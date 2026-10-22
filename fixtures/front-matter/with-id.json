@@ -1,0 +1,29 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Setting the note id: replace an existing id line, otherwise add id as the first key; keep every other line, the body and the block's line endings.",
+  "cases": [
+    { "name": "no front-matter", "input": { "text": "Body\n", "id": "m4n5p6q7" }, "expected": { "text": "---\nid: m4n5p6q7\n---\nBody\n" } },
+    { "name": "empty note", "input": { "text": "", "id": "m4n5p6q7" }, "expected": { "text": "---\nid: m4n5p6q7\n---\n" } },
+    {
+      "name": "front-matter without id gets id as first key",
+      "input": { "text": "---\ntitle: Roadmap\n---\nBody", "id": "m4n5p6q7" },
+      "expected": { "text": "---\nid: m4n5p6q7\ntitle: Roadmap\n---\nBody" }
+    },
+    {
+      "name": "existing id is replaced in place",
+      "input": { "text": "---\ntags: [a]\nid: k7f3q2xa\nx: 1\n---\nBody", "id": "m4n5p6q7" },
+      "expected": { "text": "---\ntags: [a]\nid: m4n5p6q7\nx: 1\n---\nBody" }
+    },
+    {
+      "name": "CRLF front-matter keeps CRLF",
+      "input": { "text": "---\r\ntitle: Roadmap\r\n---\r\nBody", "id": "m4n5p6q7" },
+      "expected": { "text": "---\r\nid: m4n5p6q7\r\ntitle: Roadmap\r\n---\r\nBody" }
+    },
+    {
+      "name": "invalid id line is replaced",
+      "input": { "text": "---\nid: not valid\n---\nBody", "id": "m4n5p6q7" },
+      "expected": { "text": "---\nid: m4n5p6q7\n---\nBody" },
+      "knownDivergence": { "web": "Keeps the invalid id line and inserts a second id line." }
+    }
+  ]
+}

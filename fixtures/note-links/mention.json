@@ -1,0 +1,13 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Detecting an @ mention in the text of the cursor's line before the cursor. from is the offset of the @ in that text; expected.mention is null when the picker must not open.",
+  "cases": [
+    { "name": "at start of line", "input": { "lineBeforeCursor": "@road" }, "expected": { "mention": { "from": 0, "query": "road" } } },
+    { "name": "after a space", "input": { "lineBeforeCursor": "see @road" }, "expected": { "mention": { "from": 4, "query": "road" } } },
+    { "name": "after a tab", "input": { "lineBeforeCursor": "x\t@k7" }, "expected": { "mention": { "from": 2, "query": "k7" } } },
+    { "name": "bare @", "input": { "lineBeforeCursor": "@" }, "expected": { "mention": { "from": 0, "query": "" } } },
+    { "name": "inside a word (e-mail)", "input": { "lineBeforeCursor": "me@road" }, "expected": { "mention": null } },
+    { "name": "space right after @", "input": { "lineBeforeCursor": "@ road" }, "expected": { "mention": null } },
+    { "name": "no @", "input": { "lineBeforeCursor": "road" }, "expected": { "mention": null } }
+  ]
+}

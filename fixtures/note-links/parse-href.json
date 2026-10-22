@@ -1,0 +1,30 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Note id targeted by a link href. expected.id is null when the href is not a valid marknotes: link.",
+  "cases": [
+    { "name": "note link", "input": { "href": "marknotes:k7f3q2xa" }, "expected": { "id": "k7f3q2xa" } },
+    { "name": "web link", "input": { "href": "https://example.com/marknotes:k7f3q2xa" }, "expected": { "id": null } },
+    { "name": "relative link", "input": { "href": "Work/Roadmap.md" }, "expected": { "id": null } },
+    {
+      "name": "scheme and id are case-insensitive",
+      "input": { "href": "MarkNotes:K7F3Q2XA" },
+      "expected": { "id": "k7f3q2xa" },
+      "knownDivergence": { "web": "Scheme match is case-sensitive and the id is not lowercased." }
+    },
+    {
+      "name": "surrounding whitespace in the id is trimmed",
+      "input": { "href": "marknotes: k7f3q2xa " },
+      "expected": { "id": "k7f3q2xa" },
+      "knownDivergence": { "web": "The id is not trimmed." }
+    },
+    {
+      "name": "invalid id is not a note link",
+      "input": { "href": "marknotes:nope" },
+      "expected": { "id": null },
+      "knownDivergence": {
+        "android": "Does not validate the id format.",
+        "web": "Does not validate the id format."
+      }
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Markdown inserted for an image: ![alt](path), where alt is the original file name without its extension.",
+  "cases": [
+    {
+      "name": "simple name",
+      "input": { "fileName": "photo.jpg", "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.jpg" },
+      "expected": { "markdown": "![photo](attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.jpg)" }
+    },
+    {
+      "name": "only the last extension is removed",
+      "input": { "fileName": "my.photo.png", "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png" },
+      "expected": { "markdown": "![my.photo](attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png)" }
+    },
+    {
+      "name": "name without extension",
+      "input": { "fileName": "clipboard", "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png" },
+      "expected": { "markdown": "![clipboard](attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png)" }
+    },
+    {
+      "name": "leading dot is not an extension",
+      "input": { "fileName": ".png", "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png" },
+      "expected": { "markdown": "![.png](attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png)" },
+      "knownDivergence": { "web": "Strips the whole name, giving empty alt text." }
+    },
+    {
+      "name": "brackets in the name",
+      "input": { "fileName": "a[1].jpg", "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.jpg" },
+      "expected": { "markdown": "![a 1](attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.jpg)" },
+      "knownDivergence": {
+        "android": "Escapes the brackets: ![a\\[1\\]](...).",
+        "web": "Escapes the brackets: ![a\\[1\\]](...)."
+      }
+    }
+  ]
+}

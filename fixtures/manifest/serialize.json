@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Serializing the manifest: compact JSON, keys in the order format, app, deviceId, updatedAt, files; file paths sorted; entry keys sha256, version, syncedAt. Apps must produce exactly expected.json.",
+  "cases": [
+    {
+      "name": "paths are sorted",
+      "input": {
+        "deviceId": "dev-1",
+        "updatedAt": 1700000000000,
+        "files": {
+          "b.md": { "sha256": "bb", "version": "2", "syncedAt": 20 },
+          "Work/a.md": { "sha256": "aa", "version": "1", "syncedAt": 10 }
+        }
+      },
+      "expected": { "json": "{\"format\":1,\"app\":\"MarkNotes\",\"deviceId\":\"dev-1\",\"updatedAt\":1700000000000,\"files\":{\"Work/a.md\":{\"sha256\":\"aa\",\"version\":\"1\",\"syncedAt\":10},\"b.md\":{\"sha256\":\"bb\",\"version\":\"2\",\"syncedAt\":20}}}" }
+    },
+    {
+      "name": "no files",
+      "input": { "deviceId": "d", "updatedAt": 1, "files": {} },
+      "expected": { "json": "{\"format\":1,\"app\":\"MarkNotes\",\"deviceId\":\"d\",\"updatedAt\":1,\"files\":{}}" }
+    }
+  ]
+}
