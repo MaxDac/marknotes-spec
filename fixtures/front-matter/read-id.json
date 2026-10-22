@@ -1,0 +1,29 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Reading the note id from the front-matter block. expected.id is null when there is no valid id.",
+  "cases": [
+    { "name": "plain id", "input": { "text": "---\nid: k7f3q2xa\n---\n# Title\n" }, "expected": { "id": "k7f3q2xa" } },
+    { "name": "id after other keys", "input": { "text": "---\ntitle: Roadmap\nid: k7f3q2xa\n---\nBody" }, "expected": { "id": "k7f3q2xa" } },
+    { "name": "CRLF line endings", "input": { "text": "---\r\nid: k7f3q2xa\r\n---\r\nBody\r\n" }, "expected": { "id": "k7f3q2xa" } },
+    { "name": "closing fence at end of file", "input": { "text": "---\nid: k7f3q2xa\n---" }, "expected": { "id": "k7f3q2xa" } },
+    { "name": "no front-matter", "input": { "text": "# Title\nid: k7f3q2xa\n" }, "expected": { "id": null } },
+    { "name": "front-matter not at the top", "input": { "text": "\n---\nid: k7f3q2xa\n---\n" }, "expected": { "id": null } },
+    { "name": "unterminated front-matter", "input": { "text": "---\nid: k7f3q2xa\nBody\n" }, "expected": { "id": null } },
+    { "name": "front-matter without id", "input": { "text": "---\ntitle: Roadmap\n---\nBody" }, "expected": { "id": null } },
+    {
+      "name": "invalid id value",
+      "input": { "text": "---\nid: not-an-id\n---\nBody" },
+      "expected": { "id": null },
+      "knownDivergence": {
+        "android": "Returns any non-empty id value without validating it.",
+        "web": "Accepts any token without whitespace or quotes."
+      }
+    },
+    {
+      "name": "opening fence with trailing spaces",
+      "input": { "text": "---  \nid: k7f3q2xa\n---\nBody" },
+      "expected": { "id": "k7f3q2xa" },
+      "knownDivergence": { "android": "The first line must be exactly ---." }
+    }
+  ]
+}

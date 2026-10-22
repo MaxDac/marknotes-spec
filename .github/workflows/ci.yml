@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fixtures:
+    name: Validate fixtures
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Install check-jsonschema
+        run: pip install "check-jsonschema==0.38.2"
+      - name: Validate fixture files
+        run: check-jsonschema --schemafile schemas/fixture-file.schema.json fixtures/*/*.json
+      - name: Check case names are unique
+        run: |
+          status=0
+          for f in fixtures/*/*.json; do
+            dupes=$(jq -r '.cases[].name' "$f" | sort | uniq -d)
+            if [ -n "$dupes" ]; then
+              echo "::error file=$f::Duplicate case names: $dupes"
+              status=1
+            fi
+          done
+          exit $status
+
+  actionlint:
+    name: actionlint
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Run actionlint
+        run: |
+          bash <(curl -sSfL https://raw.githubusercontent.com/rhysd/actionlint/v1.7.12/scripts/download-actionlint.bash) 1.7.12
+          ./actionlint -color
+
+  markdown:
+    name: Markdown lint
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: DavidAnson/markdownlint-cli2-action@v24
+        with:
+          globs: "**/*.md"

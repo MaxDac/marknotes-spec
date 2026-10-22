@@ -1,0 +1,18 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Whether a synced file path is an attachment: attachments/<64 lowercase hex>.<png|jpg|gif|webp> directly in the root attachments folder.",
+  "cases": [
+    { "name": "png attachment", "input": { "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png" }, "expected": { "isAttachment": true } },
+    { "name": "webp attachment", "input": { "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.webp" }, "expected": { "isAttachment": true } },
+    { "name": "jpeg extension is not used", "input": { "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.jpeg" }, "expected": { "isAttachment": false } },
+    { "name": "uppercase hash", "input": { "path": "attachments/E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855.png" }, "expected": { "isAttachment": false } },
+    { "name": "in a subfolder", "input": { "path": "attachments/old/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png" }, "expected": { "isAttachment": false } },
+    { "name": "note in attachments", "input": { "path": "attachments/readme.md" }, "expected": { "isAttachment": false } },
+    {
+      "name": "name that is not a hash",
+      "input": { "path": "attachments/abc.png" },
+      "expected": { "isAttachment": false },
+      "knownDivergence": { "android": "Accepts any name with a supported extension directly under attachments/." }
+    }
+  ]
+}

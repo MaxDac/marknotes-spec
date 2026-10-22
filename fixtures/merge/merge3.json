@@ -1,0 +1,66 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Line-based three-way merge used by sync. input.base is null when there is no common ancestor. input.choices maps a conflict index (0-based, in document order) to local, remote, both or neither; unresolved conflicts are written with markers. expected.conflicts is the number of conflicting regions.",
+  "cases": [
+    {
+      "name": "non-overlapping edits merge cleanly",
+      "input": { "base": "title\n\none\ntwo\nthree\n", "local": "title\n\none (local)\ntwo\nthree\n", "remote": "title\n\none\ntwo\nthree\nfour (remote)\n" },
+      "expected": { "text": "title\n\none (local)\ntwo\nthree\nfour (remote)\n", "conflicts": 0 }
+    },
+    {
+      "name": "overlapping edits without a choice get markers",
+      "input": { "base": "a\nb\nc\n", "local": "a\nlocal\nc\n", "remote": "a\nremote\nc\n" },
+      "expected": { "text": "a\n<<<<<<< this device\nlocal\n=======\nremote\n>>>>>>> drive\nc\n", "conflicts": 1 }
+    },
+    {
+      "name": "choice local",
+      "input": { "base": "a\nb\nc\n", "local": "a\nlocal\nc\n", "remote": "a\nremote\nc\n", "choices": { "0": "local" } },
+      "expected": { "text": "a\nlocal\nc\n", "conflicts": 1 }
+    },
+    {
+      "name": "choice remote",
+      "input": { "base": "a\nb\nc\n", "local": "a\nlocal\nc\n", "remote": "a\nremote\nc\n", "choices": { "0": "remote" } },
+      "expected": { "text": "a\nremote\nc\n", "conflicts": 1 }
+    },
+    {
+      "name": "choice both",
+      "input": { "base": "a\nb\nc\n", "local": "a\nlocal\nc\n", "remote": "a\nremote\nc\n", "choices": { "0": "both" } },
+      "expected": { "text": "a\nlocal\nremote\nc\n", "conflicts": 1 }
+    },
+    {
+      "name": "choice neither",
+      "input": { "base": "a\nb\nc\n", "local": "a\nlocal\nc\n", "remote": "a\nremote\nc\n", "choices": { "0": "neither" } },
+      "expected": { "text": "a\nc\n", "conflicts": 1 }
+    },
+    {
+      "name": "whole-file conflict",
+      "input": { "base": "x", "local": "local", "remote": "remote" },
+      "expected": { "text": "<<<<<<< this device\nlocal\n=======\nremote\n>>>>>>> drive\n", "conflicts": 1 }
+    },
+    {
+      "name": "identical changes",
+      "input": { "base": "a\nb\n", "local": "a\nB\n", "remote": "a\nB\n" },
+      "expected": { "text": "a\nB\n", "conflicts": 0 }
+    },
+    {
+      "name": "deletion and edit elsewhere",
+      "input": { "base": "1\n2\n3\n4\n", "local": "1\n3\n4\n", "remote": "1\n2\n3\n4!\n" },
+      "expected": { "text": "1\n3\n4!\n", "conflicts": 0 }
+    },
+    {
+      "name": "no base, choice local",
+      "input": { "base": null, "local": "same\nlocal only\n", "remote": "same\n", "choices": { "0": "local" } },
+      "expected": { "text": "same\nlocal only\n", "conflicts": 1 }
+    },
+    {
+      "name": "no base, choice remote",
+      "input": { "base": null, "local": "same\nlocal only\n", "remote": "same\n", "choices": { "0": "remote" } },
+      "expected": { "text": "same\n", "conflicts": 1 }
+    },
+    {
+      "name": "two conflicts resolved separately",
+      "input": { "base": "a\nb\nc\nd\ne\n", "local": "A1\nb\nc\nd\nE1\n", "remote": "A2\nb\nc\nd\nE2\n", "choices": { "0": "local", "1": "remote" } },
+      "expected": { "text": "A1\nb\nc\nd\nE2\n", "conflicts": 2 }
+    }
+  ]
+}

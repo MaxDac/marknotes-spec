@@ -1,0 +1,62 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Filtering the @ picker. input.notes is the note index sorted by path; a note matches when its id starts with the query or its title or full path contains it (case-insensitive). expected.ids lists the matches in display order. Cases avoid the ordering difference between apps (see features.md).",
+  "cases": [
+    {
+      "name": "empty query lists every note",
+      "input": {
+        "query": "",
+        "notes": [
+          { "id": "k9aaaaaa", "title": "K list", "fullPath": "Ideas/K list" },
+          { "id": "m4n5p6q7", "title": "Groceries", "fullPath": "Personal/Groceries" },
+          { "id": "k7f3q2xa", "title": "Roadmap", "fullPath": "Work/Roadmap" }
+        ]
+      },
+      "expected": { "ids": ["k9aaaaaa", "m4n5p6q7", "k7f3q2xa"] }
+    },
+    {
+      "name": "title substring",
+      "input": {
+        "query": "road",
+        "notes": [
+          { "id": "k9aaaaaa", "title": "K list", "fullPath": "Ideas/K list" },
+          { "id": "m4n5p6q7", "title": "Groceries", "fullPath": "Personal/Groceries" },
+          { "id": "k7f3q2xa", "title": "Roadmap", "fullPath": "Work/Roadmap" }
+        ]
+      },
+      "expected": { "ids": ["k7f3q2xa"] }
+    },
+    {
+      "name": "folder path is case-insensitive",
+      "input": {
+        "query": "PERSONAL",
+        "notes": [
+          { "id": "k9aaaaaa", "title": "K list", "fullPath": "Ideas/K list" },
+          { "id": "m4n5p6q7", "title": "Groceries", "fullPath": "Personal/Groceries" },
+          { "id": "k7f3q2xa", "title": "Roadmap", "fullPath": "Work/Roadmap" }
+        ]
+      },
+      "expected": { "ids": ["m4n5p6q7"] }
+    },
+    {
+      "name": "id prefix",
+      "input": {
+        "query": "k7f",
+        "notes": [
+          { "id": "k9aaaaaa", "title": "K list", "fullPath": "Ideas/K list" },
+          { "id": "m4n5p6q7", "title": "Groceries", "fullPath": "Personal/Groceries" },
+          { "id": "k7f3q2xa", "title": "Roadmap", "fullPath": "Work/Roadmap" }
+        ]
+      },
+      "expected": { "ids": ["k7f3q2xa"] }
+    },
+    {
+      "name": "id in the middle does not match",
+      "input": {
+        "query": "f3q2",
+        "notes": [{ "id": "k7f3q2xa", "title": "Roadmap", "fullPath": "Work/Roadmap" }]
+      },
+      "expected": { "ids": [] }
+    }
+  ]
+}

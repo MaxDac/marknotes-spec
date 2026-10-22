@@ -1,0 +1,19 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Markdown inserted for a note link from the @ picker: [escaped title](marknotes:<id>). [, ] and \\ are escaped with a backslash.",
+  "cases": [
+    { "name": "plain title", "input": { "title": "Roadmap", "id": "k7f3q2xa" }, "expected": { "markdown": "[Roadmap](marknotes:k7f3q2xa)" } },
+    { "name": "brackets are escaped", "input": { "title": "a[1]", "id": "k7f3q2xa" }, "expected": { "markdown": "[a\\[1\\]](marknotes:k7f3q2xa)" } },
+    { "name": "backslash is escaped", "input": { "title": "C:\\notes", "id": "k7f3q2xa" }, "expected": { "markdown": "[C:\\\\notes](marknotes:k7f3q2xa)" } },
+    { "name": "other punctuation is kept", "input": { "title": "Q&A (2026) - *draft*", "id": "k7f3q2xa" }, "expected": { "markdown": "[Q&A (2026) - *draft*](marknotes:k7f3q2xa)" } },
+    {
+      "name": "line breaks become a space",
+      "input": { "title": "line1\r\nline2", "id": "k7f3q2xa" },
+      "expected": { "markdown": "[line1 line2](marknotes:k7f3q2xa)" },
+      "knownDivergence": {
+        "android": "Line breaks are not replaced.",
+        "web": "Line breaks are not replaced."
+      }
+    }
+  ]
+}

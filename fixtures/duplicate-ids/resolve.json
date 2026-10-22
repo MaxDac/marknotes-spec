@@ -1,0 +1,21 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Resolving duplicate note ids (e.g. after copying a file outside the app). Notes sharing an id are sorted by path in code-point order; the first keeps the id and expected.reassigned lists the paths that get a new id, sorted.",
+  "cases": [
+    {
+      "name": "no duplicates",
+      "input": { "notes": [{ "path": "a.md", "id": "k7f3q2xa" }, { "path": "b.md", "id": "m4n5p6q7" }] },
+      "expected": { "reassigned": [] }
+    },
+    {
+      "name": "copy loses the id",
+      "input": { "notes": [{ "path": "Work/Roadmap.md", "id": "k7f3q2xa" }, { "path": "Archive/Roadmap.md", "id": "k7f3q2xa" }] },
+      "expected": { "reassigned": ["Work/Roadmap.md"] }
+    },
+    {
+      "name": "code-point order puts uppercase first",
+      "input": { "notes": [{ "path": "a.md", "id": "k7f3q2xa" }, { "path": "B.md", "id": "k7f3q2xa" }, { "path": "c.md", "id": "k7f3q2xa" }] },
+      "expected": { "reassigned": ["a.md", "c.md"] }
+    }
+  ]
+}

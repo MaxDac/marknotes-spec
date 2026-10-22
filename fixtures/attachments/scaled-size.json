@@ -1,0 +1,12 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Image size after scaling so that the longest side is at most 2048 pixels. Sides are rounded to the nearest integer and are at least 1.",
+  "cases": [
+    { "name": "small image is unchanged", "input": { "width": 1000, "height": 800 }, "expected": { "width": 1000, "height": 800, "scaled": false } },
+    { "name": "exactly the limit", "input": { "width": 2048, "height": 10 }, "expected": { "width": 2048, "height": 10, "scaled": false } },
+    { "name": "landscape", "input": { "width": 4000, "height": 3000 }, "expected": { "width": 2048, "height": 1536, "scaled": true } },
+    { "name": "portrait", "input": { "width": 3000, "height": 4000 }, "expected": { "width": 1536, "height": 2048, "scaled": true } },
+    { "name": "rounding", "input": { "width": 4097, "height": 100 }, "expected": { "width": 2048, "height": 50, "scaled": true } },
+    { "name": "side never below 1", "input": { "width": 10000, "height": 1 }, "expected": { "width": 2048, "height": 1, "scaled": true } }
+  ]
+}

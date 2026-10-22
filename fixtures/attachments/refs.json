@@ -1,0 +1,23 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Attachment paths referenced by a note's text, used to find unused attachments. expected.refs is sorted and has no duplicates.",
+  "cases": [
+    {
+      "name": "image references",
+      "input": { "text": "![a](attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png)\nText ![b](/attachments/0000000000000000000000000000000000000000000000000000000000000000.jpg)" },
+      "expected": { "refs": ["attachments/0000000000000000000000000000000000000000000000000000000000000000.jpg", "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png"] }
+    },
+    {
+      "name": "duplicates are counted once",
+      "input": { "text": "![a](attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png) ![a](attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png)" },
+      "expected": { "refs": ["attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png"] }
+    },
+    { "name": "no references", "input": { "text": "# Title\nNo images." }, "expected": { "refs": [] } },
+    {
+      "name": "names that are not hashes are not references",
+      "input": { "text": "![a](attachments/abc.png)" },
+      "expected": { "refs": [] },
+      "knownDivergence": { "android": "Uses the broad pattern attachments/[A-Za-z0-9._-]+." }
+    }
+  ]
+}

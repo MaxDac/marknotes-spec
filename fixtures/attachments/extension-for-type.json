@@ -1,0 +1,19 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "File extension for a pasted or dropped image's MIME type. expected.extension is null for unsupported types.",
+  "cases": [
+    { "name": "png", "input": { "mime": "image/png" }, "expected": { "extension": "png" } },
+    { "name": "jpeg becomes jpg", "input": { "mime": "image/jpeg" }, "expected": { "extension": "jpg" } },
+    { "name": "gif", "input": { "mime": "image/gif" }, "expected": { "extension": "gif" } },
+    { "name": "webp", "input": { "mime": "image/webp" }, "expected": { "extension": "webp" } },
+    { "name": "case-insensitive", "input": { "mime": "IMAGE/PNG" }, "expected": { "extension": "png" } },
+    { "name": "svg is not supported", "input": { "mime": "image/svg+xml" }, "expected": { "extension": null } },
+    { "name": "not an image", "input": { "mime": "text/plain" }, "expected": { "extension": null } },
+    {
+      "name": "parameters are not accepted",
+      "input": { "mime": "image/png; x=y" },
+      "expected": { "extension": null },
+      "knownDivergence": { "android": "Strips MIME parameters and returns png." }
+    }
+  ]
+}

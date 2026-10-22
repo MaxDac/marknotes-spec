@@ -1,0 +1,9 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "File name of the copy kept when a conflict is not merged: '<name> (conflicted copy).md' in the same folder. The copy gets a new id.",
+  "cases": [
+    { "name": "root note", "input": { "path": "Roadmap.md" }, "expected": { "path": "Roadmap (conflicted copy).md" } },
+    { "name": "note in a folder", "input": { "path": "Work/Roadmap.md" }, "expected": { "path": "Work/Roadmap (conflicted copy).md" } },
+    { "name": "dots in the name", "input": { "path": "v1.2 notes.md" }, "expected": { "path": "v1.2 notes (conflicted copy).md" } }
+  ]
+}

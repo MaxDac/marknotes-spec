@@ -1,0 +1,17 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Note id validation: 8 characters from the lowercase Crockford base32 alphabet 0123456789abcdefghjkmnpqrstvwxyz.",
+  "cases": [
+    { "name": "valid id", "input": { "value": "k7f3q2xa" }, "expected": { "valid": true } },
+    { "name": "all digits", "input": { "value": "01234567" }, "expected": { "valid": true } },
+    { "name": "too short", "input": { "value": "k7f3q2x" }, "expected": { "valid": false } },
+    { "name": "too long", "input": { "value": "k7f3q2xab" }, "expected": { "valid": false } },
+    { "name": "uppercase is not valid", "input": { "value": "K7F3Q2XA" }, "expected": { "valid": false } },
+    { "name": "excluded letter i", "input": { "value": "k7f3q2xi" }, "expected": { "valid": false } },
+    { "name": "excluded letter l", "input": { "value": "k7f3q2xl" }, "expected": { "valid": false } },
+    { "name": "excluded letter o", "input": { "value": "k7f3q2xo" }, "expected": { "valid": false } },
+    { "name": "excluded letter u", "input": { "value": "k7f3q2xu" }, "expected": { "valid": false } },
+    { "name": "punctuation", "input": { "value": "k7f3-2xa" }, "expected": { "valid": false } },
+    { "name": "empty", "input": { "value": "" }, "expected": { "valid": false } }
+  ]
+}

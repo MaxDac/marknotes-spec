@@ -1,0 +1,31 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Splitting a note into the hidden front-matter block (both fences and the newline after the closing one) and the editable body. frontMatter + body must always equal the input.",
+  "cases": [
+    {
+      "name": "front-matter and body",
+      "input": { "text": "---\nid: k7f3q2xa\n---\n# Title\n" },
+      "expected": { "frontMatter": "---\nid: k7f3q2xa\n---\n", "body": "# Title\n" }
+    },
+    {
+      "name": "no front-matter",
+      "input": { "text": "# Title\n" },
+      "expected": { "frontMatter": "", "body": "# Title\n" }
+    },
+    {
+      "name": "closing fence at end of file",
+      "input": { "text": "---\nid: k7f3q2xa\n---" },
+      "expected": { "frontMatter": "---\nid: k7f3q2xa\n---", "body": "" }
+    },
+    {
+      "name": "unknown keys are part of the front-matter",
+      "input": { "text": "---\nid: k7f3q2xa\ntags: [x]\n---\nBody" },
+      "expected": { "frontMatter": "---\nid: k7f3q2xa\ntags: [x]\n---\n", "body": "Body" }
+    },
+    {
+      "name": "unterminated block is body",
+      "input": { "text": "---\nid: k7f3q2xa\nBody" },
+      "expected": { "frontMatter": "", "body": "---\nid: k7f3q2xa\nBody" }
+    }
+  ]
+}
