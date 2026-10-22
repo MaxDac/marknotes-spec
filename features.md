@@ -55,5 +55,9 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     object, and rejects entries whose `sha256` is not 64 lowercase hex characters or whose path is not a syncable note
     or attachment.
 14. **MIME case** (`attachments/extension-for-type`): Web matches MIME types case-sensitively.
-15. **Missing functions on Web**: no note id validator (`note-ids/validation`) and no three-way merge (`merge/merge3`);
+15. **Manifest parsing on Android** (`manifest/parse`): Android accepts a numeric `version` and converts it to a
+    string.
+16. **Mention detection on Android** (`note-links/mention`): Android opens the picker for `@` followed by a space and
+    closes it only when the query has no results.
+17. **Missing functions on Web**: no note id validator (`note-ids/validation`) and no three-way merge (`merge/merge3`);
     the Web parity runner skips those files.
