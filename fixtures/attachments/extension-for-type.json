@@ -6,7 +6,7 @@
     { "name": "jpeg becomes jpg", "input": { "mime": "image/jpeg" }, "expected": { "extension": "jpg" } },
     { "name": "gif", "input": { "mime": "image/gif" }, "expected": { "extension": "gif" } },
     { "name": "webp", "input": { "mime": "image/webp" }, "expected": { "extension": "webp" } },
-    { "name": "case-insensitive", "input": { "mime": "IMAGE/PNG" }, "expected": { "extension": "png" } },
+    { "name": "case-insensitive", "input": { "mime": "IMAGE/PNG" }, "expected": { "extension": "png" }, "knownDivergence": { "web": "MIME matching is case-sensitive." } },
     { "name": "svg is not supported", "input": { "mime": "image/svg+xml" }, "expected": { "extension": null } },
     { "name": "not an image", "input": { "mime": "text/plain" }, "expected": { "extension": null } },
     {

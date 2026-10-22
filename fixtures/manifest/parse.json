@@ -9,18 +9,19 @@
     },
     {
       "name": "unknown keys are ignored",
-      "input": { "json": "{\"format\":1,\"app\":\"Other\",\"extra\":true,\"deviceId\":\"d\",\"updatedAt\":1,\"files\":{\"a.md\":{\"sha256\":\"x\",\"version\":\"1\",\"syncedAt\":2,\"size\":5}}}" },
-      "expected": { "manifest": { "deviceId": "d", "updatedAt": 1, "files": { "a.md": { "sha256": "x", "version": "1", "syncedAt": 2 } } } }
+      "input": { "json": "{\"format\":1,\"app\":\"Other\",\"extra\":true,\"deviceId\":\"d\",\"updatedAt\":1,\"files\":{\"a.md\":{\"sha256\":\"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\"version\":\"1\",\"syncedAt\":2,\"size\":5}}}" },
+      "expected": { "manifest": { "deviceId": "d", "updatedAt": 1, "files": { "a.md": { "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "version": "1", "syncedAt": 2 } } } }
     },
     {
       "name": "missing files",
       "input": { "json": "{\"format\":1,\"deviceId\":\"d\",\"updatedAt\":1}" },
-      "expected": { "manifest": { "deviceId": "d", "updatedAt": 1, "files": {} } }
+      "expected": { "manifest": { "deviceId": "d", "updatedAt": 1, "files": {} } },
+      "knownDivergence": { "web": "Requires a files object." }
     },
     { "name": "newer format", "input": { "json": "{\"format\":2,\"deviceId\":\"d\",\"updatedAt\":1,\"files\":{}}" }, "expected": { "manifest": null } },
     { "name": "missing format", "input": { "json": "{\"deviceId\":\"d\",\"updatedAt\":1,\"files\":{}}" }, "expected": { "manifest": null } },
-    { "name": "missing deviceId", "input": { "json": "{\"format\":1,\"updatedAt\":1,\"files\":{}}" }, "expected": { "manifest": null } },
-    { "name": "missing updatedAt", "input": { "json": "{\"format\":1,\"deviceId\":\"d\",\"files\":{}}" }, "expected": { "manifest": null } },
+    { "name": "missing deviceId", "input": { "json": "{\"format\":1,\"updatedAt\":1,\"files\":{}}" }, "expected": { "manifest": null }, "knownDivergence": { "web": "Does not require deviceId." } },
+    { "name": "missing updatedAt", "input": { "json": "{\"format\":1,\"deviceId\":\"d\",\"files\":{}}" }, "expected": { "manifest": null }, "knownDivergence": { "web": "Does not require updatedAt." } },
     { "name": "entry without version", "input": { "json": "{\"format\":1,\"deviceId\":\"d\",\"updatedAt\":1,\"files\":{\"a.md\":{\"sha256\":\"x\",\"syncedAt\":2}}}" }, "expected": { "manifest": null } },
     { "name": "numeric version", "input": { "json": "{\"format\":1,\"deviceId\":\"d\",\"updatedAt\":1,\"files\":{\"a.md\":{\"sha256\":\"x\",\"version\":1,\"syncedAt\":2}}}" }, "expected": { "manifest": null } },
     { "name": "not JSON", "input": { "json": "not json" }, "expected": { "manifest": null } }

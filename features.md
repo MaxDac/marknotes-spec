@@ -21,8 +21,8 @@ Apps: **Android** ([MaxDac/MarkNotes](https://github.com/MaxDac/MarkNotes)), **D
 | Dropbox sync | Yes | Yes | Yes | |
 | OneDrive sync | Yes | Yes | Yes | |
 | Proton Drive sync | Yes | Yes | No | Web: deferred to marknotes-web#1 |
-| Sync manifest (`.marknotes/manifest.json`) | Yes | Yes | Partial | Web: only `format` and `files[].sha256` verified |
-| Three-way merge with conflict choices | Yes | Yes | Not verified | Android and Desktop share the same test vectors |
+| Sync manifest (`.marknotes/manifest.json`) | Yes | Yes | Yes | Web parses it differently, see below |
+| Three-way merge with conflict choices | Yes | Yes | No | Web keeps the newest version and saves a conflicted copy |
 | When sync runs | Launch and Sync now | Launch and Sync now | Page load and Sync now | No app polls in the background |
 | Attachment hash check on download | Not verified | Not verified | Yes | |
 
@@ -51,5 +51,9 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
 10. **MIME parameters** (`attachments/extension-for-type`): Android strips parameters such as `; charset=...`.
 11. **Hash check on download**: only Web is known to reject attachments whose bytes do not match their name.
 12. **Duplicate ids**: Android compares ids case-insensitively; Desktop and Web compare them exactly.
-13. **Manifest and merge on Web**: not yet covered by Web tests; the Web parity runner is expected to confirm or report
-    differences.
+13. **Manifest parsing on Web** (`manifest/parse`): Web does not require `deviceId` or `updatedAt`, requires a `files`
+    object, and rejects entries whose `sha256` is not 64 lowercase hex characters or whose path is not a syncable note
+    or attachment.
+14. **MIME case** (`attachments/extension-for-type`): Web matches MIME types case-sensitively.
+15. **Missing functions on Web**: no note id validator (`note-ids/validation`) and no three-way merge (`merge/merge3`);
+    the Web parity runner skips those files.

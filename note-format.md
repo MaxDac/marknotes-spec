@@ -91,7 +91,8 @@ Each linked drive has `.marknotes/manifest.json` in the synced folder, rewritten
 
 ## Three-way merge
 
-When a note changed both locally and on a drive, apps run a line-based diff3 merge against the last synced base.
+When a note changed both locally and on a drive, apps run a line-based diff3 merge against the last synced base
+(the web app does not merge yet; see [features.md](features.md)).
 Unresolved conflicts are written with the markers `<<<<<<< this device`, `=======` and `>>>>>>> drive`; a conflict can
 be resolved as local, remote, both (local then remote) or neither. When a merge is not possible the remote version is
 kept as `<name> (conflicted copy).md` next to the note.
