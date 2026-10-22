@@ -18,12 +18,12 @@ Apps: **Android** ([MaxDac/MarkNotes](https://github.com/MaxDac/MarkNotes)), **D
 | Images from file picker / toolbar | Yes | Yes | Yes | |
 | Image paste and drag-and-drop | Not verified | Yes | Yes | |
 | Unused attachment clean-up | Yes | Yes | Yes | |
-| Google Drive sync | Yes | Yes | Yes | |
-| Proton Drive sync | Yes | Yes | No | |
+| Dropbox sync | Yes | Yes | Yes | |
+| OneDrive sync | Yes | Yes | Yes | |
+| Proton Drive sync | Yes | Yes | No | Web: deferred to marknotes-web#1 |
 | Sync manifest (`.marknotes/manifest.json`) | Yes | Yes | Partial | Web: only `format` and `files[].sha256` verified |
 | Three-way merge with conflict choices | Yes | Yes | Not verified | Android and Desktop share the same test vectors |
-| Automatic sync | At launch and manual | Background polling | Background polling | |
-| Trash | Yes | Yes | No | |
+| When sync runs | Launch and Sync now | Launch and Sync now | Page load and Sync now | No app polls in the background |
 | Attachment hash check on download | Not verified | Not verified | Yes | |
 
 ## Known divergences
