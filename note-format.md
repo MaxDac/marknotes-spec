@@ -13,6 +13,9 @@ app runs in CI. Change this document and the fixtures together.
 A note is a UTF-8 `.md` file; folders are real directories. The note title is the file name without `.md`, and its
 full path (for example `Work/Projects/Roadmap`) is the folder path plus the title.
 
+A note whose front-matter has `type: chords` is a [chord sequence](#chord-sequences) and opens in the chord editor.
+It is still a note in every other respect.
+
 ## Note ids (front-matter)
 
 Each note has a stable id stored in a YAML front-matter block at the very top of the file:
@@ -106,3 +109,155 @@ Files under `attachments/` sync to **every** linked drive, like notes, and are l
 - no base copy is kept for them;
 - a download whose content does not match the hash in its name is rejected;
 - deletions propagate in both directions, like notes.
+
+## Chord sequences
+
+A chord sequence is a note that stores guitar and bass chord shapes instead of free text, ported from
+[ChordBuilder](https://github.com/MaxDac/ChordBuilder). It is a normal UTF-8 `.md` note: ids, links, rename, move,
+sync, the manifest, three-way merge and conflicted copies work exactly as for any other note. One file holds one
+ordered sequence (a song or progression); the order in the file is the display order.
+
+```markdown
+---
+id: k7f3q2xa
+type: chords
+---
+# Autumn Leaves
+
+## Am7 (guitar)
+frets: x 0 2/2 0 1/1 0
+tags: jazz, open
+
+First chord of the A section.
+Let it ring.
+
+## Am7 (bass)
+frets: 5/1 7/3 7/4 x
+```
+
+### Detection
+
+A note is a chord sequence when its front-matter block (as in [Note ids](#note-ids-front-matter): opening fence on the
+first line, trailing spaces or tabs allowed, and a closing `---` line) contains a `type` line whose value is `chords`:
+
+- The key is `type` at the start of the line, followed by `:` and at least one space or tab. Indented lines,
+  `Type:` and `type:chords` do not count.
+- The value is the rest of the line without surrounding spaces and tabs and, if it is wrapped in one pair of matching
+  `"` or `'`, without them. It must then equal `chords` exactly (case-sensitive). YAML comments are not supported:
+  `type: chords # song` is not a chord sequence.
+- Only the first `type` line of the block counts.
+
+Opening a chord sequence shows the chord editor. If its body does not [parse](#parsing), the app opens the note in the
+normal note editor instead and shows the parse error with its line number, so nothing is lost. A new chord sequence is
+created with the front-matter `---\nid: <new id>\ntype: chords\n---\n` and an empty body. Other front-matter keys are
+kept verbatim, like for any note.
+
+### Model
+
+A sequence has an optional `title` (`null` when absent) and an ordered list of `chords`. Each chord has:
+
+| Field | Value |
+| --- | --- |
+| `instrument` | `guitar` (6 strings, tuning E2 A2 D3 G3 B3 E4) or `bass` (4 strings, tuning E1 A1 D2 G2) |
+| `baseName` | Chord name, for example `Am7` |
+| `strings` | One entry per string, lowest string first (see below) |
+| `tags` | List of tags |
+| `note` | Free text, `""` when there is none |
+
+A string is `{"state":"muted"}`, `{"state":"open"}` or `{"state":"fretted","fret":<n>,"finger":<n>}`.
+
+Whitespace below always means the ASCII characters U+0009 to U+000D and U+0020 only (a no-break space is not
+whitespace). Lengths are counted in Unicode code points. Lowercasing is Unicode default, locale-independent
+lowercasing (`toLowerCase()` in JavaScript, `lowercase()` in Kotlin, `String.downcase/1` in Elixir).
+
+Normalisation, applied by the parser, the serializer and the validator:
+
+- `title`: trimmed; an empty title is the same as no title.
+- `baseName`: trimmed, and every run of whitespace replaced by one space.
+- `note`: `\r\n` converted to `\n`, then trimmed. Inner lines are kept verbatim.
+- `tags`: each tag trimmed, empty tags dropped, and duplicates removed by comparing lowercased tags, keeping the first
+  spelling and the original order.
+
+### Body format
+
+The body is the text after the front-matter block. Lines are separated by `\n`; one `\r` at the end of a line is
+removed, so CRLF files parse the same. Line numbers are 1-based and count from the first line of the body.
+
+- **Title** (optional): the first non-blank line may be `# <title>`.
+- **Chord heading**: `## <baseName> (<instrument>)`. Every line starting with `##` and a space is a chord heading.
+  The instrument is the last `(guitar)` or `(bass)` on the line (lowercase), optionally followed by spaces or tabs;
+  everything between `##` plus its space and the instrument is the name, so `## C (add9) (guitar)` is named
+  `C (add9)` and `## Am7(bass)` is accepted. Sequence numbers are not written in the file; they are
+  [derived](#display-names).
+- **Frets**: the next non-blank line after the heading must start with `frets:`. The rest of the line is split on
+  runs of spaces and tabs into one token per string, lowest string first: `x` (muted), `0` (open) or
+  `<fret>/<finger>` (fretted), where `<fret>` is one or two digits and `<finger>` one digit. An empty `frets:` line
+  gives no strings.
+- **Tags** (optional): if the next non-blank line after `frets:` starts with `tags:`, the rest of the line is split on
+  `,` into tags. An empty `tags:` line gives no tags.
+- **Note**: every remaining line up to the next chord heading or the end of the body, joined with `\n` and trimmed.
+  Markdown, blank lines, `# …` lines and further `frets:` or `tags:` lines are note text.
+
+Keys (`frets:`, `tags:`) and instruments are case-sensitive. Blank lines may appear anywhere.
+
+#### Parsing
+
+Parsing returns either the normalised sequence or the first error, with its line number and one of these messages:
+
+| Situation | Line | Message |
+| --- | --- | --- |
+| A non-blank line before the first chord that is not the title | That line | `Expected a chord heading.` |
+| A line starting with `##` and a space, without `(guitar)` or `(bass)` at the end | That line | `Invalid chord heading.` |
+| No `frets:` line after a heading | The heading | `Chord has no frets line.` |
+| A frets token that is not `x`, `0` or `<fret>/<finger>` | The frets line | `Invalid string "<token>".` |
+
+Parsing checks only the syntax; out-of-range numbers, wrong string counts and empty names are reported by
+[validation](#validation).
+
+#### Serialization
+
+The chord editor writes the body below and keeps the front-matter block unchanged. All apps must produce the same
+bytes. Values are normalised first.
+
+1. If there is a title: `# <title>`.
+2. For each chord, after one blank line if anything was written before it:
+   1. `## <baseName> (<instrument>)`;
+   2. `frets:`, then each token preceded by one space (`x`, `0` or `<fret>/<finger>`, without leading zeros);
+   3. if there are tags, `tags:`, one space and the tags joined with a comma and a space (`a, b`). Without tags
+      the line is omitted, except that a bare `tags:` line is written when the note's first line starts with
+      `tags:`, so that it is not read back as tags;
+   4. if the note is not empty, one blank line and then the note lines.
+3. Every line, including the last, ends with the line ending. An empty sequence is the empty string.
+
+The line ending is `\r\n` when the note's front-matter block uses CRLF (its opening fence line ends with `\r\n`), and
+`\n` otherwise. Serializing a parsed canonical body gives back the same bytes. Apps write the file only when the user
+changes something, so opening a chord sequence never creates a sync change.
+
+### Validation
+
+The chord editor validates the normalised sequence before saving and shows every error. Errors are listed in this
+order: the title, then each chord in file order and, within a chord, in the order of the table. Each message appears
+at most once per chord and carries the chord's 0-based index (`null` for the title).
+
+| Check | Message |
+| --- | --- |
+| The title contains a line break | `Title must be a single line.` |
+| `baseName` is empty | `Enter a chord name.` |
+| `baseName` is longer than 80 | `Chord names must be at most 80 characters.` |
+| The number of strings is not the instrument's | `guitar requires 6 strings.` or `bass requires 4 strings.` |
+| Fewer than three strings are not muted | `Select at least three non-muted strings.` |
+| A fret is outside 1-24 | `Frets must be between 1 and 24.` |
+| A finger is outside 1-4 | `Fingers must be between 1 and 4.` |
+| `note` is longer than 1000 | `Notes must be at most 1000 characters.` |
+| A note line starts with `##` and a space | `Note lines cannot start with "## ".` |
+| There are more than 50 tags | `Use at most 50 tags.` |
+| A tag is longer than 80 | `Tags must be at most 80 characters.` |
+| A tag contains `,`, `\n` or `\r` | `Tags cannot contain commas or line breaks.` |
+
+An empty sequence is valid.
+
+### Display names
+
+Each chord is shown as `<sequence> <baseName>`. The sequence numbers the chords that have the same instrument and the
+same lowercased `baseName` 1, 2, 3, … in file order: the second guitar `Am7` is `2 Am7`, while the first bass `Am7` is
+`1 Am7`. Each chord shows its own spelling of the name.

@@ -13,6 +13,7 @@ Apps: **Android** ([MaxDac/MarkNotes](https://github.com/MaxDac/MarkNotes)), **D
 | Feature | Android | Desktop | Web | Notes |
 | --- | --- | --- | --- | --- |
 | Markdown notes in nested folders | Yes | Yes | Yes | [note-format.md](note-format.md#notes-and-folders) |
+| Chord sequence editor | No | No | No | [note-format.md](note-format.md#chord-sequences); runners must map `fixtures/chords/*` |
 | Stable note ids in front-matter | Yes | Yes | Yes | |
 | Note links and `@` picker | Yes | Yes | Yes | Picker ordering differs, see below |
 | Images from file picker / toolbar | Yes | Yes | Yes | |
@@ -61,3 +62,5 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     closes it only when the query has no results.
 17. **Missing functions on Web**: no note id validator (`note-ids/validation`) and no three-way merge (`merge/merge3`);
     the Web parity runner skips those files.
+18. **Chord sequences** (`fixtures/chords/*`): no app implements them yet. Until it does, its parity runner must map
+    these files and skip them (like item 17), because runners fail on unmapped fixture files.

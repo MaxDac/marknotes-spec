@@ -1,0 +1,442 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Validating a chord sequence before saving. The sequence is normalised first. expected.errors lists every error in order: the title, then each chord in order, each message at most once per chord. chord is the 0-based chord index, or null for the title.",
+  "cases": [
+    {
+      "name": "valid sequence",
+      "input": {
+        "sequence": {
+          "title": "Autumn Leaves",
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "Am7",
+              "strings": [{ "state": "muted" }, { "state": "open" }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": ["jazz", "open"],
+              "note": "First chord of the A section."
+            },
+            {
+              "instrument": "bass",
+              "baseName": "Am7",
+              "strings": [{ "state": "fretted", "fret": 5, "finger": 1 }, { "state": "fretted", "fret": 7, "finger": 3 }, { "state": "fretted", "fret": 7, "finger": 4 }, { "state": "muted" }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [] }
+    },
+    {
+      "name": "empty sequence",
+      "input": { "sequence": { "title": null, "chords": [] } },
+      "expected": { "errors": [] }
+    },
+    {
+      "name": "title with a line break",
+      "input": { "sequence": { "title": "Autumn\nLeaves", "chords": [] } },
+      "expected": { "errors": [{ "chord": null, "message": "Title must be a single line." }] }
+    },
+    {
+      "name": "empty name",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": " \t ",
+              "strings": [{ "state": "muted" }, { "state": "open" }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [{ "chord": 0, "message": "Enter a chord name." }] }
+    },
+    {
+      "name": "name of 80 characters",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij",
+              "strings": [{ "state": "muted" }, { "state": "open" }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [] }
+    },
+    {
+      "name": "name of 81 characters",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijk",
+              "strings": [{ "state": "muted" }, { "state": "open" }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [{ "chord": 0, "message": "Chord names must be at most 80 characters." }] }
+    },
+    {
+      "name": "name length is measured after normalising whitespace",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "  abcdefghijabcdefghijabcdefghijabcdefghij \t  abcdefghijabcdefghijabcdefghijabcdefghi  ",
+              "strings": [{ "state": "muted" }, { "state": "open" }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [] }
+    },
+    {
+      "name": "name length counts code points",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸🎸",
+              "strings": [{ "state": "muted" }, { "state": "open" }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [] }
+    },
+    {
+      "name": "guitar needs six strings",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "Am7",
+              "strings": [{ "state": "fretted", "fret": 5, "finger": 1 }, { "state": "fretted", "fret": 7, "finger": 3 }, { "state": "fretted", "fret": 7, "finger": 4 }, { "state": "muted" }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [{ "chord": 0, "message": "guitar requires 6 strings." }] }
+    },
+    {
+      "name": "bass needs four strings",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "bass",
+              "baseName": "Am7",
+              "strings": [{ "state": "muted" }, { "state": "open" }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [{ "chord": 0, "message": "bass requires 4 strings." }] }
+    },
+    {
+      "name": "fewer than three non-muted strings",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "E5",
+              "strings": [{ "state": "open" }, { "state": "fretted", "fret": 2, "finger": 3 }, { "state": "muted" }, { "state": "muted" }, { "state": "muted" }, { "state": "muted" }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [{ "chord": 0, "message": "Select at least three non-muted strings." }] }
+    },
+    {
+      "name": "three non-muted strings are enough",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "bass",
+              "baseName": "E",
+              "strings": [{ "state": "open" }, { "state": "fretted", "fret": 2, "finger": 3 }, { "state": "fretted", "fret": 2, "finger": 4 }, { "state": "muted" }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [] }
+    },
+    {
+      "name": "wrong count and too few non-muted strings",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [{ "instrument": "guitar", "baseName": "E", "strings": [{ "state": "open" }, { "state": "open" }], "tags": [], "note": "" }]
+        }
+      },
+      "expected": {
+        "errors": [
+          { "chord": 0, "message": "guitar requires 6 strings." },
+          { "chord": 0, "message": "Select at least three non-muted strings." }
+        ]
+      }
+    },
+    {
+      "name": "frets 1 and 24 are valid",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "bass",
+              "baseName": "High",
+              "strings": [{ "state": "fretted", "fret": 1, "finger": 1 }, { "state": "fretted", "fret": 24, "finger": 4 }, { "state": "fretted", "fret": 24, "finger": 4 }, { "state": "muted" }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [] }
+    },
+    {
+      "name": "frets out of range are reported once",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "bass",
+              "baseName": "Bad",
+              "strings": [{ "state": "fretted", "fret": 0, "finger": 1 }, { "state": "fretted", "fret": 25, "finger": 2 }, { "state": "open" }, { "state": "muted" }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [{ "chord": 0, "message": "Frets must be between 1 and 24." }] }
+    },
+    {
+      "name": "fingers out of range are reported once",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "bass",
+              "baseName": "Bad",
+              "strings": [{ "state": "fretted", "fret": 3, "finger": 0 }, { "state": "fretted", "fret": 5, "finger": 5 }, { "state": "open" }, { "state": "muted" }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [{ "chord": 0, "message": "Fingers must be between 1 and 4." }] }
+    },
+    {
+      "name": "note line starting with a heading",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "Am7",
+              "strings": [{ "state": "muted" }, { "state": "open" }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": [],
+              "note": "Verse\r\n## Bridge\n## Coda"
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [{ "chord": 0, "message": "Note lines cannot start with \"## \"." }] }
+    },
+    {
+      "name": "note lines that are not headings",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "Am7",
+              "strings": [{ "state": "muted" }, { "state": "open" }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": [],
+              "note": "# Verse\n##Bridge\n ## Coda\n### Outro"
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [] }
+    },
+    {
+      "name": "fifty tags after removing duplicates",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "Am7",
+              "strings": [{ "state": "muted" }, { "state": "open" }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": ["t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9", "t10", "t11", "t12", "t13", "t14", "t15", "t16", "t17", "t18", "t19", "t20", "t21", "t22", "t23", "t24", "t25", "t26", "t27", "t28", "t29", "t30", "t31", "t32", "t33", "t34", "t35", "t36", "t37", "t38", "t39", "t40", "t41", "t42", "t43", "t44", "t45", "t46", "t47", "t48", "t49", "t50", "T1", " t2 ", ""],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [] }
+    },
+    {
+      "name": "more than fifty tags",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "Am7",
+              "strings": [{ "state": "muted" }, { "state": "open" }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": ["t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "t9", "t10", "t11", "t12", "t13", "t14", "t15", "t16", "t17", "t18", "t19", "t20", "t21", "t22", "t23", "t24", "t25", "t26", "t27", "t28", "t29", "t30", "t31", "t32", "t33", "t34", "t35", "t36", "t37", "t38", "t39", "t40", "t41", "t42", "t43", "t44", "t45", "t46", "t47", "t48", "t49", "t50", "t51"],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [{ "chord": 0, "message": "Use at most 50 tags." }] }
+    },
+    {
+      "name": "tag of 80 characters after trimming",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "Am7",
+              "strings": [{ "state": "muted" }, { "state": "open" }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": ["  abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghij  "],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [] }
+    },
+    {
+      "name": "tag of 81 characters",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "Am7",
+              "strings": [{ "state": "muted" }, { "state": "open" }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": ["abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijk"],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [{ "chord": 0, "message": "Tags must be at most 80 characters." }] }
+    },
+    {
+      "name": "tags with a comma or a line break",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "Am7",
+              "strings": [{ "state": "muted" }, { "state": "open" }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": ["jazz, swing", "open\nvoicing"],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": { "errors": [{ "chord": 0, "message": "Tags cannot contain commas or line breaks." }] }
+    },
+    {
+      "name": "errors are listed in order",
+      "input": {
+        "sequence": {
+          "title": "A\r\nB",
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "Am7",
+              "strings": [{ "state": "muted" }, { "state": "open" }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": [],
+              "note": ""
+            },
+            {
+              "instrument": "bass",
+              "baseName": "",
+              "strings": [{ "state": "fretted", "fret": 30, "finger": 9 }, { "state": "muted" }, { "state": "muted" }],
+              "tags": ["a,b"],
+              "note": "## Bridge"
+            },
+            {
+              "instrument": "guitar",
+              "baseName": "abcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijabcdefghijk",
+              "strings": [{ "state": "muted" }, { "state": "open" }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        }
+      },
+      "expected": {
+        "errors": [
+          { "chord": null, "message": "Title must be a single line." },
+          { "chord": 1, "message": "Enter a chord name." },
+          { "chord": 1, "message": "bass requires 4 strings." },
+          { "chord": 1, "message": "Select at least three non-muted strings." },
+          { "chord": 1, "message": "Frets must be between 1 and 24." },
+          { "chord": 1, "message": "Fingers must be between 1 and 4." },
+          { "chord": 1, "message": "Note lines cannot start with \"## \"." },
+          { "chord": 1, "message": "Tags cannot contain commas or line breaks." },
+          { "chord": 2, "message": "Chord names must be at most 80 characters." }
+        ]
+      }
+    }
+  ]
+}

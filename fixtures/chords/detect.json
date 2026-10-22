@@ -1,0 +1,30 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Detecting a chord sequence: the whole note text has a front-matter block whose first type line has the value chords. expected.chords is true or false.",
+  "cases": [
+    { "name": "type after id", "input": { "text": "---\nid: k7f3q2xa\ntype: chords\n---\n# Autumn Leaves\n" }, "expected": { "chords": true } },
+    { "name": "type before id", "input": { "text": "---\ntype: chords\nid: k7f3q2xa\n---\n" }, "expected": { "chords": true } },
+    { "name": "type only", "input": { "text": "---\ntype: chords\n---\n" }, "expected": { "chords": true } },
+    { "name": "closing fence at end of file", "input": { "text": "---\ntype: chords\n---" }, "expected": { "chords": true } },
+    { "name": "CRLF line endings", "input": { "text": "---\r\nid: k7f3q2xa\r\ntype: chords\r\n---\r\n" }, "expected": { "chords": true } },
+    { "name": "double-quoted value", "input": { "text": "---\ntype: \"chords\"\n---\n" }, "expected": { "chords": true } },
+    { "name": "single-quoted value", "input": { "text": "---\ntype: 'chords'\n---\n" }, "expected": { "chords": true } },
+    { "name": "spaces and tabs around the value", "input": { "text": "---\ntype:\t chords \t\n---\n" }, "expected": { "chords": true } },
+    { "name": "opening fence with trailing spaces", "input": { "text": "---  \ntype: chords\n---\n" }, "expected": { "chords": true } },
+    { "name": "plain note", "input": { "text": "---\nid: k7f3q2xa\n---\n# Autumn Leaves\n" }, "expected": { "chords": false } },
+    { "name": "no front-matter", "input": { "text": "# Autumn Leaves\ntype: chords\n" }, "expected": { "chords": false } },
+    { "name": "type line in the body", "input": { "text": "---\nid: k7f3q2xa\n---\ntype: chords\n" }, "expected": { "chords": false } },
+    { "name": "front-matter not at the top", "input": { "text": "\n---\ntype: chords\n---\n" }, "expected": { "chords": false } },
+    { "name": "unterminated front-matter", "input": { "text": "---\ntype: chords\n# Autumn Leaves\n" }, "expected": { "chords": false } },
+    { "name": "other type value", "input": { "text": "---\ntype: note\n---\n" }, "expected": { "chords": false } },
+    { "name": "singular value", "input": { "text": "---\ntype: chord\n---\n" }, "expected": { "chords": false } },
+    { "name": "value is case-sensitive", "input": { "text": "---\ntype: Chords\n---\n" }, "expected": { "chords": false } },
+    { "name": "key is case-sensitive", "input": { "text": "---\nType: chords\n---\n" }, "expected": { "chords": false } },
+    { "name": "no space after the colon", "input": { "text": "---\ntype:chords\n---\n" }, "expected": { "chords": false } },
+    { "name": "indented key", "input": { "text": "---\nmeta:\n  type: chords\n---\n" }, "expected": { "chords": false } },
+    { "name": "mismatched quotes", "input": { "text": "---\ntype: \"chords'\n---\n" }, "expected": { "chords": false } },
+    { "name": "trailing comment", "input": { "text": "---\ntype: chords # song\n---\n" }, "expected": { "chords": false } },
+    { "name": "empty value", "input": { "text": "---\ntype:\n---\n" }, "expected": { "chords": false } },
+    { "name": "only the first type line counts", "input": { "text": "---\ntype: note\ntype: chords\n---\n" }, "expected": { "chords": false } }
+  ]
+}
