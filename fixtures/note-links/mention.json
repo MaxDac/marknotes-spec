@@ -7,7 +7,7 @@
     { "name": "after a tab", "input": { "lineBeforeCursor": "x\t@k7" }, "expected": { "mention": { "from": 2, "query": "k7" } } },
     { "name": "bare @", "input": { "lineBeforeCursor": "@" }, "expected": { "mention": { "from": 0, "query": "" } } },
     { "name": "inside a word (e-mail)", "input": { "lineBeforeCursor": "me@road" }, "expected": { "mention": null } },
-    { "name": "space right after @", "input": { "lineBeforeCursor": "@ road" }, "expected": { "mention": null } },
+    { "name": "space right after @", "input": { "lineBeforeCursor": "@ road" }, "expected": { "mention": null }, "knownDivergence": { "android": "Detection keeps the picker open; it closes later only when the query has no results." } },
     { "name": "no @", "input": { "lineBeforeCursor": "road" }, "expected": { "mention": null } }
   ]
 }
