@@ -184,10 +184,11 @@ The body is the text after the front-matter block. Lines are separated by `\n`; 
 removed, so CRLF files parse the same. Line numbers are 1-based and count from the first line of the body.
 
 - **Title** (optional): the first non-blank line may be `# <title>`.
-- **Chord heading**: `## <baseName> (<instrument>)`. Every line starting with `## ` is a chord heading. The
-  instrument is the last `(guitar)` or `(bass)` on the line (lowercase), optionally followed by spaces or tabs;
-  everything between `## ` and it is the name, so `## C (add9) (guitar)` is named `C (add9)` and `## Am7(bass)` is
-  accepted. Sequence numbers are not written in the file; they are [derived](#display-names).
+- **Chord heading**: `## <baseName> (<instrument>)`. Every line starting with `##` and a space is a chord heading.
+  The instrument is the last `(guitar)` or `(bass)` on the line (lowercase), optionally followed by spaces or tabs;
+  everything between `##` plus its space and the instrument is the name, so `## C (add9) (guitar)` is named
+  `C (add9)` and `## Am7(bass)` is accepted. Sequence numbers are not written in the file; they are
+  [derived](#display-names).
 - **Frets**: the next non-blank line after the heading must start with `frets:`. The rest of the line is split on
   runs of spaces and tabs into one token per string, lowest string first: `x` (muted), `0` (open) or
   `<fret>/<finger>` (fretted), where `<fret>` is one or two digits and `<finger>` one digit. An empty `frets:` line
@@ -206,7 +207,7 @@ Parsing returns either the normalised sequence or the first error, with its line
 | Situation | Line | Message |
 | --- | --- | --- |
 | A non-blank line before the first chord that is not the title | That line | `Expected a chord heading.` |
-| A line starting with `## ` without `(guitar)` or `(bass)` at the end | That line | `Invalid chord heading.` |
+| A line starting with `##` and a space, without `(guitar)` or `(bass)` at the end | That line | `Invalid chord heading.` |
 | No `frets:` line after a heading | The heading | `Chord has no frets line.` |
 | A frets token that is not `x`, `0` or `<fret>/<finger>` | The frets line | `Invalid string "<token>".` |
 
@@ -222,8 +223,9 @@ bytes. Values are normalised first.
 2. For each chord, after one blank line if anything was written before it:
    1. `## <baseName> (<instrument>)`;
    2. `frets:`, then each token preceded by one space (`x`, `0` or `<fret>/<finger>`, without leading zeros);
-   3. if there are tags, `tags: ` and the tags joined with `, `. Without tags the line is omitted, except that a bare
-      `tags:` line is written when the note's first line starts with `tags:`, so that it is not read back as tags;
+   3. if there are tags, `tags:`, one space and the tags joined with a comma and a space (`a, b`). Without tags
+      the line is omitted, except that a bare `tags:` line is written when the note's first line starts with
+      `tags:`, so that it is not read back as tags;
    4. if the note is not empty, one blank line and then the note lines.
 3. Every line, including the last, ends with the line ending. An empty sequence is the empty string.
 
@@ -247,7 +249,7 @@ at most once per chord and carries the chord's 0-based index (`null` for the tit
 | A fret is outside 1-24 | `Frets must be between 1 and 24.` |
 | A finger is outside 1-4 | `Fingers must be between 1 and 4.` |
 | `note` is longer than 1000 | `Notes must be at most 1000 characters.` |
-| A note line starts with `## ` | `Note lines cannot start with "## ".` |
+| A note line starts with `##` and a space | `Note lines cannot start with "## ".` |
 | There are more than 50 tags | `Use at most 50 tags.` |
 | A tag is longer than 80 | `Tags must be at most 80 characters.` |
 | A tag contains `,`, `\n` or `\r` | `Tags cannot contain commas or line breaks.` |
