@@ -1,0 +1,219 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Writing the canonical body of a chord sequence. input.sequence is normalised first; input.lineEnding is \"\\n\" or \"\\r\\n\". expected.body is the exact text that follows the front-matter block.",
+  "cases": [
+    {
+      "name": "empty sequence",
+      "input": { "sequence": { "title": null, "chords": [] }, "lineEnding": "\n" },
+      "expected": { "body": "" }
+    },
+    {
+      "name": "title only",
+      "input": { "sequence": { "title": "Autumn Leaves", "chords": [] }, "lineEnding": "\n" },
+      "expected": { "body": "# Autumn Leaves\n" }
+    },
+    {
+      "name": "canonical example",
+      "input": {
+        "sequence": {
+          "title": "Autumn Leaves",
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "Am7",
+              "strings": [{ "state": "muted" }, { "state": "open" }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": ["jazz", "open"],
+              "note": "First chord of the A section.\nLet it ring."
+            },
+            {
+              "instrument": "bass",
+              "baseName": "Am7",
+              "strings": [{ "state": "fretted", "fret": 5, "finger": 1 }, { "state": "fretted", "fret": 7, "finger": 3 }, { "state": "fretted", "fret": 7, "finger": 4 }, { "state": "muted" }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        },
+        "lineEnding": "\n"
+      },
+      "expected": { "body": "# Autumn Leaves\n\n## Am7 (guitar)\nfrets: x 0 2/2 0 1/1 0\ntags: jazz, open\n\nFirst chord of the A section.\nLet it ring.\n\n## Am7 (bass)\nfrets: 5/1 7/3 7/4 x\n" }
+    },
+    {
+      "name": "no title",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "C",
+              "strings": [{ "state": "muted" }, { "state": "fretted", "fret": 3, "finger": 3 }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        },
+        "lineEnding": "\n"
+      },
+      "expected": { "body": "## C (guitar)\nfrets: x 3/3 2/2 0 1/1 0\n" }
+    },
+    {
+      "name": "empty title is omitted",
+      "input": {
+        "sequence": {
+          "title": " \t ",
+          "chords": [
+            {
+              "instrument": "bass",
+              "baseName": "G",
+              "strings": [{ "state": "fretted", "fret": 3, "finger": 2 }, { "state": "fretted", "fret": 5, "finger": 4 }, { "state": "fretted", "fret": 5, "finger": 4 }, { "state": "muted" }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        },
+        "lineEnding": "\n"
+      },
+      "expected": { "body": "## G (bass)\nfrets: 3/2 5/4 5/4 x\n" }
+    },
+    {
+      "name": "chords are separated by one blank line",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "bass",
+              "baseName": "G",
+              "strings": [{ "state": "fretted", "fret": 3, "finger": 2 }, { "state": "fretted", "fret": 5, "finger": 4 }, { "state": "fretted", "fret": 5, "finger": 4 }, { "state": "muted" }],
+              "tags": ["root"],
+              "note": ""
+            },
+            {
+              "instrument": "guitar",
+              "baseName": "G",
+              "strings": [{ "state": "fretted", "fret": 3, "finger": 2 }, { "state": "fretted", "fret": 2, "finger": 1 }, { "state": "open" }, { "state": "open" }, { "state": "open" }, { "state": "fretted", "fret": 3, "finger": 3 }],
+              "tags": [],
+              "note": "Strum."
+            },
+            {
+              "instrument": "bass",
+              "baseName": "D",
+              "strings": [{ "state": "muted" }, { "state": "fretted", "fret": 5, "finger": 1 }, { "state": "fretted", "fret": 7, "finger": 3 }, { "state": "fretted", "fret": 7, "finger": 4 }],
+              "tags": [],
+              "note": ""
+            }
+          ]
+        },
+        "lineEnding": "\n"
+      },
+      "expected": { "body": "## G (bass)\nfrets: 3/2 5/4 5/4 x\ntags: root\n\n## G (guitar)\nfrets: 3/2 2/1 0 0 0 3/3\n\nStrum.\n\n## D (bass)\nfrets: x 5/1 7/3 7/4\n" }
+    },
+    {
+      "name": "CRLF line ending",
+      "input": {
+        "sequence": {
+          "title": "Song",
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "C",
+              "strings": [{ "state": "muted" }, { "state": "fretted", "fret": 3, "finger": 3 }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": ["pop"],
+              "note": "Line one\nLine two\r\nLine three"
+            }
+          ]
+        },
+        "lineEnding": "\r\n"
+      },
+      "expected": { "body": "# Song\r\n\r\n## C (guitar)\r\nfrets: x 3/3 2/2 0 1/1 0\r\ntags: pop\r\n\r\nLine one\r\nLine two\r\nLine three\r\n" }
+    },
+    {
+      "name": "values are normalised",
+      "input": {
+        "sequence": {
+          "title": "  Song  ",
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "  C \t  major ",
+              "strings": [{ "state": "muted" }, { "state": "fretted", "fret": 3, "finger": 3 }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": ["  a ", "A", "", " ", "b"],
+              "note": "\n\n  Note text \n\n"
+            }
+          ]
+        },
+        "lineEnding": "\n"
+      },
+      "expected": { "body": "# Song\n\n## C major (guitar)\nfrets: x 3/3 2/2 0 1/1 0\ntags: a, b\n\nNote text\n" }
+    },
+    {
+      "name": "note keeps inner blank lines",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "C",
+              "strings": [{ "state": "muted" }, { "state": "fretted", "fret": 3, "finger": 3 }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": [],
+              "note": "Intro\n\n  indented\n# heading"
+            }
+          ]
+        },
+        "lineEnding": "\n"
+      },
+      "expected": { "body": "## C (guitar)\nfrets: x 3/3 2/2 0 1/1 0\n\nIntro\n\n  indented\n# heading\n" }
+    },
+    {
+      "name": "bare tags line protects a note starting with tags:",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "C",
+              "strings": [{ "state": "muted" }, { "state": "fretted", "fret": 3, "finger": 3 }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": [],
+              "note": "tags: are written here"
+            }
+          ]
+        },
+        "lineEnding": "\n"
+      },
+      "expected": { "body": "## C (guitar)\nfrets: x 3/3 2/2 0 1/1 0\ntags:\n\ntags: are written here\n" }
+    },
+    {
+      "name": "no bare tags line when there are tags",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [
+            {
+              "instrument": "guitar",
+              "baseName": "C",
+              "strings": [{ "state": "muted" }, { "state": "fretted", "fret": 3, "finger": 3 }, { "state": "fretted", "fret": 2, "finger": 2 }, { "state": "open" }, { "state": "fretted", "fret": 1, "finger": 1 }, { "state": "open" }],
+              "tags": ["pop"],
+              "note": "tags: are written here"
+            }
+          ]
+        },
+        "lineEnding": "\n"
+      },
+      "expected": { "body": "## C (guitar)\nfrets: x 3/3 2/2 0 1/1 0\ntags: pop\n\ntags: are written here\n" }
+    },
+    {
+      "name": "no strings writes a bare frets key",
+      "input": {
+        "sequence": {
+          "title": null,
+          "chords": [{ "instrument": "bass", "baseName": "E", "strings": [], "tags": [], "note": "" }]
+        },
+        "lineEnding": "\n"
+      },
+      "expected": { "body": "## E (bass)\nfrets:\n" }
+    }
+  ]
+}

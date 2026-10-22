@@ -1,0 +1,74 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Display names of the chords in a sequence: <sequence> <baseName>, where sequence counts 1, 2, 3... in file order the chords with the same instrument and the same lowercased, whitespace-normalised baseName. expected.displayNames has one entry per input chord.",
+  "cases": [
+    { "name": "no chords", "input": { "chords": [] }, "expected": { "displayNames": [] } },
+    { "name": "single chord", "input": { "chords": [{ "instrument": "guitar", "baseName": "Am7" }] }, "expected": { "displayNames": ["1 Am7"] } },
+    {
+      "name": "repeated names count up",
+      "input": {
+        "chords": [
+          { "instrument": "guitar", "baseName": "Am7" },
+          { "instrument": "guitar", "baseName": "C" },
+          { "instrument": "guitar", "baseName": "Am7" },
+          { "instrument": "guitar", "baseName": "Am7" },
+          { "instrument": "guitar", "baseName": "C" }
+        ]
+      },
+      "expected": { "displayNames": ["1 Am7", "1 C", "2 Am7", "3 Am7", "2 C"] }
+    },
+    {
+      "name": "instruments are counted separately",
+      "input": {
+        "chords": [
+          { "instrument": "guitar", "baseName": "Am7" },
+          { "instrument": "bass", "baseName": "Am7" },
+          { "instrument": "guitar", "baseName": "Am7" },
+          { "instrument": "bass", "baseName": "Am7" }
+        ]
+      },
+      "expected": { "displayNames": ["1 Am7", "1 Am7", "2 Am7", "2 Am7"] }
+    },
+    {
+      "name": "names are compared case-insensitively and keep their spelling",
+      "input": {
+        "chords": [
+          { "instrument": "guitar", "baseName": "Am7" },
+          { "instrument": "guitar", "baseName": "AM7" },
+          { "instrument": "guitar", "baseName": "am7" }
+        ]
+      },
+      "expected": { "displayNames": ["1 Am7", "2 AM7", "3 am7"] }
+    },
+    {
+      "name": "whitespace is normalised",
+      "input": {
+        "chords": [
+          { "instrument": "bass", "baseName": "  C   maj " },
+          { "instrument": "bass", "baseName": "C\tmaj" }
+        ]
+      },
+      "expected": { "displayNames": ["1 C maj", "2 C maj"] }
+    },
+    {
+      "name": "non-ASCII letters are lowercased",
+      "input": {
+        "chords": [
+          { "instrument": "guitar", "baseName": "Émaj" },
+          { "instrument": "guitar", "baseName": "émaj" }
+        ]
+      },
+      "expected": { "displayNames": ["1 Émaj", "2 émaj"] }
+    },
+    {
+      "name": "no-break space is not whitespace",
+      "input": {
+        "chords": [
+          { "instrument": "guitar", "baseName": "C\u00a0maj" },
+          { "instrument": "guitar", "baseName": "C maj" }
+        ]
+      },
+      "expected": { "displayNames": ["1 C\u00a0maj", "1 C maj"] }
+    }
+  ]
+}
