@@ -12,7 +12,6 @@
       "input": { "frontMatter": "---\nid: k7f3q2xa\n---", "body": "Hello" },
       "expected": { "text": "---\nid: k7f3q2xa\n---\nHello" },
       "knownDivergence": {
-        "android": "Concatenates header and body, giving ---Hello.",
         "desktop": "Concatenates header and body, giving ---Hello."
       }
     },
@@ -21,7 +20,6 @@
       "input": { "frontMatter": "---\r\nid: k7f3q2xa\r\n---", "body": "Hello\r\n" },
       "expected": { "text": "---\r\nid: k7f3q2xa\r\n---\r\nHello\r\n" },
       "knownDivergence": {
-        "android": "Concatenates header and body, giving ---Hello.",
         "desktop": "Concatenates header and body, giving ---Hello."
       }
     },

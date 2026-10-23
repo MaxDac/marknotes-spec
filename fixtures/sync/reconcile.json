@@ -211,6 +211,9 @@
         "winner": "local",
         "copyPath": "a (conflicted copy).md",
         "copyText": "---\nid: m4n5p6q7\n---\nremote\n"
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -238,6 +241,9 @@
         "winner": "local",
         "copyPath": "a (conflicted copy).md",
         "copyText": "---\nid: m4n5p6q7\ntitle: T\n---\nremote\n"
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -265,6 +271,9 @@
         "winner": "local",
         "copyPath": "a (conflicted copy).md",
         "copyText": "---\nid: m4n5p6q7\n---\nremote\n"
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix."
       }
     },
     {
