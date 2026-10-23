@@ -11,6 +11,10 @@ and WebAssembly bindings), which runs the sync fixtures here.
 
 All three read and write the same notes folder and sync it through the same drives, so they must agree on the format.
 
+All MarkNotes repositories carry the `marknotes` topic (list them with `gh repo list MaxDac --topic marknotes`),
+and their issues and pull requests are tracked together on the
+[MarkNotes project](https://github.com/users/MaxDac/projects/16).
+
 | Path | Content |
 | --- | --- |
 | [note-format.md](note-format.md) | The canonical note, link, attachment, sync, manifest, merge and chord-sequence format |

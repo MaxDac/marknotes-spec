@@ -16,6 +16,10 @@ Each app pins this repository as a git submodule at `spec/` and runs the fixture
 `Parity (marknotes-spec fixtures)`. marknotes-sync pins it too and must pass every sync, manifest and merge case;
 change the sync rules there in the same round as here.
 
+All of them carry the `marknotes` topic (`gh repo list MaxDac --topic marknotes`) and are linked to the
+[MarkNotes project](https://github.com/users/MaxDac/projects/16). Add cross-repository issues and pull requests to it
+(`gh project item-add 16 --owner MaxDac --url <url>`) and set its `Repo area` field.
+
 ## Rules
 
 - Change `note-format.md`, the matching fixtures and `features.md` in the same pull request.
