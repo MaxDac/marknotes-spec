@@ -88,7 +88,8 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
 28. **marknotes-sync 0.1.0 on Android** (`sync/plan`, `sync/reconcile`, `manifest/parse`): Android runs these
     fixtures against its marknotes-sync binding, which predates the case-insensitive paths, folder survivor and
     folder-record rules, the conflicted-copy id and the `"files": null` rejection
-    ([#8](https://github.com/MaxDac/marknotes-spec/issues/8), [#14](https://github.com/MaxDac/marknotes-spec/issues/14),
+    ([#8](https://github.com/MaxDac/marknotes-spec/issues/8),
+    [#14](https://github.com/MaxDac/marknotes-spec/issues/14),
     [#19](https://github.com/MaxDac/marknotes-spec/issues/19), [#20](https://github.com/MaxDac/marknotes-spec/issues/20),
     [MaxDac/marknotes-sync#8](https://github.com/MaxDac/marknotes-sync/issues/8)). Fixed when Android picks up the
     marknotes-sync release with these fixes.
