@@ -65,8 +65,8 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     The three-way merge now comes from marknotes-sync.
 18. Resolved: all three apps implement chord sequences and run `fixtures/chords/*`.
 19. **Re-attaching front-matter** (`front-matter/with-body`,
-    [#21](https://github.com/MaxDac/marknotes-spec/issues/21)): all three apps concatenate the header and the body, so
-    a header without a final line break gives `---Hello`.
+    [#21](https://github.com/MaxDac/marknotes-spec/issues/21)):     Android and Desktop concatenate the header and the body, so
+        a header without a final line break gives `---Hello`.
 20. **Compare before write** ([#9](https://github.com/MaxDac/marknotes-spec/issues/9)): no app re-hashes a local file
     before writing or deleting it during a sync, and uploads record the hash from the listing.
 21. **Conditional deletes** ([#10](https://github.com/MaxDac/marknotes-spec/issues/10)): Android and Desktop delete
