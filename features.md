@@ -64,9 +64,7 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
 17. **Missing function on Web**: no note id validator (`note-ids/validation`); the Web parity runner skips that file.
     The three-way merge now comes from marknotes-sync.
 18. Resolved: all three apps implement chord sequences and run `fixtures/chords/*`.
-19. **Re-attaching front-matter** (`front-matter/with-body`,
-    [#21](https://github.com/MaxDac/marknotes-spec/issues/21)): Desktop concatenates the header and the body, so a
-    header without a final line break gives `---Hello`.
+19. Resolved: all three apps insert the missing line break when re-attaching front-matter (`front-matter/with-body`).
 20. **Compare before write** ([#9](https://github.com/MaxDac/marknotes-spec/issues/9)): no app re-hashes a local file
     before writing or deleting it during a sync, and uploads record the hash from the listing.
 21. **Conditional deletes** ([#10](https://github.com/MaxDac/marknotes-spec/issues/10)): Android and Desktop delete
@@ -85,14 +83,14 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     in memory only, so they are forgotten on restart.
 27. **Media types** ([MaxDac/marknotes-electron#31](https://github.com/MaxDac/marknotes-electron/issues/31)): Desktop
     uploads attachments to Proton Drive as `text/markdown`.
-28. **marknotes-sync 0.1.0 on Android** (`sync/plan`, `sync/reconcile`, `manifest/parse`): Android runs these
-    fixtures against its marknotes-sync binding, which predates the case-insensitive paths, folder survivor and
+28. **marknotes-sync 0.1.0 on Android and Desktop** (`sync/plan`, `sync/reconcile`, `manifest/parse`): both apps run
+    these fixtures against marknotes-sync 0.1.0, which predates the case-insensitive paths, folder survivor and
     folder-record rules, the conflicted-copy id and the `"files": null` rejection
     ([#8](https://github.com/MaxDac/marknotes-spec/issues/8),
     [#14](https://github.com/MaxDac/marknotes-spec/issues/14),
     [#19](https://github.com/MaxDac/marknotes-spec/issues/19), [#20](https://github.com/MaxDac/marknotes-spec/issues/20),
-    [MaxDac/marknotes-sync#8](https://github.com/MaxDac/marknotes-sync/issues/8)). Fixed when Android picks up the
-    marknotes-sync release with these fixes.
+    [MaxDac/marknotes-sync#8](https://github.com/MaxDac/marknotes-sync/issues/8)).     Fixed when each app picks up
+        the marknotes-sync release with these fixes.
 
 Sync fixtures (`fixtures/sync/*`, `manifest/*`, `merge/*`) are run by marknotes-sync, which implements them for every
 app. App runners may map them to the library instead of running them again, but must still map the files. Apps keep

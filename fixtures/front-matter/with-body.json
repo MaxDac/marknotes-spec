@@ -10,18 +10,12 @@
     {
       "name": "header without a final line break gets one",
       "input": { "frontMatter": "---\nid: k7f3q2xa\n---", "body": "Hello" },
-      "expected": { "text": "---\nid: k7f3q2xa\n---\nHello" },
-      "knownDivergence": {
-        "desktop": "Concatenates header and body, giving ---Hello."
-      }
+      "expected": { "text": "---\nid: k7f3q2xa\n---\nHello" }
     },
     {
       "name": "CRLF header without a final line break gets CRLF",
       "input": { "frontMatter": "---\r\nid: k7f3q2xa\r\n---", "body": "Hello\r\n" },
-      "expected": { "text": "---\r\nid: k7f3q2xa\r\n---\r\nHello\r\n" },
-      "knownDivergence": {
-        "desktop": "Concatenates header and body, giving ---Hello."
-      }
+      "expected": { "text": "---\r\nid: k7f3q2xa\r\n---\r\nHello\r\n" }
     },
     {
       "name": "header without a final line break and an empty body",
