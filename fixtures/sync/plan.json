@@ -1,0 +1,1518 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "The sync plan for one drive (see note-format.md, Sync algorithm). input is a SyncInput: local entries (sha256 for files), remote entries, the records saved at the last sync and the manifest text (or null). expected.actions is the exact ordered list of actions.",
+  "cases": [
+    {
+      "name": "nothing to do",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": []
+      }
+    },
+    {
+      "name": "new local note is uploaded",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [],
+        "records": [],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "uploadNew",
+            "path": "a.md"
+          }
+        ]
+      }
+    },
+    {
+      "name": "new drive note is downloaded",
+      "input": {
+        "local": [],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "download",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "local edit is uploaded as a revision",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "uploadRevision",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "drive edit is downloaded",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v2",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "download",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v2",
+              "modifiedMillis": 1000
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "drive file replaced with a new id is downloaded",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r9",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "download",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r9",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "edited on both sides is reconciled",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v2",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "reconcile",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v2",
+              "modifiedMillis": 1000
+            },
+            "hasRecord": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "never synced on both sides is reconciled without a base",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "reconcile",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "hasRecord": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "never synced but the manifest has the same content",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [],
+        "manifest": "{\"format\":1,\"app\":\"MarkNotes\",\"deviceId\":\"other\",\"updatedAt\":1,\"files\":{\"a.md\":{\"sha256\":\"h1\",\"version\":\"v1\",\"syncedAt\":1}}}"
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "record",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "sha256": "h1",
+            "updateBase": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "manifest for another version is not used",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [],
+        "manifest": "{\"format\":1,\"app\":\"MarkNotes\",\"deviceId\":\"other\",\"updatedAt\":1,\"files\":{\"a.md\":{\"sha256\":\"h1\",\"version\":\"v0\",\"syncedAt\":1}}}"
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "reconcile",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "hasRecord": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "unreadable manifest is ignored",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [],
+        "manifest": "not json"
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "reconcile",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "hasRecord": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "new drive revision with the content we have is only recorded",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v2",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": "{\"format\":1,\"app\":\"MarkNotes\",\"deviceId\":\"other\",\"updatedAt\":1,\"files\":{\"a.md\":{\"sha256\":\"h1\",\"version\":\"v2\",\"syncedAt\":1}}}"
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "record",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v2",
+              "modifiedMillis": 1000
+            },
+            "sha256": "h1",
+            "updateBase": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "same content re-uploaded while edited locally uploads the edit",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v2",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": "{\"format\":1,\"app\":\"MarkNotes\",\"deviceId\":\"other\",\"updatedAt\":1,\"files\":{\"a.md\":{\"sha256\":\"h1\",\"version\":\"v2\",\"syncedAt\":1}}}"
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "record",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v2",
+              "modifiedMillis": 1000
+            },
+            "sha256": "h1",
+            "updateBase": false
+          },
+          {
+            "kind": "uploadRevision",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v2",
+              "modifiedMillis": 1000
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "deleted locally is deleted on the drive",
+      "input": {
+        "local": [],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "deleteRemote",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "deleted on the drive is deleted locally",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "deleteLocal",
+            "path": "a.md"
+          }
+        ]
+      }
+    },
+    {
+      "name": "deleted locally but edited on the drive is downloaded",
+      "input": {
+        "local": [],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v2",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "download",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v2",
+              "modifiedMillis": 1000
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "deleted on the drive but edited locally is uploaded again",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          }
+        ],
+        "remote": [],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "uploadNew",
+            "path": "a.md"
+          }
+        ]
+      }
+    },
+    {
+      "name": "deleted on both sides is forgotten",
+      "input": {
+        "local": [],
+        "remote": [],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "forget",
+            "path": "a.md"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ignored entries",
+      "input": {
+        "local": [
+          {
+            "path": "notes.txt",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          },
+          {
+            "path": "attachments/readme.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          },
+          {
+            "path": ".hidden.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": " padded.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "Work//a.md",
+            "id": "r2",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "attachments/readme.md",
+            "id": "r3",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "photo.png",
+            "id": "r4",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [],
+        "manifest": null
+      },
+      "expected": {
+        "actions": []
+      }
+    },
+    {
+      "name": "file on one side and folder on the other",
+      "input": {
+        "local": [
+          {
+            "path": "x.md",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "y.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "x.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "y.md",
+            "id": "f1",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "x.md",
+            "message": "is a file on one side and a folder on the other"
+          },
+          {
+            "kind": "error",
+            "path": "y.md",
+            "message": "is a file on one side and a folder on the other"
+          }
+        ]
+      }
+    },
+    {
+      "name": "new local folders are created on the drive parents first",
+      "input": {
+        "local": [
+          {
+            "path": "A/B/n.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          },
+          {
+            "path": "A/B",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "A",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "Z",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          }
+        ],
+        "remote": [],
+        "records": [],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "createRemoteFolder",
+            "path": "A"
+          },
+          {
+            "kind": "createRemoteFolder",
+            "path": "Z"
+          },
+          {
+            "kind": "createRemoteFolder",
+            "path": "A/B"
+          },
+          {
+            "kind": "uploadNew",
+            "path": "A/B/n.md"
+          }
+        ]
+      }
+    },
+    {
+      "name": "new drive folder is created locally",
+      "input": {
+        "local": [],
+        "remote": [
+          {
+            "path": "A",
+            "id": "fA",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "createLocalFolder",
+            "path": "A",
+            "remoteId": "fA"
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder on both sides is recorded",
+      "input": {
+        "local": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          }
+        ],
+        "remote": [
+          {
+            "path": "A",
+            "id": "fA",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "recordFolder",
+            "path": "A",
+            "remoteId": "fA"
+          }
+        ]
+      }
+    },
+    {
+      "name": "recorded folder is not recorded again",
+      "input": {
+        "local": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          }
+        ],
+        "remote": [
+          {
+            "path": "A",
+            "id": "fA",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "remoteId": "fA",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": []
+      }
+    },
+    {
+      "name": "folder gone on both sides is forgotten",
+      "input": {
+        "local": [],
+        "remote": [],
+        "records": [
+          {
+            "path": "Old",
+            "isFolder": true,
+            "remoteId": "fO",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "forget",
+            "path": "Old"
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder deleted on the drive is deleted locally with its notes",
+      "input": {
+        "local": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "A/B",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "A/n.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          },
+          {
+            "path": "A/B/m.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          }
+        ],
+        "remote": [],
+        "records": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "remoteId": "fA",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "A/B",
+            "isFolder": true,
+            "remoteId": "fB",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "A/n.md",
+            "isFolder": false,
+            "remoteId": "rn",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          },
+          {
+            "path": "A/B/m.md",
+            "isFolder": false,
+            "remoteId": "rm",
+            "remoteVersion": "v1",
+            "localHash": "h2",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "forget",
+            "path": "A/B/m.md"
+          },
+          {
+            "kind": "forget",
+            "path": "A/n.md"
+          },
+          {
+            "kind": "deleteLocalFolder",
+            "path": "A",
+            "forget": [
+              "A",
+              "A/B",
+              "A/B/m.md",
+              "A/n.md"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder deleted on the drive keeps local edits",
+      "input": {
+        "local": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "A/B",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "A/n.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h9"
+          },
+          {
+            "path": "A/B/m.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          }
+        ],
+        "remote": [],
+        "records": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "remoteId": "fA",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "A/B",
+            "isFolder": true,
+            "remoteId": "fB",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "A/n.md",
+            "isFolder": false,
+            "remoteId": "rn",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          },
+          {
+            "path": "A/B/m.md",
+            "isFolder": false,
+            "remoteId": "rm",
+            "remoteVersion": "v1",
+            "localHash": "h2",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "createRemoteFolder",
+            "path": "A"
+          },
+          {
+            "kind": "forget",
+            "path": "A/B/m.md"
+          },
+          {
+            "kind": "uploadNew",
+            "path": "A/n.md"
+          },
+          {
+            "kind": "deleteLocalFolder",
+            "path": "A/B",
+            "forget": [
+              "A/B",
+              "A/B/m.md"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder deleted locally is deleted on the drive",
+      "input": {
+        "local": [],
+        "remote": [
+          {
+            "path": "A",
+            "id": "fA",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "A/n.md",
+            "id": "rn",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "remoteId": "fA",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "A/n.md",
+            "isFolder": false,
+            "remoteId": "rn",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "forget",
+            "path": "A/n.md"
+          },
+          {
+            "kind": "deleteRemoteFolder",
+            "path": "A",
+            "remote": {
+              "path": "A",
+              "id": "fA",
+              "isFolder": true,
+              "version": "",
+              "modifiedMillis": 1000
+            },
+            "forget": [
+              "A",
+              "A/n.md"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "folder deleted locally keeps drive edits",
+      "input": {
+        "local": [],
+        "remote": [
+          {
+            "path": "A",
+            "id": "fA",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "A/n.md",
+            "id": "rn",
+            "isFolder": false,
+            "version": "v2",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "remoteId": "fA",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "A/n.md",
+            "isFolder": false,
+            "remoteId": "rn",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "createLocalFolder",
+            "path": "A",
+            "remoteId": "fA"
+          },
+          {
+            "kind": "download",
+            "path": "A/n.md",
+            "remote": {
+              "path": "A/n.md",
+              "id": "rn",
+              "isFolder": false,
+              "version": "v2",
+              "modifiedMillis": 1000
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "attachment on both sides is recorded, never reconciled",
+      "input": {
+        "local": [
+          {
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "remote": [
+          {
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "id": "ra",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "record",
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "remote": {
+              "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+              "id": "ra",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "updateBase": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "attachment with a new drive revision is only recorded",
+      "input": {
+        "local": [
+          {
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "remote": [
+          {
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "id": "ra",
+            "isFolder": false,
+            "version": "v2",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "isFolder": false,
+            "remoteId": "ra",
+            "remoteVersion": "v1",
+            "localHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "record",
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "remote": {
+              "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+              "id": "ra",
+              "isFolder": false,
+              "version": "v2",
+              "modifiedMillis": 1000
+            },
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "updateBase": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "new local attachment is uploaded",
+      "input": {
+        "local": [
+          {
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "remote": [],
+        "records": [],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "uploadNew",
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png"
+          }
+        ]
+      }
+    },
+    {
+      "name": "attachment deleted locally is deleted on the drive",
+      "input": {
+        "local": [],
+        "remote": [
+          {
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "id": "ra",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "isFolder": false,
+            "remoteId": "ra",
+            "remoteVersion": "v1",
+            "localHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "deleteRemote",
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "remote": {
+              "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+              "id": "ra",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "files are processed in code-unit order",
+      "input": {
+        "local": [
+          {
+            "path": "b.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          },
+          {
+            "path": "B.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          },
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [],
+        "records": [],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "uploadNew",
+            "path": "B.md"
+          },
+          {
+            "kind": "uploadNew",
+            "path": "a.md"
+          },
+          {
+            "kind": "uploadNew",
+            "path": "b.md"
+          }
+        ]
+      }
+    }
+  ]
+}

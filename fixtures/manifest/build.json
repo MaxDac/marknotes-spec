@@ -1,0 +1,101 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "The manifest written after a sync, built from the records (folders excluded). expected.json is null when the files (paths, sha256 and version) are the same as in input.previous, so nothing is written.",
+  "cases": [
+    {
+      "name": "no previous manifest",
+      "input": {
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 10
+          },
+          {
+            "path": "F",
+            "isFolder": true,
+            "remoteId": "f1",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          }
+        ],
+        "deviceId": "dev",
+        "nowMillis": 20,
+        "previous": null
+      },
+      "expected": {
+        "json": "{\"format\":1,\"app\":\"MarkNotes\",\"deviceId\":\"dev\",\"updatedAt\":20,\"files\":{\"a.md\":{\"sha256\":\"h1\",\"version\":\"v1\",\"syncedAt\":10}}}"
+      }
+    },
+    {
+      "name": "same files: nothing to write",
+      "input": {
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 99
+          }
+        ],
+        "deviceId": "dev",
+        "nowMillis": 20,
+        "previous": "{\"format\":1,\"app\":\"MarkNotes\",\"deviceId\":\"other\",\"updatedAt\":5,\"files\":{\"a.md\":{\"sha256\":\"h1\",\"version\":\"v1\",\"syncedAt\":10}}}"
+      },
+      "expected": {
+        "json": null
+      }
+    },
+    {
+      "name": "new version is written",
+      "input": {
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v2",
+            "localHash": "h1",
+            "syncedAt": 10
+          }
+        ],
+        "deviceId": "dev",
+        "nowMillis": 20,
+        "previous": "{\"format\":1,\"app\":\"MarkNotes\",\"deviceId\":\"other\",\"updatedAt\":5,\"files\":{\"a.md\":{\"sha256\":\"h1\",\"version\":\"v1\",\"syncedAt\":10}}}"
+      },
+      "expected": {
+        "json": "{\"format\":1,\"app\":\"MarkNotes\",\"deviceId\":\"dev\",\"updatedAt\":20,\"files\":{\"a.md\":{\"sha256\":\"h1\",\"version\":\"v2\",\"syncedAt\":10}}}"
+      }
+    },
+    {
+      "name": "removed file is written",
+      "input": {
+        "records": [],
+        "deviceId": "dev",
+        "nowMillis": 20,
+        "previous": "{\"format\":1,\"app\":\"MarkNotes\",\"deviceId\":\"other\",\"updatedAt\":5,\"files\":{\"a.md\":{\"sha256\":\"h1\",\"version\":\"v1\",\"syncedAt\":10}}}"
+      },
+      "expected": {
+        "json": "{\"format\":1,\"app\":\"MarkNotes\",\"deviceId\":\"dev\",\"updatedAt\":20,\"files\":{}}"
+      }
+    },
+    {
+      "name": "unreadable previous manifest is replaced",
+      "input": {
+        "records": [],
+        "deviceId": "dev",
+        "nowMillis": 20,
+        "previous": "{"
+      },
+      "expected": {
+        "json": "{\"format\":1,\"app\":\"MarkNotes\",\"deviceId\":\"dev\",\"updatedAt\":20,\"files\":{}}"
+      }
+    }
+  ]
+}

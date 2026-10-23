@@ -80,30 +80,101 @@ attachments/<sha256>.<ext>
 - **Settings → Clean unused images** scans every note for `attachments/…` references and deletes unreferenced
   attachment files locally; the deletion reaches the drives on the next sync. Cleanup never runs automatically.
 
-## Sync manifest
+## Sync
 
-Each linked drive has `.marknotes/manifest.json` in the synced folder, rewritten after each sync:
+The apps sync the notes folder with each linked drive using **one shared implementation**,
+[marknotes-sync](https://github.com/MaxDac/marknotes-sync): a Rust library used through Kotlin bindings on Android
+and a WebAssembly npm package on desktop and web. It decides what to do; each app only lists files, transfers them
+and stores what it needs. The rules below are what the library implements and the [`fixtures/sync/`](fixtures/sync/)
+fixtures check; an app must not add its own sync decisions.
+
+### What is synced
+
+- Notes (`.md`, any case) outside `attachments/`, [attachments](#images-attachments), and every folder.
+- Paths are relative, `/`-separated and already normalised: no empty segment, no segment that is `.`, `..`, starts with
+  `.` or has leading or trailing whitespace. Anything else (other files, hidden files and folders such as
+  `.marknotes/`, notes inside `attachments/`) is ignored on both sides.
+- A path that is a file on one side and a folder on the other is reported as an error and skipped.
+- Paths are ordered by UTF-16 code units, the order of JavaScript's default string sort.
+
+### Records and base copies
+
+After a path is synced the app saves a **record** for it, per drive: the drive id and version of the file, the
+SHA-256 of the local bytes and the time. For notes it also keeps a **base copy**, the text both sides agreed on, used
+by the three-way merge. Folders get a record with their drive id. Attachments get no base copy.
+
+### Sync plan
+
+Each sync of one drive lists the local tree (hashing every local file), the drive tree and
+`.marknotes/manifest.json`, and computes an ordered plan:
+
+1. **Folders**, parents first (by depth, then path):
+   - on both sides: recorded if not yet recorded with that drive id;
+   - only local: created on the drive if it was never synced or still holds something to sync, otherwise deleted
+     locally;
+   - only on the drive: created locally under the same rule, otherwise deleted on the drive;
+   - on neither: its record is dropped.
+2. **Files**, by path. A side has *changed* when there is no record, or when the local hash (or the drive id or
+   version) differs from the record.
+   - On both sides, never synced or changed on both: if the manifest lists this exact drive version with the local
+     hash the file is just recorded; otherwise notes are [reconciled](#conflicts) and attachments are recorded (their
+     name is their content).
+   - On both sides, only one changed: the change is uploaded as a new revision or downloaded. When the drive has a new
+     version whose manifest hash equals the recorded local hash (another device re-uploaded the same content), it is
+     only recorded.
+   - Only local: uploaded if never synced or changed; otherwise it was deleted on the drive, so it is deleted locally.
+   - Only on the drive: downloaded if never synced or changed; otherwise it was deleted locally, so it is deleted on
+     the drive.
+   - So a change wins over a deletion. A file whose deletion is part of a folder deletion (step 3) only has its record
+     dropped here.
+   - On neither side: its record is dropped.
+3. **Folder deletions**, top-most first: a folder deleted on one side, with nothing changed under it on the other, is
+   deleted with everything inside, and the records under it are dropped.
+
+A failed step is reported as `<path>: <message>` and the sync goes on with the next one.
+
+### Conflicts
+
+A note that changed on both sides is reconciled:
+
+1. Same text on both sides: it is recorded.
+2. A base copy exists and the line-based three-way merge is clean: the merged text is written locally, uploaded and
+   recorded.
+3. Otherwise **the newest version wins**, by modification time; on a tie the drive wins. The winner is kept at the
+   note's path on both sides. The other version is saved next to it as `<name> (conflicted copy).md` (or
+   `<name> (conflicted copy) <n>.md`, with the first free `n` from 2) with a new id, and synced as a new note.
+
+Every app tells the user about conflicted copies and offers to merge a copy back into its note: a three-way merge of
+the base, the note and the copy, where each conflicting region can be resolved as local, remote, both (local then
+remote) or neither. Unresolved regions are written with the markers `<<<<<<< this device`, `=======` and
+`>>>>>>> drive`.
+
+### Sync manifest
+
+Each linked drive has `.marknotes/manifest.json` in the synced folder:
 
 ```json
 {"format":1,"app":"MarkNotes","deviceId":"…","updatedAt":1700000000000,"files":{"Work/Roadmap.md":{"sha256":"…","version":"…","syncedAt":1700000000000}}}
 ```
 
+- It lists every synced file (notes and attachments, not folders) with the drive version and the SHA-256 of its
+  content, so that a device can tell that a drive version holds content it already has.
 - Compact JSON, keys in the order shown, `files` sorted by path, entry keys `sha256`, `version`, `syncedAt`.
-- Readers reject a manifest whose `format` is greater than 1, or that lacks `deviceId`, `updatedAt` or any entry
-  field; unknown keys are ignored.
+- It is rewritten after a sync only when a file's path, hash or version changed.
+- Readers reject a manifest whose `format` is not a number up to 1, that lacks `deviceId` (a string) or `updatedAt`,
+  whose `files` is not an object, or with an entry lacking a string `sha256` or `version` or a numeric `syncedAt`;
+  a missing `files` means no files, and unknown keys are ignored. A rejected manifest is treated as absent.
 
-## Three-way merge
+### Several drives
 
-When a note changed both locally and on a drive, apps run a line-based diff3 merge against the last synced base
-(the web app does not merge yet; see [features.md](features.md)).
-Unresolved conflicts are written with the markers `<<<<<<< this device`, `=======` and `>>>>>>> drive`; a conflict can
-be resolved as local, remote, both (local then remote) or neither. When a merge is not possible the remote version is
-kept as `<name> (conflicted copy).md` next to the note.
+With more than one drive the app syncs them in order. When a drive brings local changes (downloads, local deletions,
+merges or conflicted copies), every other drive that is not already waiting is queued again so that it receives
+them, at most 3 passes per drive. A drive whose sync failed brings no changes.
 
-## Attachment sync
+### Attachment sync
 
-Files under `attachments/` sync to **every** linked drive, like notes, and are listed in the manifest with their
-`sha256` (the manifest stays `format: 1`). They are binary and immutable, because the name is the content hash:
+Attachments sync to **every** linked drive like notes and are listed in the manifest with their `sha256` (the manifest
+stays `format: 1`). They are binary and immutable, because the name is the content hash:
 
 - they are only uploaded, downloaded or deleted, never three-way merged, and they never produce conflicted copies;
 - no base copy is kept for them;

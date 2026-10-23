@@ -1,9 +1,12 @@
 {
   "$schema": "../../schemas/fixture-file.schema.json",
-  "description": "File name of the copy kept when a conflict is not merged: '<name> (conflicted copy).md' in the same folder. The copy gets a new id.",
+  "description": "File name of the copy kept for the losing version of a conflict: '<name> (conflicted copy).md' in the same folder, or '<name> (conflicted copy) <n>.md' with the first free n from 2 when that path is in input.existingPaths (optional, compared case-insensitively). The copy gets a new id.",
   "cases": [
     { "name": "root note", "input": { "path": "Roadmap.md" }, "expected": { "path": "Roadmap (conflicted copy).md" } },
     { "name": "note in a folder", "input": { "path": "Work/Roadmap.md" }, "expected": { "path": "Work/Roadmap (conflicted copy).md" } },
-    { "name": "dots in the name", "input": { "path": "v1.2 notes.md" }, "expected": { "path": "v1.2 notes (conflicted copy).md" } }
+    { "name": "dots in the name", "input": { "path": "v1.2 notes.md" }, "expected": { "path": "v1.2 notes (conflicted copy).md" } },
+    { "name": "copy name already taken", "input": { "path": "Work/Roadmap.md", "existingPaths": ["Work/Roadmap.md", "Work/Roadmap (conflicted copy).md"] }, "expected": { "path": "Work/Roadmap (conflicted copy) 2.md" } },
+    { "name": "taken names are compared case-insensitively", "input": { "path": "a.md", "existingPaths": ["A (Conflicted Copy).md", "a (conflicted copy) 2.md"] }, "expected": { "path": "a (conflicted copy) 3.md" } },
+    { "name": "same name in another folder is not taken", "input": { "path": "a.md", "existingPaths": ["Work/a (conflicted copy).md"] }, "expected": { "path": "a (conflicted copy).md" } }
   ]
 }

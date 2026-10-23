@@ -1,0 +1,194 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Order in which drives are synced. Call next() until it returns null; after the n-th call, report input.reports[n] (localChanges, failed) for the returned drive. expected.order lists the drives returned.",
+  "cases": [
+    {
+      "name": "each drive once when nothing changes",
+      "input": {
+        "driveIds": [
+          "a",
+          "b",
+          "c"
+        ],
+        "maxPasses": 3,
+        "reports": [
+          {
+            "localChanges": 0,
+            "failed": false
+          },
+          {
+            "localChanges": 0,
+            "failed": false
+          },
+          {
+            "localChanges": 0,
+            "failed": false
+          }
+        ]
+      },
+      "expected": {
+        "order": [
+          "a",
+          "b",
+          "c"
+        ]
+      }
+    },
+    {
+      "name": "changes from a later drive reach the earlier ones",
+      "input": {
+        "driveIds": [
+          "a",
+          "b"
+        ],
+        "maxPasses": 3,
+        "reports": [
+          {
+            "localChanges": 0,
+            "failed": false
+          },
+          {
+            "localChanges": 2,
+            "failed": false
+          },
+          {
+            "localChanges": 0,
+            "failed": false
+          }
+        ]
+      },
+      "expected": {
+        "order": [
+          "a",
+          "b",
+          "a"
+        ]
+      }
+    },
+    {
+      "name": "drives already waiting are not queued twice",
+      "input": {
+        "driveIds": [
+          "a",
+          "b",
+          "c"
+        ],
+        "maxPasses": 3,
+        "reports": [
+          {
+            "localChanges": 1,
+            "failed": false
+          },
+          {
+            "localChanges": 0,
+            "failed": false
+          },
+          {
+            "localChanges": 0,
+            "failed": false
+          }
+        ]
+      },
+      "expected": {
+        "order": [
+          "a",
+          "b",
+          "c"
+        ]
+      }
+    },
+    {
+      "name": "a failed drive brings no changes",
+      "input": {
+        "driveIds": [
+          "a",
+          "b"
+        ],
+        "maxPasses": 3,
+        "reports": [
+          {
+            "localChanges": 0,
+            "failed": false
+          },
+          {
+            "localChanges": 0,
+            "failed": true
+          }
+        ]
+      },
+      "expected": {
+        "order": [
+          "a",
+          "b"
+        ]
+      }
+    },
+    {
+      "name": "passes are bounded",
+      "input": {
+        "driveIds": [
+          "a",
+          "b"
+        ],
+        "maxPasses": 2,
+        "reports": [
+          {
+            "localChanges": 1,
+            "failed": false
+          },
+          {
+            "localChanges": 1,
+            "failed": false
+          },
+          {
+            "localChanges": 1,
+            "failed": false
+          },
+          {
+            "localChanges": 1,
+            "failed": false
+          }
+        ]
+      },
+      "expected": {
+        "order": [
+          "a",
+          "b",
+          "a",
+          "b"
+        ]
+      }
+    },
+    {
+      "name": "single drive",
+      "input": {
+        "driveIds": [
+          "a"
+        ],
+        "maxPasses": 3,
+        "reports": [
+          {
+            "localChanges": 5,
+            "failed": false
+          }
+        ]
+      },
+      "expected": {
+        "order": [
+          "a"
+        ]
+      }
+    },
+    {
+      "name": "no drives",
+      "input": {
+        "driveIds": [],
+        "maxPasses": 3,
+        "reports": []
+      },
+      "expected": {
+        "order": []
+      }
+    }
+  ]
+}

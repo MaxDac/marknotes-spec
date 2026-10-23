@@ -22,8 +22,10 @@ Apps: **Android** ([MaxDac/MarkNotes](https://github.com/MaxDac/MarkNotes)), **D
 | Dropbox sync | Yes | Yes | Yes | |
 | OneDrive sync | Yes | Yes | Yes | |
 | Proton Drive sync | Yes | Yes | No | Web: deferred to marknotes-web#1 |
-| Sync manifest (`.marknotes/manifest.json`) | Yes | Yes | Yes | Web parses it differently, see below |
-| Three-way merge with conflict choices | Yes | Yes | No | Web keeps the newest version and saves a conflicted copy |
+| Shared sync algorithm ([marknotes-sync](https://github.com/MaxDac/marknotes-sync)) | Yes | Yes | Yes | [note-format.md](note-format.md#sync); `fixtures/sync/*` |
+| Sync manifest (`.marknotes/manifest.json`) | Yes | Yes | Yes | |
+| Three-way merge, newest wins on conflict | Yes | Yes | Yes | The other version is saved as a conflicted copy |
+| Merge a conflicted copy back, with conflict choices | Yes | Yes | Yes | |
 | When sync runs | Launch and Sync now | Launch and Sync now | Page load and Sync now | No app polls in the background |
 | Attachment hash check on download | Not verified | Not verified | Yes | |
 
@@ -52,15 +54,15 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
 10. **MIME parameters** (`attachments/extension-for-type`): Android strips parameters such as `; charset=...`.
 11. **Hash check on download**: only Web is known to reject attachments whose bytes do not match their name.
 12. **Duplicate ids**: Android compares ids case-insensitively; Desktop and Web compare them exactly.
-13. **Manifest parsing on Web** (`manifest/parse`): Web does not require `deviceId` or `updatedAt`, requires a `files`
-    object, and rejects entries whose `sha256` is not 64 lowercase hex characters or whose path is not a syncable note
-    or attachment.
+13. Resolved: manifest parsing on Web now uses marknotes-sync.
 14. **MIME case** (`attachments/extension-for-type`): Web matches MIME types case-sensitively.
-15. **Manifest parsing on Android** (`manifest/parse`): Android accepts a numeric `version` and converts it to a
-    string.
+15. Resolved: manifest parsing on Android now uses marknotes-sync.
 16. **Mention detection on Android** (`note-links/mention`): Android opens the picker for `@` followed by a space and
     closes it only when the query has no results.
-17. **Missing functions on Web**: no note id validator (`note-ids/validation`) and no three-way merge (`merge/merge3`);
-    the Web parity runner skips those files.
+17. **Missing function on Web**: no note id validator (`note-ids/validation`); the Web parity runner skips that file.
+    The three-way merge now comes from marknotes-sync.
 18. **Chord sequences** (`fixtures/chords/*`): no app implements them yet. Until it does, its parity runner must map
     these files and skip them (like item 17), because runners fail on unmapped fixture files.
+
+Sync fixtures (`fixtures/sync/*`, `manifest/*`, `merge/*`) are run by marknotes-sync, which implements them for every
+app. App runners may map them to the library instead of running them again, but must still map the files.

@@ -15,15 +15,14 @@
     {
       "name": "missing files",
       "input": { "json": "{\"format\":1,\"deviceId\":\"d\",\"updatedAt\":1}" },
-      "expected": { "manifest": { "deviceId": "d", "updatedAt": 1, "files": {} } },
-      "knownDivergence": { "web": "Requires a files object." }
+      "expected": { "manifest": { "deviceId": "d", "updatedAt": 1, "files": {} } }
     },
     { "name": "newer format", "input": { "json": "{\"format\":2,\"deviceId\":\"d\",\"updatedAt\":1,\"files\":{}}" }, "expected": { "manifest": null } },
     { "name": "missing format", "input": { "json": "{\"deviceId\":\"d\",\"updatedAt\":1,\"files\":{}}" }, "expected": { "manifest": null } },
-    { "name": "missing deviceId", "input": { "json": "{\"format\":1,\"updatedAt\":1,\"files\":{}}" }, "expected": { "manifest": null }, "knownDivergence": { "web": "Does not require deviceId." } },
-    { "name": "missing updatedAt", "input": { "json": "{\"format\":1,\"deviceId\":\"d\",\"files\":{}}" }, "expected": { "manifest": null }, "knownDivergence": { "web": "Does not require updatedAt." } },
+    { "name": "missing deviceId", "input": { "json": "{\"format\":1,\"updatedAt\":1,\"files\":{}}" }, "expected": { "manifest": null } },
+    { "name": "missing updatedAt", "input": { "json": "{\"format\":1,\"deviceId\":\"d\",\"files\":{}}" }, "expected": { "manifest": null } },
     { "name": "entry without version", "input": { "json": "{\"format\":1,\"deviceId\":\"d\",\"updatedAt\":1,\"files\":{\"a.md\":{\"sha256\":\"x\",\"syncedAt\":2}}}" }, "expected": { "manifest": null } },
-    { "name": "numeric version", "input": { "json": "{\"format\":1,\"deviceId\":\"d\",\"updatedAt\":1,\"files\":{\"a.md\":{\"sha256\":\"x\",\"version\":1,\"syncedAt\":2}}}" }, "expected": { "manifest": null }, "knownDivergence": { "android": "Coerces a numeric version to a string instead of rejecting the manifest." } },
+    { "name": "numeric version", "input": { "json": "{\"format\":1,\"deviceId\":\"d\",\"updatedAt\":1,\"files\":{\"a.md\":{\"sha256\":\"x\",\"version\":1,\"syncedAt\":2}}}" }, "expected": { "manifest": null } },
     { "name": "not JSON", "input": { "json": "not json" }, "expected": { "manifest": null } }
   ]
 }
