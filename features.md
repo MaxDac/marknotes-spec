@@ -19,6 +19,7 @@ Apps: **Android** ([MaxDac/MarkNotes](https://github.com/MaxDac/MarkNotes)), **D
 | Images from file picker / toolbar | Yes | Yes | Yes | |
 | Image paste and drag-and-drop | No | Yes | Yes | Android: file picker and camera only |
 | Unused attachment clean-up | Yes | Yes | Yes | |
+| Import shared text and documents as Markdown | Yes | No | No | Android share sheet: text, HTML, `.txt`/`.md`/`.html`, `.docx`, PDF text, images. App-only, no format change |
 | Dropbox sync | Yes | Yes | Yes | |
 | OneDrive sync | Yes | Yes | Yes | |
 | Proton Drive sync | Yes | Yes | No | Web: deferred to marknotes-web#1 |
