@@ -43,7 +43,7 @@ Each file under `fixtures/<area>/<function>.json` has this shape:
 | File | Function under test |
 | --- | --- |
 | `note-ids/validation` | Is a string a valid note id |
-| `front-matter/read-id`, `with-id`, `split` | Read the id, set the id, split front-matter from the body |
+| `front-matter/read-id`, `with-id`, `split`, `with-body` | Read the id, set the id, split front-matter from the body, re-attach it on save |
 | `note-links/link-markdown`, `parse-href`, `mention`, `filter` | Insert a link, read a link target, detect `@`, filter the picker |
 | `attachments/extension-for-type`, `is-attachment-path`, `image-markdown`, `scaled-size`, `refs` | Image attachments |
 | `manifest/parse`, `serialize`, `build` | `.marknotes/manifest.json` |

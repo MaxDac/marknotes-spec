@@ -1,6 +1,6 @@
 {
   "$schema": "../../schemas/fixture-file.schema.json",
-  "description": "Resolving duplicate note ids (e.g. after copying a file outside the app). Notes sharing an id are sorted by path in code-point order; the first keeps the id and expected.reassigned lists the paths that get a new id, sorted.",
+  "description": "Resolving duplicate note ids (e.g. after copying a file outside the app). Notes sharing an id are sorted by path in UTF-16 code-unit order (JavaScript's default string sort); the first keeps the id and expected.reassigned lists the paths that get a new id, sorted.",
   "cases": [
     {
       "name": "no duplicates",
@@ -13,9 +13,14 @@
       "expected": { "reassigned": ["Work/Roadmap.md"] }
     },
     {
-      "name": "code-point order puts uppercase first",
+      "name": "uppercase sorts first",
       "input": { "notes": [{ "path": "a.md", "id": "k7f3q2xa" }, { "path": "B.md", "id": "k7f3q2xa" }, { "path": "c.md", "id": "k7f3q2xa" }] },
       "expected": { "reassigned": ["a.md", "c.md"] }
+    },
+    {
+      "name": "code-unit order puts astral characters before U+E000-U+FFFF",
+      "input": { "notes": [{ "path": "\uff21.md", "id": "k7f3q2xa" }, { "path": "\ud83d\ude00.md", "id": "k7f3q2xa" }] },
+      "expected": { "reassigned": ["\uff21.md"] }
     }
   ]
 }

@@ -36,10 +36,13 @@ Note body…
 - Any other front-matter keys are kept verbatim. When the block has an `id:` line it is replaced; otherwise `id` is
   added as the first key. The block keeps its line endings (CRLF if it uses CRLF).
 - The front-matter is hidden in the editor and preview: you edit only the body, and the header is re-attached on save.
+  When the header does not end with a line break (its closing `---` is the last line of the file) and the body is not
+  empty, a line break is inserted between them: `\r\n` if the block's opening fence line ends with `\r\n`, `\n`
+  otherwise.
 - The id stays the same when the note is renamed or moved, so links keep working.
-- **Duplicate ids** (for example when a file is copied): links resolve to the first note by sorted path (code-point
-  order). When an app notices a duplicate locally, it gives the later note a new id. A `(conflicted copy)` note gets
-  a new id too, so links keep pointing at the original.
+- **Duplicate ids** (for example when a file is copied): links resolve to the first note by sorted path (UTF-16
+  code-unit order, as for [sync paths](#what-is-synced)). When an app notices a duplicate locally, it gives the later
+  note a new id. A `(conflicted copy)` note gets a new id too, so links keep pointing at the original.
 
 ## Note links
 
@@ -94,7 +97,15 @@ fixtures check; an app must not add its own sync decisions.
 - Paths are relative, `/`-separated and already normalised: no empty segment, no segment that is `.`, `..`, starts with
   `.` or has leading or trailing whitespace. Anything else (other files, hidden files and folders such as
   `.marknotes/`, notes inside `attachments/`) is ignored on both sides.
-- A path that is a file on one side and a folder on the other is reported as an error and skipped.
+- A path that is a file on one side and a folder on the other is reported as the error
+  `is a file on one side and a folder on the other` and skipped.
+- Paths are identified case-insensitively, by Unicode simple case folding, because Dropbox and OneDrive ignore case
+  (`Über.md` and `über.md` are the same path; `Straße.md` and `STRASSE.md` are not). Synced paths that differ only in
+  case, whether on the same side or across the local tree, the drive and the records, are each reported as the error
+  `differs only in case from another path` and skipped, together with everything inside them: nothing is uploaded,
+  downloaded, deleted, recorded or forgotten for them. To change only the case of a name, rename it to another name,
+  sync, then rename it again.
+- Errors come first in the plan, one per path, by path; the file/folder message wins when both apply.
 - Paths are ordered by UTF-16 code units, the order of JavaScript's default string sort.
 
 ### Records and base copies
@@ -110,10 +121,13 @@ Each sync of one drive lists the local tree (hashing every local file), the driv
 
 1. **Folders**, parents first (by depth, then path):
    - on both sides: recorded if not yet recorded with that drive id;
-   - only local: created on the drive if it was never synced or still holds something to sync, otherwise deleted
-     locally;
+   - only local: created on the drive if it was never synced, still holds something to sync, or holds anything that
+     is not synced (an ignored file or folder, such as a PDF or `.obsidian/`), otherwise deleted locally;
    - only on the drive: created locally under the same rule, otherwise deleted on the drive;
    - on neither: its record is dropped.
+
+   A folder kept this way is not deleted: its synced contents are handled one by one in step 2, so those deleted on
+   the other side are deleted individually. The listings given to the planner therefore include ignored entries.
 2. **Files**, by path. A side has *changed* when there is no record, or when the local hash (or the drive id or
    version) differs from the record.
    - On both sides, never synced or changed on both: if the manifest lists this exact drive version with the local
@@ -125,13 +139,30 @@ Each sync of one drive lists the local tree (hashing every local file), the driv
    - Only local: uploaded if never synced or changed; otherwise it was deleted on the drive, so it is deleted locally.
    - Only on the drive: downloaded if never synced or changed; otherwise it was deleted locally, so it is deleted on
      the drive.
-   - So a change wins over a deletion. A file whose deletion is part of a folder deletion (step 3) only has its record
-     dropped here.
+   - So a change wins over a deletion. A file whose deletion is part of a folder deletion (step 3) gets no action
+     here.
    - On neither side: its record is dropped.
 3. **Folder deletions**, top-most first: a folder deleted on one side, with nothing changed under it on the other, is
-   deleted with everything inside, and the records under it are dropped.
+   deleted with everything inside. The records of the folder and everything under it are dropped only after the
+   deletion succeeds; when it fails they are kept, so the next sync tries again instead of recreating the folder.
 
 A failed step is reported as `<path>: <message>` and the sync goes on with the next one.
+
+### Applying the plan
+
+- Apps flush pending editor saves before a sync starts.
+- Before every local write or deletion (a download, a merge or conflict result, a local file or folder deletion), the
+  app hashes the local file again (for a folder, every file inside it) and skips the step if a hash differs from the
+  listing the plan was computed from: the file was edited during the sync. A skipped step is not an error and records
+  nothing; the next sync picks the edit up.
+- An upload records the hash of the bytes actually uploaded, not the hash from the listing.
+
+### Modification time
+
+The modification time of a note is the time it was last edited on a device. An app sets it to the current time only
+for a real edit or when it writes a merge result; uploads carry it to the drive and downloads set the local file's
+modification time to the drive's value (see the [drive adapter contract](#drive-adapter-contract)). Syncing a note to
+another device therefore never makes it newer.
 
 ### Conflicts
 
@@ -140,14 +171,21 @@ A note that changed on both sides is reconciled:
 1. Same text on both sides: it is recorded.
 2. A base copy exists and the line-based three-way merge is clean: the merged text is written locally, uploaded and
    recorded.
-3. Otherwise **the newest version wins**, by modification time; on a tie the drive wins. The winner is kept at the
-   note's path on both sides. The other version is saved next to it as `<name> (conflicted copy).md` (or
-   `<name> (conflicted copy) <n>.md`, with the first free `n` from 2) with a new id, and synced as a new note.
+3. Otherwise **the newest version wins**, by [modification time](#modification-time); on a tie the drive wins. The
+   winner is kept at the note's path on both sides. The other version is saved next to it as
+   `<name> (conflicted copy).md` (or `<name> (conflicted copy) <n>.md`, with the first free `n` from 2) and synced
+   as a new note. The copy always gets a new valid id (set as in [Note ids](#note-ids-front-matter)), even when the
+   losing version had no id or an invalid one.
+
+   The steps run in this order, so the losing version is never lost: write the copy locally; then overwrite the
+   losing side (write the drive's text locally, or upload the local text as a new revision) and record the note;
+   then upload the copy. If writing the copy fails, the note is left as it is and the step is reported.
 
 Every app tells the user about conflicted copies and offers to merge a copy back into its note: a three-way merge of
 the base, the note and the copy, where each conflicting region can be resolved as local, remote, both (local then
 remote) or neither. Unresolved regions are written with the markers `<<<<<<< this device`, `=======` and
-`>>>>>>> drive`.
+`>>>>>>> drive`. Pending conflicts (copy path, note path, drive and base text) are kept across restarts until they
+are resolved or one of the two files is gone.
 
 ### Sync manifest
 
@@ -167,9 +205,10 @@ Each linked drive has `.marknotes/manifest.json` in the synced folder:
 
 ### Several drives
 
-With more than one drive the app syncs them in order. When a drive brings local changes (downloads, local deletions,
-merges or conflicted copies), every other drive that is not already waiting is queued again so that it receives
-them, at most 3 passes per drive. A drive whose sync failed brings no changes.
+With more than one drive the app syncs them in order. When a drive brings local changes (downloads, local folder
+creations, local file or folder deletions, merges or conflicted copies), every other drive that is not already
+waiting is queued again so that it receives them, at most 3 passes per drive. A drive whose sync failed brings no
+changes.
 
 ### Attachment sync
 
@@ -178,8 +217,30 @@ stays `format: 1`). They are binary and immutable, because the name is the conte
 
 - they are only uploaded, downloaded or deleted, never three-way merged, and they never produce conflicted copies;
 - no base copy is kept for them;
-- a download whose content does not match the hash in its name is rejected;
+- a download whose content does not match the hash in its name is a step error: nothing is written or recorded;
 - deletions propagate in both directions, like notes.
+
+### Drive adapter contract
+
+Each app talks to each drive through its own adapter, which lists the drive and transfers files for marknotes-sync.
+The sync fixtures cannot reach the adapters, so each app keeps contract tests for them against a fake HTTP or SDK
+layer. Every adapter must provide:
+
+- **Complete listings.** A listing is either complete or it fails, and a failed listing fails the sync of that drive.
+  An entry that cannot be read (for example a Proton Drive name that cannot be decrypted) fails the listing; it is
+  never treated as absent, which would read as a deletion. An incremental listing (OneDrive delta) stores its
+  checkpoint only after a complete listing succeeds, and clears it when one fails, so that the next sync lists
+  everything again.
+- **Conditional changes.** Uploads of a new revision and deletions of files only apply to the version in the listing:
+  Dropbox `update` mode with the `rev` and `delete_v2` with `parent_rev`, OneDrive `If-Match` with the eTag, and on
+  Proton Drive a check of the active revision before trashing. A failed precondition is a step error that keeps the
+  record, so the next sync sees the other device's change.
+- **Modification times.** Uploads write the note's [modification time](#modification-time) to Dropbox
+  `client_modified`, OneDrive `fileSystemInfo.lastModifiedDateTime` or the Proton Drive claimed `modificationTime`.
+  Listings read the same fields, falling back to the server time when they are missing, and downloads set the local
+  file's modification time to them.
+- **Media types.** Notes are uploaded as `text/markdown`, attachments with the MIME type of their extension
+  (`image/png`, `image/jpeg`, `image/gif` or `image/webp`) and the manifest as `application/json`.
 
 ## Chord sequences
 

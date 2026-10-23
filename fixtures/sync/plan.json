@@ -1,6 +1,6 @@
 {
   "$schema": "../../schemas/fixture-file.schema.json",
-  "description": "The sync plan for one drive (see note-format.md, Sync algorithm). input is a SyncInput: local entries (sha256 for files), remote entries, the records saved at the last sync and the manifest text (or null). expected.actions is the exact ordered list of actions.",
+  "description": "The sync plan for one drive (see note-format.md, Sync algorithm). input is a SyncInput: local entries (sha256 for files), remote entries (both may include entries that are not synced, which only keep their folder from being deleted), the records saved at the last sync and the manifest text (or null). expected.actions is the exact ordered list of actions.",
   "cases": [
     {
       "name": "nothing to do",
@@ -844,6 +844,273 @@
       }
     },
     {
+      "name": "case-only rename is an error on both spellings",
+      "input": {
+        "local": [
+          {
+            "path": "Todo.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "todo.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "todo.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Todo.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "todo.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
+        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
+        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
+      }
+    },
+    {
+      "name": "case-colliding siblings are skipped",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          },
+          {
+            "path": "A.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          },
+          {
+            "path": "b.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h3"
+          }
+        ],
+        "remote": [],
+        "records": [],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "A.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "a.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "uploadNew",
+            "path": "b.md"
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
+        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
+        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
+      }
+    },
+    {
+      "name": "case-variant folder is skipped with everything inside it",
+      "input": {
+        "local": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          },
+          {
+            "path": "Work/new.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          },
+          {
+            "path": "z.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h3"
+          }
+        ],
+        "remote": [
+          {
+            "path": "work",
+            "id": "fW",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "remoteId": "fW",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Work",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "Work/a.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "Work/new.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "work",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "work/a.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "uploadNew",
+            "path": "z.md"
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
+        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
+        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
+      }
+    },
+    {
+      "name": "case folding is Unicode simple case folding",
+      "input": {
+        "local": [
+          {
+            "path": "Über.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          },
+          {
+            "path": "über.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          },
+          {
+            "path": "Straße.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h3"
+          },
+          {
+            "path": "STRASSE.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h4"
+          }
+        ],
+        "remote": [],
+        "records": [],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Über.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "über.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "uploadNew",
+            "path": "STRASSE.md"
+          },
+          {
+            "kind": "uploadNew",
+            "path": "Straße.md"
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
+        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
+        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
+      }
+    },
+    {
       "name": "new local folders are created on the drive parents first",
       "input": {
         "local": [
@@ -1080,14 +1347,6 @@
       "expected": {
         "actions": [
           {
-            "kind": "forget",
-            "path": "A/B/m.md"
-          },
-          {
-            "kind": "forget",
-            "path": "A/n.md"
-          },
-          {
             "kind": "deleteLocalFolder",
             "path": "A",
             "forget": [
@@ -1098,6 +1357,11 @@
             ]
           }
         ]
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
+        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
+        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -1171,10 +1435,6 @@
             "path": "A"
           },
           {
-            "kind": "forget",
-            "path": "A/B/m.md"
-          },
-          {
             "kind": "uploadNew",
             "path": "A/n.md"
           },
@@ -1187,6 +1447,11 @@
             ]
           }
         ]
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
+        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
+        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -1232,10 +1497,6 @@
       "expected": {
         "actions": [
           {
-            "kind": "forget",
-            "path": "A/n.md"
-          },
-          {
             "kind": "deleteRemoteFolder",
             "path": "A",
             "remote": {
@@ -1251,6 +1512,11 @@
             ]
           }
         ]
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
+        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
+        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -1312,6 +1578,218 @@
             }
           }
         ]
+      }
+    },
+    {
+      "name": "folder deleted on the drive is kept for an ignored file",
+      "input": {
+        "local": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "A/n.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          },
+          {
+            "path": "A/report.pdf",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h9"
+          }
+        ],
+        "remote": [],
+        "records": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "remoteId": "fA",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "A/n.md",
+            "isFolder": false,
+            "remoteId": "rn",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "createRemoteFolder",
+            "path": "A"
+          },
+          {
+            "kind": "deleteLocal",
+            "path": "A/n.md"
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
+        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
+        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
+      }
+    },
+    {
+      "name": "folder deleted locally is kept for an ignored drive folder",
+      "input": {
+        "local": [],
+        "remote": [
+          {
+            "path": "A",
+            "id": "fA",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "A/n.md",
+            "id": "rn",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "A/.obsidian",
+            "id": "fX",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "remoteId": "fA",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "A/n.md",
+            "isFolder": false,
+            "remoteId": "rn",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "createLocalFolder",
+            "path": "A",
+            "remoteId": "fA"
+          },
+          {
+            "kind": "deleteRemote",
+            "path": "A/n.md",
+            "remote": {
+              "path": "A/n.md",
+              "id": "rn",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            }
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
+        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
+        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
+      }
+    },
+    {
+      "name": "only the subfolder without ignored entries is deleted",
+      "input": {
+        "local": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "A/B",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "A/B/m.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          },
+          {
+            "path": "A/x.pdf",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h9"
+          }
+        ],
+        "remote": [],
+        "records": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "remoteId": "fA",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "A/B",
+            "isFolder": true,
+            "remoteId": "fB",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "A/B/m.md",
+            "isFolder": false,
+            "remoteId": "rm",
+            "remoteVersion": "v1",
+            "localHash": "h2",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "createRemoteFolder",
+            "path": "A"
+          },
+          {
+            "kind": "deleteLocalFolder",
+            "path": "A/B",
+            "forget": [
+              "A/B",
+              "A/B/m.md"
+            ]
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
+        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
+        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -1481,7 +1959,7 @@
             "sha256": "h1"
           },
           {
-            "path": "B.md",
+            "path": "C.md",
             "isFolder": false,
             "modifiedMillis": 1000,
             "sha256": "h1"
@@ -1501,7 +1979,7 @@
         "actions": [
           {
             "kind": "uploadNew",
-            "path": "B.md"
+            "path": "C.md"
           },
           {
             "kind": "uploadNew",
