@@ -76,11 +76,6 @@
         "winner": "local",
         "copyPath": "Work/a (conflicted copy).md",
         "copyText": "---\nid: m4n5p6q7\n---\na\nremote\n"
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -108,11 +103,6 @@
         "winner": "remote",
         "copyPath": "a (conflicted copy).md",
         "copyText": "---\nid: m4n5p6q7\n---\na\nlocal\n"
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -140,11 +130,6 @@
         "winner": "remote",
         "copyPath": "a (conflicted copy).md",
         "copyText": "---\nid: m4n5p6q7\n---\nl\n"
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -172,11 +157,6 @@
         "winner": "remote",
         "copyPath": "a (conflicted copy).md",
         "copyText": "---\nid: m4n5p6q7\n---\nA\nb\nc\n"
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -231,11 +211,6 @@
         "winner": "local",
         "copyPath": "a (conflicted copy).md",
         "copyText": "---\nid: m4n5p6q7\n---\nremote\n"
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -263,11 +238,6 @@
         "winner": "local",
         "copyPath": "a (conflicted copy).md",
         "copyText": "---\nid: m4n5p6q7\ntitle: T\n---\nremote\n"
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -295,11 +265,6 @@
         "winner": "local",
         "copyPath": "a (conflicted copy).md",
         "copyText": "---\nid: m4n5p6q7\n---\nremote\n"
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -329,11 +294,6 @@
         "winner": "remote",
         "copyPath": "a (conflicted copy) 3.md",
         "copyText": "---\nid: m4n5p6q7\n---\nl\n"
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     }
   ]
