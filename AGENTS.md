@@ -10,9 +10,11 @@ code; read [README.md](README.md) first.
 | Android | MaxDac/MarkNotes | `android` | Kotlin |
 | Desktop (Electron) | MaxDac/marknotes-electron | `desktop` | TypeScript |
 | Web | MaxDac/marknotes-web | `web` | Elixir/Phoenix + TypeScript |
+| Shared sync library | MaxDac/marknotes-sync | (none: implements every case) | Rust, Kotlin and WASM bindings |
 
 Each app pins this repository as a git submodule at `spec/` and runs the fixtures in a CI job named
-`Parity (marknotes-spec fixtures)`.
+`Parity (marknotes-spec fixtures)`. marknotes-sync pins it too and must pass every sync, manifest and merge case;
+change the sync rules there in the same round as here.
 
 ## Rules
 

@@ -6,11 +6,14 @@ The shared specification of the MarkNotes apps:
 - [Desktop (Electron)](https://github.com/MaxDac/marknotes-electron)
 - [Web](https://github.com/MaxDac/marknotes-web)
 
+They share one sync implementation, [marknotes-sync](https://github.com/MaxDac/marknotes-sync) (Rust, with Kotlin
+and WebAssembly bindings), which runs the sync fixtures here.
+
 All three read and write the same notes folder and sync it through the same drives, so they must agree on the format.
 
 | Path | Content |
 | --- | --- |
-| [note-format.md](note-format.md) | The canonical note, link, attachment, manifest, merge and chord-sequence format |
+| [note-format.md](note-format.md) | The canonical note, link, attachment, sync, manifest, merge and chord-sequence format |
 | [features.md](features.md) | Feature parity matrix and known divergences between the apps |
 | [fixtures/](fixtures) | Golden test cases every app runs against its own implementation |
 | [schemas/](schemas) | JSON Schema the fixture files are validated against |
@@ -39,9 +42,10 @@ Each file under `fixtures/<area>/<function>.json` has this shape:
 | `front-matter/read-id`, `with-id`, `split` | Read the id, set the id, split front-matter from the body |
 | `note-links/link-markdown`, `parse-href`, `mention`, `filter` | Insert a link, read a link target, detect `@`, filter the picker |
 | `attachments/extension-for-type`, `is-attachment-path`, `image-markdown`, `scaled-size`, `refs` | Image attachments |
-| `manifest/parse`, `serialize` | `.marknotes/manifest.json` |
+| `manifest/parse`, `serialize`, `build` | `.marknotes/manifest.json` |
 | `duplicate-ids/resolve` | Which notes get a new id when ids collide |
 | `merge/merge3`, `conflict-copy-name` | Three-way merge and conflict copies |
+| `sync/plan`, `reconcile`, `multi-drive` | Sync plan for one drive, notes changed on both sides, order of drives |
 | `chords/detect`, `parse`, `serialize`, `validate`, `display-names` | Chord sequences: detect `type: chords`, parse and write the body, validate before saving, number repeated chords |
 
 ## How apps consume this repository

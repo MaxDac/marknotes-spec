@@ -1,0 +1,246 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Reconciling a note that changed on both sides: same text, clean three-way merge, otherwise the newest version wins (ties go to the drive) and the other one is saved as a conflicted copy with a new id.",
+  "cases": [
+    {
+      "name": "same text",
+      "input": {
+        "path": "a.md",
+        "local": "x\n",
+        "localModifiedMillis": 1,
+        "remote": "x\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2
+        },
+        "base": null,
+        "existingPaths": [
+          "a.md"
+        ],
+        "newId": "m4n5p6q7"
+      },
+      "expected": {
+        "kind": "same"
+      }
+    },
+    {
+      "name": "non-overlapping edits merge",
+      "input": {
+        "path": "a.md",
+        "local": "A\nb\nc\n",
+        "localModifiedMillis": 1,
+        "remote": "a\nb\nC\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2
+        },
+        "base": "a\nb\nc\n",
+        "existingPaths": [
+          "a.md"
+        ],
+        "newId": "m4n5p6q7"
+      },
+      "expected": {
+        "kind": "merged",
+        "text": "A\nb\nC\n"
+      }
+    },
+    {
+      "name": "overlapping edits: newer local wins",
+      "input": {
+        "path": "Work/a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 3000,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "Work/a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "Work/a.md"
+        ],
+        "newId": "m4n5p6q7"
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "local",
+        "copyPath": "Work/a (conflicted copy).md",
+        "copyText": "a\nremote\n"
+      }
+    },
+    {
+      "name": "overlapping edits: newer drive wins",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 1000,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "a.md"
+        ],
+        "newId": "m4n5p6q7"
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy).md",
+        "copyText": "a\nlocal\n"
+      }
+    },
+    {
+      "name": "same time: the drive wins",
+      "input": {
+        "path": "a.md",
+        "local": "l\n",
+        "localModifiedMillis": 2000,
+        "remote": "r\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "b\n",
+        "existingPaths": [
+          "a.md"
+        ],
+        "newId": "m4n5p6q7"
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy).md",
+        "copyText": "l\n"
+      }
+    },
+    {
+      "name": "no base: newest wins even when edits do not overlap",
+      "input": {
+        "path": "a.md",
+        "local": "A\nb\nc\n",
+        "localModifiedMillis": 1000,
+        "remote": "a\nb\nC\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": null,
+        "existingPaths": [
+          "a.md"
+        ],
+        "newId": "m4n5p6q7"
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy).md",
+        "copyText": "A\nb\nc\n"
+      }
+    },
+    {
+      "name": "the copy gets a new id",
+      "input": {
+        "path": "a.md",
+        "local": "---\nid: k7f3q2xa\n---\nlocal\n",
+        "localModifiedMillis": 3000,
+        "remote": "---\nid: k7f3q2xa\n---\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "---\nid: k7f3q2xa\n---\nbase\n",
+        "existingPaths": [
+          "a.md"
+        ],
+        "newId": "m4n5p6q7"
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "local",
+        "copyPath": "a (conflicted copy).md",
+        "copyText": "---\nid: m4n5p6q7\n---\nremote\n"
+      }
+    },
+    {
+      "name": "a copy without an id is kept as is",
+      "input": {
+        "path": "a.md",
+        "local": "---\ntitle: T\n---\nlocal\n",
+        "localModifiedMillis": 3000,
+        "remote": "remote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "base\n",
+        "existingPaths": [
+          "a.md"
+        ],
+        "newId": "m4n5p6q7"
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "local",
+        "copyPath": "a (conflicted copy).md",
+        "copyText": "remote\n"
+      }
+    },
+    {
+      "name": "copy name skips taken names",
+      "input": {
+        "path": "a.md",
+        "local": "l\n",
+        "localModifiedMillis": 1,
+        "remote": "r\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2
+        },
+        "base": "b\n",
+        "existingPaths": [
+          "a.md",
+          "a (conflicted copy).md",
+          "A (Conflicted Copy) 2.md"
+        ],
+        "newId": "m4n5p6q7"
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy) 3.md",
+        "copyText": "l\n"
+      }
+    }
+  ]
+}
