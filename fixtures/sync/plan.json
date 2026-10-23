@@ -888,11 +888,6 @@
             "message": "differs only in case from another path"
           }
         ]
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -939,11 +934,6 @@
             "path": "b.md"
           }
         ]
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -1042,11 +1032,6 @@
             "path": "z.md"
           }
         ]
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -1103,11 +1088,6 @@
             "path": "Straße.md"
           }
         ]
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -1357,11 +1337,6 @@
             ]
           }
         ]
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -1447,11 +1422,6 @@
             ]
           }
         ]
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -1512,11 +1482,6 @@
             ]
           }
         ]
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -1634,11 +1599,6 @@
             "path": "A/n.md"
           }
         ]
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -1707,11 +1667,6 @@
             }
           }
         ]
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {
@@ -1785,11 +1740,6 @@
             ]
           }
         ]
-      },
-      "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.",
-        "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.",
-        "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix."
       }
     },
     {

@@ -28,7 +28,7 @@ Apps: **Android** ([MaxDac/MarkNotes](https://github.com/MaxDac/MarkNotes)), **D
 | Three-way merge, newest wins on conflict | Yes | Yes | Yes | The other version is saved as a conflicted copy |
 | Merge a conflicted copy back, with conflict choices | Yes | Yes | Yes | |
 | When sync runs | Launch and Sync now | Launch and Sync now | Page load and Sync now | No app polls in the background |
-| Attachment hash check on download | No | No | Yes | Required by [note-format.md](note-format.md#attachment-sync); see divergence 11 |
+| Attachment hash check on download | Yes | Yes | Yes | [note-format.md](note-format.md#attachment-sync) |
 
 ## Known divergences
 
@@ -53,9 +53,8 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
 9. **Attachment names** (`attachments/is-attachment-path`, `attachments/refs`): Android accepts any name with a
    supported extension and uses the broad reference pattern `attachments/[A-Za-z0-9._-]+`.
 10. **MIME parameters** (`attachments/extension-for-type`): Android strips parameters such as `; charset=...`.
-11. **Hash check on download** ([#12](https://github.com/MaxDac/marknotes-spec/issues/12)): Android and Desktop
-    write and record attachments whose bytes do not match their name; they must report a step error instead. Only Web
-    implements the check.
+11. Resolved: all three apps reject attachment downloads whose bytes do not match their name
+    ([#12](https://github.com/MaxDac/marknotes-spec/issues/12)).
 12. **Duplicate ids**: Android compares ids case-insensitively; Desktop and Web compare them exactly.
 13. Resolved: manifest parsing on Web now uses marknotes-sync.
 14. **MIME case** (`attachments/extension-for-type`): Web matches MIME types case-sensitively.
@@ -66,32 +65,27 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     The three-way merge now comes from marknotes-sync.
 18. Resolved: all three apps implement chord sequences and run `fixtures/chords/*`.
 19. Resolved: all three apps insert the missing line break when re-attaching front-matter (`front-matter/with-body`).
-20. **Compare before write** ([#9](https://github.com/MaxDac/marknotes-spec/issues/9)): no app re-hashes a local file
-    before writing or deleting it during a sync, and uploads record the hash from the listing.
-21. **Conditional deletes** ([#10](https://github.com/MaxDac/marknotes-spec/issues/10)): Android and Desktop delete
-    Dropbox and OneDrive files unconditionally; so does Web on Dropbox.
-22. **Modification time** ([#11](https://github.com/MaxDac/marknotes-spec/issues/11)): Android and Desktop read the
-    server times (Dropbox `server_modified`, OneDrive `lastModifiedDateTime`) and use the current time for Proton
-    Drive uploads and for downloaded files. Web reads the client fields; its download times are not verified.
-23. **Local folder creation** ([#15](https://github.com/MaxDac/marknotes-spec/issues/15)): Android and Desktop do not
-    count it as a local change when queueing drives again.
-24. **Complete listings** ([#16](https://github.com/MaxDac/marknotes-spec/issues/16),
-    [#17](https://github.com/MaxDac/marknotes-spec/issues/17)): on Android and Desktop a failed OneDrive full listing
-    leaves its delta checkpoint behind, and Proton Drive entries whose name cannot be decrypted are treated as absent.
-25. **Conflict order** ([#18](https://github.com/MaxDac/marknotes-spec/issues/18)): all three apps overwrite the
-    losing version before saving its conflicted copy.
-26. **Pending conflicts** ([#22](https://github.com/MaxDac/marknotes-spec/issues/22)): Android and Desktop keep them
-    in memory only, so they are forgotten on restart.
-27. **Media types** ([MaxDac/marknotes-electron#31](https://github.com/MaxDac/marknotes-electron/issues/31)): Desktop
-    uploads attachments to Proton Drive as `text/markdown`.
-28. **marknotes-sync 0.1.0 in the apps** (`sync/plan`, `sync/reconcile`, `manifest/parse`): all three apps run
-    these fixtures against marknotes-sync 0.1.0, which predates the case-insensitive paths, folder survivor and
-    folder-record rules, the conflicted-copy id and the `"files": null` rejection
-    ([#8](https://github.com/MaxDac/marknotes-spec/issues/8),
-    [#14](https://github.com/MaxDac/marknotes-spec/issues/14),
+20. Resolved: all three apps re-hash a local file before writing or deleting it during a sync, and uploads record the
+    hash of the uploaded bytes ([#9](https://github.com/MaxDac/marknotes-spec/issues/9)).
+21. Resolved: all three apps delete drive files conditionally on their revision
+    ([#10](https://github.com/MaxDac/marknotes-spec/issues/10)).
+22. Resolved: all three apps use the local edit time as the modification time, on uploads, listings and downloads
+    ([#11](https://github.com/MaxDac/marknotes-spec/issues/11)).
+23. Resolved: all three apps count local folder creation as a local change
+    ([#15](https://github.com/MaxDac/marknotes-spec/issues/15)).
+24. Resolved: a failed OneDrive full listing no longer leaves a delta checkpoint, and an undecryptable Proton Drive
+    name fails the listing ([#16](https://github.com/MaxDac/marknotes-spec/issues/16),
+    [#17](https://github.com/MaxDac/marknotes-spec/issues/17)).
+25. Resolved: all three apps save the conflicted copy before overwriting the losing version
+    ([#18](https://github.com/MaxDac/marknotes-spec/issues/18)).
+26. Resolved: all three apps persist pending conflicts across restarts
+    ([#22](https://github.com/MaxDac/marknotes-spec/issues/22)).
+27. Resolved: Desktop uploads attachments to Proton Drive with their image media type
+    ([MaxDac/marknotes-electron#31](https://github.com/MaxDac/marknotes-electron/issues/31)).
+28. Resolved: all three apps run `sync/plan`, `sync/reconcile` and `manifest/parse` against marknotes-sync 0.1.1
+    ([#8](https://github.com/MaxDac/marknotes-spec/issues/8), [#14](https://github.com/MaxDac/marknotes-spec/issues/14),
     [#19](https://github.com/MaxDac/marknotes-spec/issues/19), [#20](https://github.com/MaxDac/marknotes-spec/issues/20),
-    [MaxDac/marknotes-sync#8](https://github.com/MaxDac/marknotes-sync/issues/8)).     Fixed when each app picks up
-        the marknotes-sync release with these fixes.
+    [MaxDac/marknotes-sync#8](https://github.com/MaxDac/marknotes-sync/issues/8)).
 
 Sync fixtures (`fixtures/sync/*`, `manifest/*`, `merge/*`) are run by marknotes-sync, which implements them for every
 app. App runners may map them to the library instead of running them again, but must still map the files. Apps keep
