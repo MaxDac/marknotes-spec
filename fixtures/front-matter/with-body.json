@@ -1,0 +1,46 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Re-attaching the hidden front-matter block (as returned by front-matter/split) to the edited body on save. When the block does not end with a line break and the body is not empty, one is inserted: \\r\\n if the block's opening fence line ends with \\r\\n, \\n otherwise. Otherwise the result is frontMatter + body.",
+  "cases": [
+    {
+      "name": "header ending with a line break",
+      "input": { "frontMatter": "---\nid: k7f3q2xa\n---\n", "body": "# Title\n" },
+      "expected": { "text": "---\nid: k7f3q2xa\n---\n# Title\n" }
+    },
+    {
+      "name": "header without a final line break gets one",
+      "input": { "frontMatter": "---\nid: k7f3q2xa\n---", "body": "Hello" },
+      "expected": { "text": "---\nid: k7f3q2xa\n---\nHello" },
+      "knownDivergence": {
+        "android": "Concatenates header and body, giving ---Hello.",
+        "desktop": "Concatenates header and body, giving ---Hello.",
+        "web": "Concatenates header and body, giving ---Hello."
+      }
+    },
+    {
+      "name": "CRLF header without a final line break gets CRLF",
+      "input": { "frontMatter": "---\r\nid: k7f3q2xa\r\n---", "body": "Hello\r\n" },
+      "expected": { "text": "---\r\nid: k7f3q2xa\r\n---\r\nHello\r\n" },
+      "knownDivergence": {
+        "android": "Concatenates header and body, giving ---Hello.",
+        "desktop": "Concatenates header and body, giving ---Hello.",
+        "web": "Concatenates header and body, giving ---Hello."
+      }
+    },
+    {
+      "name": "header without a final line break and an empty body",
+      "input": { "frontMatter": "---\nid: k7f3q2xa\n---", "body": "" },
+      "expected": { "text": "---\nid: k7f3q2xa\n---" }
+    },
+    {
+      "name": "header ending with a line break and an empty body",
+      "input": { "frontMatter": "---\nid: k7f3q2xa\n---\n", "body": "" },
+      "expected": { "text": "---\nid: k7f3q2xa\n---\n" }
+    },
+    {
+      "name": "no front-matter",
+      "input": { "frontMatter": "", "body": "Hello" },
+      "expected": { "text": "Hello" }
+    }
+  ]
+}

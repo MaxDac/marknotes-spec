@@ -13,11 +13,11 @@ Apps: **Android** ([MaxDac/MarkNotes](https://github.com/MaxDac/MarkNotes)), **D
 | Feature | Android | Desktop | Web | Notes |
 | --- | --- | --- | --- | --- |
 | Markdown notes in nested folders | Yes | Yes | Yes | [note-format.md](note-format.md#notes-and-folders) |
-| Chord sequence editor | No | No | No | [note-format.md](note-format.md#chord-sequences); runners must map `fixtures/chords/*` |
+| Chord sequence editor | Yes | Yes | Yes | [note-format.md](note-format.md#chord-sequences); `fixtures/chords/*` |
 | Stable note ids in front-matter | Yes | Yes | Yes | |
 | Note links and `@` picker | Yes | Yes | Yes | Picker ordering differs, see below |
 | Images from file picker / toolbar | Yes | Yes | Yes | |
-| Image paste and drag-and-drop | Not verified | Yes | Yes | |
+| Image paste and drag-and-drop | No | Yes | Yes | Android: file picker and camera only |
 | Unused attachment clean-up | Yes | Yes | Yes | |
 | Dropbox sync | Yes | Yes | Yes | |
 | OneDrive sync | Yes | Yes | Yes | |
@@ -27,7 +27,7 @@ Apps: **Android** ([MaxDac/MarkNotes](https://github.com/MaxDac/MarkNotes)), **D
 | Three-way merge, newest wins on conflict | Yes | Yes | Yes | The other version is saved as a conflicted copy |
 | Merge a conflicted copy back, with conflict choices | Yes | Yes | Yes | |
 | When sync runs | Launch and Sync now | Launch and Sync now | Page load and Sync now | No app polls in the background |
-| Attachment hash check on download | Not verified | Not verified | Yes | |
+| Attachment hash check on download | No | No | Yes | Required by [note-format.md](note-format.md#attachment-sync); see divergence 11 |
 
 ## Known divergences
 
@@ -52,7 +52,9 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
 9. **Attachment names** (`attachments/is-attachment-path`, `attachments/refs`): Android accepts any name with a
    supported extension and uses the broad reference pattern `attachments/[A-Za-z0-9._-]+`.
 10. **MIME parameters** (`attachments/extension-for-type`): Android strips parameters such as `; charset=...`.
-11. **Hash check on download**: only Web is known to reject attachments whose bytes do not match their name.
+11. **Hash check on download** ([#12](https://github.com/MaxDac/marknotes-spec/issues/12)): Android and Desktop
+    write and record attachments whose bytes do not match their name; they must report a step error instead. Only Web
+    implements the check.
 12. **Duplicate ids**: Android compares ids case-insensitively; Desktop and Web compare them exactly.
 13. Resolved: manifest parsing on Web now uses marknotes-sync.
 14. **MIME case** (`attachments/extension-for-type`): Web matches MIME types case-sensitively.
@@ -61,8 +63,29 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     closes it only when the query has no results.
 17. **Missing function on Web**: no note id validator (`note-ids/validation`); the Web parity runner skips that file.
     The three-way merge now comes from marknotes-sync.
-18. **Chord sequences** (`fixtures/chords/*`): no app implements them yet. Until it does, its parity runner must map
-    these files and skip them (like item 17), because runners fail on unmapped fixture files.
+18. Resolved: all three apps implement chord sequences and run `fixtures/chords/*`.
+19. **Re-attaching front-matter** (`front-matter/with-body`,
+    [#21](https://github.com/MaxDac/marknotes-spec/issues/21)): all three apps concatenate the header and the body, so
+    a header without a final line break gives `---Hello`.
+20. **Compare before write** ([#9](https://github.com/MaxDac/marknotes-spec/issues/9)): no app re-hashes a local file
+    before writing or deleting it during a sync, and uploads record the hash from the listing.
+21. **Conditional deletes** ([#10](https://github.com/MaxDac/marknotes-spec/issues/10)): Android and Desktop delete
+    Dropbox and OneDrive files unconditionally; so does Web on Dropbox.
+22. **Modification time** ([#11](https://github.com/MaxDac/marknotes-spec/issues/11)): Android and Desktop read the
+    server times (Dropbox `server_modified`, OneDrive `lastModifiedDateTime`) and use the current time for Proton
+    Drive uploads and for downloaded files. Web reads the client fields; its download times are not verified.
+23. **Local folder creation** ([#15](https://github.com/MaxDac/marknotes-spec/issues/15)): Android and Desktop do not
+    count it as a local change when queueing drives again.
+24. **Complete listings** ([#16](https://github.com/MaxDac/marknotes-spec/issues/16),
+    [#17](https://github.com/MaxDac/marknotes-spec/issues/17)): on Android and Desktop a failed OneDrive full listing
+    leaves its delta checkpoint behind, and Proton Drive entries whose name cannot be decrypted are treated as absent.
+25. **Conflict order** ([#18](https://github.com/MaxDac/marknotes-spec/issues/18)): all three apps overwrite the
+    losing version before saving its conflicted copy.
+26. **Pending conflicts** ([#22](https://github.com/MaxDac/marknotes-spec/issues/22)): Android and Desktop keep them
+    in memory only, so they are forgotten on restart.
+27. **Media types** ([MaxDac/marknotes-electron#31](https://github.com/MaxDac/marknotes-electron/issues/31)): Desktop
+    uploads attachments to Proton Drive as `text/markdown`.
 
 Sync fixtures (`fixtures/sync/*`, `manifest/*`, `merge/*`) are run by marknotes-sync, which implements them for every
-app. App runners may map them to the library instead of running them again, but must still map the files.
+app. App runners may map them to the library instead of running them again, but must still map the files. Apps keep
+their own contract tests for the [drive adapters](note-format.md#drive-adapter-contract), which no fixture reaches.

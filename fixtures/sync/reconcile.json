@@ -187,7 +187,7 @@
       }
     },
     {
-      "name": "a copy without an id is kept as is",
+      "name": "a copy without front-matter gets an id",
       "input": {
         "path": "a.md",
         "local": "---\ntitle: T\n---\nlocal\n",
@@ -210,7 +210,61 @@
         "kind": "newestWins",
         "winner": "local",
         "copyPath": "a (conflicted copy).md",
-        "copyText": "remote\n"
+        "copyText": "---\nid: m4n5p6q7\n---\nremote\n"
+      }
+    },
+    {
+      "name": "a copy with front-matter but no id gets an id",
+      "input": {
+        "path": "a.md",
+        "local": "local\n",
+        "localModifiedMillis": 3000,
+        "remote": "---\ntitle: T\n---\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "base\n",
+        "existingPaths": [
+          "a.md"
+        ],
+        "newId": "m4n5p6q7"
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "local",
+        "copyPath": "a (conflicted copy).md",
+        "copyText": "---\nid: m4n5p6q7\ntitle: T\n---\nremote\n"
+      }
+    },
+    {
+      "name": "a copy with an invalid id gets a valid one",
+      "input": {
+        "path": "a.md",
+        "local": "---\nid: not valid\n---\nlocal\n",
+        "localModifiedMillis": 3000,
+        "remote": "---\nid: not valid\n---\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "base\n",
+        "existingPaths": [
+          "a.md"
+        ],
+        "newId": "m4n5p6q7"
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "local",
+        "copyPath": "a (conflicted copy).md",
+        "copyText": "---\nid: m4n5p6q7\n---\nremote\n"
       }
     },
     {
