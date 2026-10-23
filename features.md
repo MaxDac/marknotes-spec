@@ -83,7 +83,7 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     in memory only, so they are forgotten on restart.
 27. **Media types** ([MaxDac/marknotes-electron#31](https://github.com/MaxDac/marknotes-electron/issues/31)): Desktop
     uploads attachments to Proton Drive as `text/markdown`.
-28. **marknotes-sync 0.1.0 on Android and Desktop** (`sync/plan`, `sync/reconcile`, `manifest/parse`): both apps run
+28. **marknotes-sync 0.1.0 in the apps** (`sync/plan`, `sync/reconcile`, `manifest/parse`): all three apps run
     these fixtures against marknotes-sync 0.1.0, which predates the case-insensitive paths, folder survivor and
     folder-record rules, the conflicted-copy id and the `"files": null` rejection
     ([#8](https://github.com/MaxDac/marknotes-spec/issues/8),

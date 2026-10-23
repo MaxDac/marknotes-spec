@@ -17,7 +17,7 @@
       "input": { "json": "{\"format\":1,\"deviceId\":\"d\",\"updatedAt\":1}" },
       "expected": { "manifest": { "deviceId": "d", "updatedAt": 1, "files": {} } }
     },
-    { "name": "null files", "input": { "json": "{\"format\":1,\"deviceId\":\"d\",\"updatedAt\":1,\"files\":null}" }, "expected": { "manifest": null }, "knownDivergence": { "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.", "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix." } },
+    { "name": "null files", "input": { "json": "{\"format\":1,\"deviceId\":\"d\",\"updatedAt\":1,\"files\":null}" }, "expected": { "manifest": null }, "knownDivergence": { "android": "Comes from marknotes-sync 0.1.0; fixed when Android picks up the marknotes-sync release with the planner fix.", "desktop": "Comes from marknotes-sync 0.1.0; fixed when Desktop picks up the marknotes-sync release with the planner fix.", "web": "Comes from marknotes-sync 0.1.0; fixed when Web picks up the marknotes-sync release with the planner fix." } },
     { "name": "newer format", "input": { "json": "{\"format\":2,\"deviceId\":\"d\",\"updatedAt\":1,\"files\":{}}" }, "expected": { "manifest": null } },
     { "name": "missing format", "input": { "json": "{\"deviceId\":\"d\",\"updatedAt\":1,\"files\":{}}" }, "expected": { "manifest": null } },
     { "name": "missing deviceId", "input": { "json": "{\"format\":1,\"updatedAt\":1,\"files\":{}}" }, "expected": { "manifest": null } },
