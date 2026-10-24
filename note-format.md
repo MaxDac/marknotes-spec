@@ -13,8 +13,8 @@ app runs in CI. Change this document and the fixtures together.
 A note is a UTF-8 `.md` file; folders are real directories. The note title is the file name without `.md`, and its
 full path (for example `Work/Projects/Roadmap`) is the folder path plus the title.
 
-A note whose front-matter has `type: chords` is a [chord sequence](#chord-sequences) and opens in the chord editor.
-It is still a note in every other respect.
+A note whose front-matter has `type: chords` is a [chord sequence](#chord-sequences) and opens in the chord editor
+when the [Chord sequences setting](#chord-sequences-setting) is on. It is still a note in every other respect.
 
 ## Note ids (front-matter)
 
@@ -283,6 +283,20 @@ Opening a chord sequence shows the chord editor. If its body does not [parse](#p
 normal note editor instead and shows the parse error with its line number, so nothing is lost. A new chord sequence is
 created with the front-matter `---\nid: <new id>\ntype: chords\n---\n` and an empty body. Other front-matter keys are
 kept verbatim, like for any note.
+
+### Chord sequences setting
+
+Chord sequences are opt-in. Each app has a **Settings → Chord sequences** switch, off by default. It is stored on the
+device only: it is not synced and not written to the drive or the manifest.
+
+- **On**: the app offers "New chord sequence" wherever it offers a new note (the New menu and the empty states), and
+  chord sequences open as described above.
+- **Off**: the app offers no way to create a chord sequence. Opening a note detected as a chord sequence asks whether
+  to enable chord sequences. If the user agrees, the app turns the setting on and opens the note in the chord editor.
+  Otherwise the note is not opened and the app stays where it was.
+
+The setting never changes notes: detection, parsing, sync and every other note operation are the same whether it is on
+or off, so turning it off hides nothing and loses nothing.
 
 ### Model
 
