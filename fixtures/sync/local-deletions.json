@@ -1,0 +1,335 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Which records to flag as deleted locally (see note-format.md, Records and base copies). input.local is the local listing, input.records the records of one drive. expected.paths lists, in code-unit order, the file records that are not flagged yet and whose path is not a file in the listing. The app calls this for every linked drive before planning and sets localDeleted on those records.",
+  "cases": [
+    {
+      "name": "nothing is flagged when every recorded file is present",
+      "input": {
+        "local": [
+          {
+            "path": "F",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "F/d.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          },
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          }
+        ],
+        "records": [
+          {
+            "path": "F",
+            "isFolder": true,
+            "remoteId": "fF",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "F/d.md",
+            "isFolder": false,
+            "remoteId": "rd",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          },
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h2",
+            "syncedAt": 500
+          }
+        ]
+      },
+      "expected": {
+        "paths": []
+      }
+    },
+    {
+      "name": "no records",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "records": []
+      },
+      "expected": {
+        "paths": []
+      }
+    },
+    {
+      "name": "edited files are not flagged",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h9"
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ]
+      },
+      "expected": {
+        "paths": []
+      }
+    },
+    {
+      "name": "note moved away is flagged",
+      "input": {
+        "local": [
+          {
+            "path": "F",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "b.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "records": [
+          {
+            "path": "F",
+            "isFolder": true,
+            "remoteId": "fF",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "F/d.md",
+            "isFolder": false,
+            "remoteId": "rd",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ]
+      },
+      "expected": {
+        "paths": [
+          "F/d.md"
+        ]
+      }
+    },
+    {
+      "name": "deleted folder flags the files inside it, not the folder",
+      "input": {
+        "local": [],
+        "records": [
+          {
+            "path": "F",
+            "isFolder": true,
+            "remoteId": "fF",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "F/d.md",
+            "isFolder": false,
+            "remoteId": "rd",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          },
+          {
+            "path": "F/e.md",
+            "isFolder": false,
+            "remoteId": "re",
+            "remoteVersion": "v1",
+            "localHash": "h2",
+            "syncedAt": 500
+          }
+        ]
+      },
+      "expected": {
+        "paths": [
+          "F/d.md",
+          "F/e.md"
+        ]
+      }
+    },
+    {
+      "name": "already flagged records are not returned",
+      "input": {
+        "local": [],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500,
+            "localDeleted": true
+          },
+          {
+            "path": "b.md",
+            "isFolder": false,
+            "remoteId": "r2",
+            "remoteVersion": "v1",
+            "localHash": "h2",
+            "syncedAt": 500
+          }
+        ]
+      },
+      "expected": {
+        "paths": [
+          "b.md"
+        ]
+      }
+    },
+    {
+      "name": "file replaced by a folder is flagged",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ]
+      },
+      "expected": {
+        "paths": [
+          "a.md"
+        ]
+      }
+    },
+    {
+      "name": "paths are matched exactly",
+      "input": {
+        "local": [
+          {
+            "path": "A.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ]
+      },
+      "expected": {
+        "paths": [
+          "a.md"
+        ]
+      }
+    },
+    {
+      "name": "deleted attachment is flagged",
+      "input": {
+        "local": [],
+        "records": [
+          {
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "isFolder": false,
+            "remoteId": "ra",
+            "remoteVersion": "v1",
+            "localHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "syncedAt": 500
+          }
+        ]
+      },
+      "expected": {
+        "paths": [
+          "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png"
+        ]
+      }
+    },
+    {
+      "name": "paths are in code-unit order",
+      "input": {
+        "local": [],
+        "records": [
+          {
+            "path": "Ａ.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          },
+          {
+            "path": "b.md",
+            "isFolder": false,
+            "remoteId": "r2",
+            "remoteVersion": "v1",
+            "localHash": "h2",
+            "syncedAt": 500
+          },
+          {
+            "path": "😀.md",
+            "isFolder": false,
+            "remoteId": "r3",
+            "remoteVersion": "v1",
+            "localHash": "h3",
+            "syncedAt": 500
+          },
+          {
+            "path": "B/x.md",
+            "isFolder": false,
+            "remoteId": "r4",
+            "remoteVersion": "v1",
+            "localHash": "h4",
+            "syncedAt": 500
+          }
+        ]
+      },
+      "expected": {
+        "paths": [
+          "B/x.md",
+          "b.md",
+          "😀.md",
+          "Ａ.md"
+        ]
+      }
+    }
+  ]
+}

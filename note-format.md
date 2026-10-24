@@ -125,6 +125,20 @@ After a path is synced the app saves a **record** for it, per drive: the drive i
 SHA-256 of the local bytes and the time. For notes it also keeps a **base copy**, the text both sides agreed on, used
 by the three-way merge. Folders get a record with their drive id. Attachments get no base copy.
 
+A file record can also be **flagged as deleted locally** (`localDeleted`): a sync saw the file missing from the local
+tree after the record was saved. After listing the local tree, and before planning, the app asks marknotes-sync
+(`local_deletions`, checked by the [`fixtures/sync/local-deletions.json`](fixtures/sync/local-deletions.json)
+fixtures) which records of **every** linked drive to flag, not only those of the drive being synced, and saves the
+flags. `local_deletions` returns the file records that are not flagged yet and whose path is not a file in the local
+listing (exact path match); folder records are never flagged. Every record the app writes for an action is unflagged,
+and records saved without the flag read as unflagged.
+
+The flag matters with several drives. Without it, a note moved away and back between syncs could look unchanged to a
+drive whose record predates the move, and that drive's copy of the deletion would then delete the restored note
+everywhere ([#37](https://github.com/MaxDac/marknotes-spec/issues/37)). Dropping the other drives' records instead
+would not work: a file only on the drive and without a record is downloaded, so a local deletion would come back from
+every drive but the first.
+
 ### Sync plan
 
 Each sync of one drive lists the local tree (hashing every local file), the drive tree and
@@ -132,8 +146,9 @@ Each sync of one drive lists the local tree (hashing every local file), the driv
 
 1. **Folders**, parents first (by depth, then path):
    - on both sides: recorded if not yet recorded with that drive id;
-   - only local: created on the drive if it was never synced, still holds something to sync, or holds anything that
-     is not synced (an ignored file or folder, such as a PDF or `.obsidian/`), otherwise deleted locally;
+   - only local: created on the drive if it was never synced, still holds something to sync (including a file whose
+     record is flagged as deleted locally), or holds anything that is not synced (an ignored file or folder, such as a
+     PDF or `.obsidian/`), otherwise deleted locally;
    - only on the drive: created locally under the same rule, otherwise deleted on the drive;
    - on neither: its record is dropped.
 
@@ -147,11 +162,14 @@ Each sync of one drive lists the local tree (hashing every local file), the driv
    - On both sides, only one changed: the change is uploaded as a new revision or downloaded. When the drive has a new
      version whose manifest hash equals the recorded local hash (another device re-uploaded the same content), it is
      only recorded.
-   - Only local: uploaded if never synced or changed; otherwise it was deleted on the drive, so it is deleted locally.
+   - Only local: uploaded if never synced, changed, or its record is flagged as deleted locally (the file was deleted
+     and put back here, so it is new to this drive); otherwise it was deleted on the drive, so it is deleted locally.
    - Only on the drive: downloaded if never synced or changed; otherwise it was deleted locally, so it is deleted on
      the drive.
    - So a change wins over a deletion. A file whose deletion is part of a folder deletion (step 3) gets no action
      here.
+   - In this step the flag only changes the "only local" case above. Elsewhere a flagged record is compared as usual,
+     and a file on both sides that would get no action is recorded again (no upload, no reconcile) to clear the flag.
    - On neither side: its record is dropped.
 3. **Folder deletions**, top-most first: a folder deleted on one side, with nothing changed under it on the other, is
    deleted with everything inside. The records of the folder and everything under it are dropped only after the
@@ -224,7 +242,8 @@ Each linked drive has `.marknotes/manifest.json` in the synced folder:
 With more than one drive the app syncs them in order. When a drive brings local changes (downloads, local folder
 creations, local file or folder deletions, merges or conflicted copies), every other drive that is not already
 waiting is queued again so that it receives them, at most 3 passes per drive. A drive whose sync failed brings no
-changes.
+changes. Before each drive's sync the app flags, in the records of every linked drive, the files missing locally (see
+[Records and base copies](#records-and-base-copies)).
 
 ### Attachment sync
 

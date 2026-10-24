@@ -2341,6 +2341,644 @@
         "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
         "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
+    },
+    {
+      "name": "restored note deleted on the drive through a flagged record is uploaded again",
+      "input": {
+        "local": [
+          {
+            "path": "F",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "F/d.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "F",
+            "id": "fF",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "F",
+            "isFolder": true,
+            "remoteId": "fF",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "F/d.md",
+            "isFolder": false,
+            "remoteId": "rd",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500,
+            "localDeleted": true
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "uploadNew",
+            "path": "F/d.md"
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "marknotes-sync 0.2 ignores localDeleted; fixed when Android picks up marknotes-sync 0.3.0 and flags records.",
+        "desktop": "marknotes-sync 0.2 ignores localDeleted; fixed when Desktop picks up marknotes-sync 0.3.0 and flags records.",
+        "web": "marknotes-sync 0.2 ignores localDeleted; fixed when Web picks up marknotes-sync 0.3.0 and flags records."
+      }
+    },
+    {
+      "name": "flagged note still deleted locally is deleted on the drive",
+      "input": {
+        "local": [],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500,
+            "localDeleted": true
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "deleteRemote",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "flagged note edited on the drive is downloaded",
+      "input": {
+        "local": [],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v2",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500,
+            "localDeleted": true
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "download",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v2",
+              "modifiedMillis": 1000
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "flagged note deleted on both sides is forgotten",
+      "input": {
+        "local": [],
+        "remote": [],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500,
+            "localDeleted": true
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "forget",
+            "path": "a.md"
+          }
+        ]
+      }
+    },
+    {
+      "name": "restored note still on the drive is only recorded",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500,
+            "localDeleted": true
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "record",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "sha256": "h1",
+            "updateBase": false
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "marknotes-sync 0.2 ignores localDeleted; fixed when Android picks up marknotes-sync 0.3.0 and flags records.",
+        "desktop": "marknotes-sync 0.2 ignores localDeleted; fixed when Desktop picks up marknotes-sync 0.3.0 and flags records.",
+        "web": "marknotes-sync 0.2 ignores localDeleted; fixed when Web picks up marknotes-sync 0.3.0 and flags records."
+      }
+    },
+    {
+      "name": "restored note edited locally is uploaded as a revision",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500,
+            "localDeleted": true
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "uploadRevision",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "restored note edited on the drive is downloaded",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v2",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500,
+            "localDeleted": true
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "download",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v2",
+              "modifiedMillis": 1000
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "restored note edited on both sides is reconciled",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v2",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500,
+            "localDeleted": true
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "reconcile",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v2",
+              "modifiedMillis": 1000
+            },
+            "hasRecord": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "restored note re-uploaded with the same content is only recorded",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v2",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500,
+            "localDeleted": true
+          }
+        ],
+        "manifest": "{\"format\":1,\"app\":\"MarkNotes\",\"deviceId\":\"other\",\"updatedAt\":1,\"files\":{\"a.md\":{\"sha256\":\"h1\",\"version\":\"v2\",\"syncedAt\":1}}}"
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "record",
+            "path": "a.md",
+            "remote": {
+              "path": "a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v2",
+              "modifiedMillis": 1000
+            },
+            "sha256": "h1",
+            "updateBase": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "restored attachment still on the drive is only recorded",
+      "input": {
+        "local": [
+          {
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "remote": [
+          {
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "id": "ra",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "isFolder": false,
+            "remoteId": "ra",
+            "remoteVersion": "v1",
+            "localHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "syncedAt": 500,
+            "localDeleted": true
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "record",
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "remote": {
+              "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+              "id": "ra",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "updateBase": false
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "marknotes-sync 0.2 ignores localDeleted; fixed when Android picks up marknotes-sync 0.3.0 and flags records.",
+        "desktop": "marknotes-sync 0.2 ignores localDeleted; fixed when Desktop picks up marknotes-sync 0.3.0 and flags records.",
+        "web": "marknotes-sync 0.2 ignores localDeleted; fixed when Web picks up marknotes-sync 0.3.0 and flags records."
+      }
+    },
+    {
+      "name": "restored attachment deleted on the drive is uploaded again",
+      "input": {
+        "local": [
+          {
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        ],
+        "remote": [],
+        "records": [
+          {
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png",
+            "isFolder": false,
+            "remoteId": "ra",
+            "remoteVersion": "v1",
+            "localHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "syncedAt": 500,
+            "localDeleted": true
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "uploadNew",
+            "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png"
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "marknotes-sync 0.2 ignores localDeleted; fixed when Android picks up marknotes-sync 0.3.0 and flags records.",
+        "desktop": "marknotes-sync 0.2 ignores localDeleted; fixed when Desktop picks up marknotes-sync 0.3.0 and flags records.",
+        "web": "marknotes-sync 0.2 ignores localDeleted; fixed when Web picks up marknotes-sync 0.3.0 and flags records."
+      }
+    },
+    {
+      "name": "folder deleted on the drive is created again for a restored note",
+      "input": {
+        "local": [
+          {
+            "path": "F",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "F/d.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [],
+        "records": [
+          {
+            "path": "F",
+            "isFolder": true,
+            "remoteId": "fF",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "F/d.md",
+            "isFolder": false,
+            "remoteId": "rd",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500,
+            "localDeleted": true
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "createRemoteFolder",
+            "path": "F"
+          },
+          {
+            "kind": "uploadNew",
+            "path": "F/d.md"
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "marknotes-sync 0.2 ignores localDeleted; fixed when Android picks up marknotes-sync 0.3.0 and flags records.",
+        "desktop": "marknotes-sync 0.2 ignores localDeleted; fixed when Desktop picks up marknotes-sync 0.3.0 and flags records.",
+        "web": "marknotes-sync 0.2 ignores localDeleted; fixed when Web picks up marknotes-sync 0.3.0 and flags records."
+      }
+    },
+    {
+      "name": "folder deleted locally with flagged notes is deleted on the drive",
+      "input": {
+        "local": [],
+        "remote": [
+          {
+            "path": "F",
+            "id": "fF",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "F/d.md",
+            "id": "rd",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "F",
+            "isFolder": true,
+            "remoteId": "fF",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "F/d.md",
+            "isFolder": false,
+            "remoteId": "rd",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500,
+            "localDeleted": true
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "deleteRemoteFolder",
+            "path": "F",
+            "remote": {
+              "path": "F",
+              "id": "fF",
+              "isFolder": true,
+              "version": "",
+              "modifiedMillis": 1000
+            },
+            "forget": [
+              "F",
+              "F/d.md"
+            ]
+          }
+        ]
+      }
     }
   ]
 }

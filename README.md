@@ -49,7 +49,7 @@ Each file under `fixtures/<area>/<function>.json` has this shape:
 | `manifest/parse`, `serialize`, `build` | `.marknotes/manifest.json` |
 | `duplicate-ids/resolve` | Which notes get a new id when ids collide |
 | `merge/merge3`, `conflict-copy-name` | Three-way merge and conflict copies |
-| `sync/plan`, `reconcile`, `multi-drive` | Sync plan for one drive, notes changed on both sides, order of drives |
+| `sync/plan`, `reconcile`, `multi-drive`, `local-deletions` | Sync plan for one drive, notes changed on both sides, order of drives, records to flag as deleted locally |
 | `chords/detect`, `parse`, `serialize`, `validate`, `display-names` | Chord sequences: detect `type: chords`, parse and write the body, validate before saving, number repeated chords |
 
 ## How apps consume this repository
