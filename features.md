@@ -18,6 +18,11 @@ Verified default-branch updates after that audit: Libre's reserved-root move gua
 [MaxDac/marknotes-android#33](https://github.com/MaxDac/marknotes-android/pull/33) (`130c441`) and Desktop's bass
 fret-12 marker in [MaxDac/marknotes-electron#49](https://github.com/MaxDac/marknotes-electron/pull/49) (`e601472`).
 Pro's checked Libre pin `a65aa93` does not yet include the reserved-root move fix.
+Cross-app links are also merged in
+[MaxDac/marknotes-android#23](https://github.com/MaxDac/marknotes-android/pull/23),
+[MaxDac/MarkNotes#37](https://github.com/MaxDac/MarkNotes/pull/37),
+[MaxDac/marknotes-electron#42](https://github.com/MaxDac/marknotes-electron/pull/42) and
+[MaxDac/marknotes-web#45](https://github.com/MaxDac/marknotes-web/pull/45).
 
 ## Features
 
@@ -87,7 +92,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Only the permissions the app needs | Yes (checked on release) | Partial: the `libre/` pin builds marknotes-sync without the AAR permission fix [MaxDac/MarkNotes#38](https://github.com/MaxDac/MarkNotes/issues/38) | N/A | N/A | |
 | Local error diagnostics and user-initiated GitHub reporting | Yes | Yes | No [MaxDac/marknotes-electron#44](https://github.com/MaxDac/marknotes-electron/issues/44) | No [MaxDac/marknotes-web#47](https://github.com/MaxDac/marknotes-web/issues/47) | See [Android diagnostics](#android-diagnostics). App-only, no format change |
 | About | Licence notices, Ko-fi link | Same as Libre, plus the Proton Drive notice | Short text | No About view; `/security` page and `licenses.txt` | No app shows its version |
-| Links to the other apps (Settings and README) | No (planned) | No (planned) | No (planned) | No (planned) | See [Links between apps](#links-between-apps). App-only, no format change |
+| Links to the other apps (Settings and README) | Yes | Yes | Yes | Yes | See [Links between apps](#links-between-apps). App-only, no format change |
 | Updates | F-Droid or GitHub releases | GitHub releases | In-app updater | Service worker update | |
 
 ## Links between apps
