@@ -3,7 +3,8 @@
 What each MarkNotes app supports today, and where their implementations of the shared format differ. Update this file
 in the same pull request that changes behaviour in an app (open the spec PR first, then bump the pin in the app).
 
-Apps: **Android** ([MaxDac/MarkNotes](https://github.com/MaxDac/MarkNotes)), **Desktop**
+Apps: **Android** ([libre](https://github.com/MaxDac/marknotes-android) and
+[Pro](https://github.com/MaxDac/MarkNotes), sharing the executor), **Desktop**
 ([MaxDac/marknotes-electron](https://github.com/MaxDac/marknotes-electron)) and **Web**
 ([MaxDac/marknotes-web](https://github.com/MaxDac/marknotes-web)). Fixture divergence keys are `android`, `desktop` and
 `web`.

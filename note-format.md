@@ -1,7 +1,8 @@
 # MarkNotes note format
 
 This is the canonical on-disk format shared by the MarkNotes apps:
-[Android](https://github.com/MaxDac/MarkNotes), [desktop](https://github.com/MaxDac/marknotes-electron) and
+[Android](https://github.com/MaxDac/marknotes-android) (including [Pro](https://github.com/MaxDac/MarkNotes)),
+[desktop](https://github.com/MaxDac/marknotes-electron) and
 [web](https://github.com/MaxDac/marknotes-web). Notes and attachments written by one app must be readable by the
 others through the same synced drive folder (Proton Drive, Dropbox, OneDrive).
 
@@ -230,6 +231,10 @@ other drives' records and bases at their previous paths until those drives perfo
 saved identity and version remain evidence of the unchanged stale drive spelling. A `localDeleted` flag is not
 permission to delete a case alias. Do not apply additional actions inside a renamed subtree from the old listing:
 take a fresh listing to plan its contents. A local rename counts as a local change for the other drives' queue.
+When the rename and history migration cannot commit atomically, persist a per-drive rename intent before the
+mutation and replay it before flagging local deletions or planning. A restart after the move but before metadata
+migration must finish migrating the records and bases, not leave an old recorded spelling as a permanent collision.
+Replay verifies the entry's identity at its source or intended destination and never overwrites an intervening edit.
 Migration preserves the recorded hashes and drive versions: a rename response is not proof that its returned
 revision contains the already-synced bytes. In particular, a stable-id no-overwrite drive move may preserve a
 concurrent content edit; its new revision must still be detected by the next plan, not adopted as synced.

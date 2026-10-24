@@ -2,12 +2,14 @@
 
 The shared specification of the MarkNotes apps:
 
-- [Android](https://github.com/MaxDac/MarkNotes)
+- [Android](https://github.com/MaxDac/marknotes-android) and its [Pro edition](https://github.com/MaxDac/MarkNotes)
 - [Desktop (Electron)](https://github.com/MaxDac/marknotes-electron)
 - [Web](https://github.com/MaxDac/marknotes-web)
 
 They share one sync implementation, [marknotes-sync](https://github.com/MaxDac/marknotes-sync) (Rust, with Kotlin
 and WebAssembly bindings), which runs the sync fixtures here.
+The Android editions share their executor in marknotes-android; the Pro repository pins it at `libre/` and adds
+OneDrive and Proton Drive adapters. Both use the `android` fixture key.
 
 All three read and write the same notes folder and sync it through the same drives, so they must agree on the format.
 
