@@ -230,6 +230,15 @@ generation, so deleting the same folder identity again after recreation is a new
 - A complete successful remote listing proving that the folder disappeared retires its record and deferred state.
   A different remote identity at the same path retires the old state and is handled as a new entry, not suppressed
   by the old identity's notice; descendants must not inherit deletion authority from a replaced ancestor's history.
+  Before recording the replacement folder identity, atomically retire that drive's old descendant records and
+  active preservation notices together with the old folder lifecycle, and save the new folder record in the same
+  transaction. Retire old descendant base copies before that commit; when bases live outside the metadata store,
+  use failure-checked ordering or a recoverable intent completed before planning to provide the same boundary.
+  Do not delete local note/attachment bytes, remote bytes or another drive's history. This prevents
+  a failed descendant download or restart after `createLocalFolder` or `recordFolder` from reusing an old child
+  record to authorize deletion, even if the child retained its own identity and revision. If the transaction fails,
+  report the error and retain the previous records and notice state; do not save the replacement identity separately.
+  Unlike local recreation preflight, remote identity replacement invalidates descendant history.
   A failed or incomplete listing never proves absence.
 - State and notice issuance are independent for different drives, accounts, folder paths and identities.
   Disconnecting one drive must not reset another drive's notices. This metadata is device-local sync history;
