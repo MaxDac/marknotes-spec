@@ -3988,7 +3988,6 @@
       },
       "knownDivergence": {
         "android": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation.",
-        "desktop": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation.",
         "web": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation."
       }
     },
@@ -4064,7 +4063,6 @@
       },
       "knownDivergence": {
         "android": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation.",
-        "desktop": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation.",
         "web": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation."
       }
     },
@@ -4181,7 +4179,6 @@
       },
       "knownDivergence": {
         "android": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation.",
-        "desktop": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation.",
         "web": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation."
       }
     },
@@ -4237,7 +4234,6 @@
       },
       "knownDivergence": {
         "android": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation.",
-        "desktop": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation.",
         "web": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation."
       }
     },
