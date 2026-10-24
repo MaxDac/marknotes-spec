@@ -70,8 +70,9 @@ Each file under `fixtures/<area>/<function>.json` has this shape:
 The apps' `docs/note-format.md` should link here instead of keeping a copy.
 
 `sync/executor-safety` runs against marknotes-sync's reference executor, because planner inputs cannot express a
-provider race or a process restart. App runners must map it to that shared contract suite, not silently ignore it;
-apps also keep their own adapter and durable-store tests for the same guarantees.
+provider race or a process restart. App runners must map it, not silently ignore it. Desktop and Web run its cases
+against their own executors; the Android runner does not run them yet and relies on the reference suite and its own
+executor tests. Apps also keep their own adapter and durable-store tests for the same guarantees.
 
 ## Changing the spec
 

@@ -7,14 +7,15 @@ code; read [README.md](README.md) first.
 
 | App | Repository | Fixture key | Language |
 | --- | --- | --- | --- |
-| Android | MaxDac/MarkNotes | `android` | Kotlin |
+| Android Libre | MaxDac/marknotes-android | `android` | Kotlin |
+| Android Pro (pins Libre at `libre/`) | MaxDac/MarkNotes | `android` | Kotlin |
 | Desktop (Electron) | MaxDac/marknotes-electron | `desktop` | TypeScript |
-| Web | MaxDac/marknotes-web | `web` | Elixir/Phoenix + TypeScript |
+| Web | MaxDac/marknotes-web | `web` | TypeScript + Vite (static PWA served by Caddy) |
 | Shared sync library | MaxDac/marknotes-sync | (none: implements every case) | Rust, Kotlin and WASM bindings |
 
-Each app pins this repository as a git submodule at `spec/` and runs the fixtures in a CI job named
-`Parity (marknotes-spec fixtures)`. marknotes-sync pins it too and must pass every sync, manifest and merge case;
-change the sync rules there in the same round as here.
+Each app pins this repository as a git submodule at `spec/` (Pro through Libre's pin at `libre/spec/`) and runs the
+fixtures in a CI job named `Parity (marknotes-spec fixtures)`. Pin commits that are on `main`. marknotes-sync pins it
+too and must pass every sync, manifest and merge case; change the sync rules there in the same round as here.
 
 All of them carry the `marknotes` topic (`gh repo list MaxDac --topic marknotes`) and are linked to the
 [MarkNotes project](https://github.com/users/MaxDac/projects/16). Add cross-repository issues and pull requests to it

@@ -83,7 +83,7 @@ attachments/<sha256>.<ext>
   always resolved from the notes root, whatever folder the note is in.
 - Images can be added with an **Insert image** action, by pasting, or by drag-and-drop where the platform allows it.
 - The `attachments/` folder is hidden from the note tree, and `attachments` cannot be used as a root note or folder
-  name (on create or rename).
+  name (on create, rename or move).
 - **Settings → Clean unused images** scans every note for `attachments/…` references and deletes unreferenced
   attachment files locally; the deletion reaches the drives on the next sync. Cleanup never runs automatically.
 
@@ -444,7 +444,7 @@ A string is `{"state":"muted"}`, `{"state":"open"}` or `{"state":"fretted","fret
 
 Whitespace below always means the ASCII characters U+0009 to U+000D and U+0020 only (a no-break space is not
 whitespace). Lengths are counted in Unicode code points. Lowercasing is Unicode default, locale-independent
-lowercasing (`toLowerCase()` in JavaScript, `lowercase()` in Kotlin, `String.downcase/1` in Elixir).
+lowercasing (`toLowerCase()` in JavaScript, `lowercase()` in Kotlin).
 
 Normalisation, applied by the parser, the serializer and the validator:
 
