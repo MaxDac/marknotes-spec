@@ -178,14 +178,70 @@ Each sync of one drive lists the local tree (hashing every local file), the driv
    Each local folder removal is non-recursive and fails if any entry remains. Each drive folder removal
    must be an atomic empty-only operation: it must not remove any remaining descendant, including an ignored entry
    or a file another device created after the listing. A fresh listing followed by an ordinary recursive deletion
-   does not provide this guarantee. If the folder is not empty, or the provider cannot guarantee empty-only removal,
-   the step fails explicitly without a recursive fallback.
+   does not provide this guarantee. If a supported removal finds the folder non-empty or otherwise fails,
+   the step fails explicitly without a recursive fallback. A provider that explicitly declares empty-only removal
+   unsupported instead uses [deferred drive folder removal](#deferred-drive-folder-removal).
 
    Records are dropped only after their corresponding deletion succeeds. A failed folder removal retains its
    folder record and any records not already successfully deleted, so a later sync can retry or pick up new
    contents instead of recreating the folder from a failed deletion.
 
 A failed step is reported as `<path>: <message>` and the sync goes on with the next one.
+
+### Deferred drive folder removal
+
+When an adapter explicitly declares that it cannot atomically remove an empty folder, leave that remote folder
+intact. Do not call its folder-deletion operation, count a remote deletion, or report this capability limitation as
+a sync error. Individual guarded file deletions still run first; failures of those operations remain errors and
+retain their records. Never use recursive deletion, even after an empty listing.
+
+Persist deferred-removal state alongside the retained folder record, scoped to the linked drive, exact path and
+stable remote folder identity. It records this local deletion lifecycle and whether its manual-removal notice has
+been acknowledged. Atomically save the marker and a pending notice identifying the drive and folder and explaining that
+the user must remove the folder on the drive. The app presents that same pending notice until acknowledged, then
+persists the acknowledgement; retries and process restarts must neither lose a pending notice nor create another
+notice for an acknowledged lifecycle. This is one durable notice, not a new toast or error on every sync.
+If saving the marker, pending notice or acknowledgement fails, report the failure explicitly and preserve the
+previous durable state; do not claim deferral or acknowledgement that was not saved.
+
+The shared API calls the capability `SyncInput.remoteFolderDeletion`: `atomicEmptyOnly` or `unsupported`, with an
+omitted value retaining `atomicEmptyOnly`. Updated apps pass their adapter's actual capability explicitly.
+`SyncRecord.remoteFolderPreserved` is an optional boolean, defaulting to false, meaningful only on a folder record
+and bound to its `remoteId`. An unsupported eligible deletion emits
+`{ kind: "preserveRemoteFolder", path, remote }` instead of `deleteRemoteFolder`. Applying it rechecks that the local
+folder has not reappeared, then atomically saves the marker and notice. It is not a local change or remote deletion.
+The app allocates a durable deletion generation on the false-to-true transition; notice uniqueness includes that
+generation, so deleting the same folder identity again after recreation is a new lifecycle.
+
+- An unchanged deferred folder stays absent locally across syncs and restarts. Keep its record and deferred state,
+  even after all successfully deleted child records are gone; treating it as never synced would resurrect it.
+- Deferral suppresses only the unchanged folder, not its descendants. A new or changed synced descendant wins over
+  deletion under the normal planning rules, and an ignored descendant still protects its containing folders.
+  Restore the required local parents, reconcile the contents normally, and retire the affected deferred state.
+  Do not hide remote entries or swallow failed child deletions to make the folder appear empty.
+- Local recreation ends the deletion lifecycle. Before planning any linked drive, atomically retire the active
+  notice and remove only the affected preserved **folder records** for **every** linked drive whose folder now
+  exists locally. Do not remove descendant file records or base copies, ordinary folder history or acknowledged
+  generation history. This prevents another drive's stale history from deleting the restored local folder:
+  if remote is absent it gets `createRemoteFolder`, and if both sides exist it gets `recordFolder`.
+  Interrupted preflight resumes before planning. If the planner receives a preserved record with both folders
+  present and the same identity, it still emits `recordFolder` to clear that marker rather than doing nothing.
+  A later local deletion starts a new lifecycle and may issue a new notice.
+- A complete successful remote listing proving that the folder disappeared retires its record and deferred state.
+  A different remote identity at the same path retires the old state and is handled as a new entry, not suppressed
+  by the old identity's notice; descendants must not inherit deletion authority from a replaced ancestor's history.
+  A failed or incomplete listing never proves absence.
+- State and notice issuance are independent for different drives, accounts, folder paths and identities.
+  Disconnecting one drive must not reset another drive's notices. This metadata is device-local sync history;
+  it is not part of note files or the remote manifest and is not a deletion instruction to other devices.
+  A new device without that history may therefore import the retained empty folder.
+- Missing deferred state in older persisted records means no deferral, not an already-issued notice. Older
+  adapters without an explicit unsupported capability retain the strict atomic-empty-only attempt and explicit
+  failure path. Never infer unsupported capability from a timeout, authorization error, non-empty result,
+  failed precondition, arbitrary exception or error-message matching. If a provider later supports safe removal,
+  retry it under the same empty-only guards and clear retained state only on success.
+- A successful case-only rename migrates the marker and notice with that drive's history, using the existing
+  rename-intent recovery rules; a failed rename must not reset deduplication or migrate another drive's state.
 
 ### Applying the plan
 
@@ -351,8 +407,10 @@ layer. Every adapter must provide:
   record, so the next sync sees the other device's change.
 - **Safe folder removal.** Folder deletion must be atomic and empty-only, after individual conditional file
   deletions. Recursive provider deletion, even after an empty listing or a file-revision check, is not equivalent.
-  If an adapter cannot provide this guarantee, it reports an unsupported-operation step error and leaves the
-  folder and its remaining records intact.
+  An adapter that cannot provide this guarantee explicitly declares the capability unsupported, so the executor
+  uses [deferred drive folder removal](#deferred-drive-folder-removal), leaving the folder and its remaining records
+  intact with a durable one-time manual-removal notice. An adapter that supports it must still report runtime
+  failures explicitly; the executor must not convert them to capability notices.
 - **Create-only writes.** New files, conflicted copies and planned new folders fail if an entry already exists:
   Dropbox uses `mode: add`, `autorename: false` and `strict_conflict: true`; OneDrive uses
   `@microsoft.graph.conflictBehavior=fail` on the creation operation. Other providers must give the equivalent

@@ -161,10 +161,15 @@ format or add fixture requirements.
 
 ## Folder deletion
 
-A folder deleted locally is never removed from a drive. No provider adapter offers the atomic empty-only folder
-deletion that [safe folder removal](note-format.md#drive-adapter-contract) requires, so every app keeps the folder
-and its records and reports a step error on each sync. This is the same in every app; see
-[#50](https://github.com/MaxDac/marknotes-spec/issues/50).
+A folder deleted locally is removed from a drive only when the adapter supports atomic empty-only removal.
+Otherwise the agreed behaviour is to retain the remote folder and its per-drive deletion history and offer one
+durable manual-removal notice per deletion lifecycle, not an error on every sync. Pending notices survive restart;
+acknowledged notices are not issued again. Unchanged retained folders do not reappear locally on that device.
+Changed or new descendants, local recreation and replacement identities still reconcile normally; genuine runtime
+and persistence failures remain errors, and recursive best-effort deletion is never allowed.
+See [deferred drive folder removal](note-format.md#deferred-drive-folder-removal) and
+[#50](https://github.com/MaxDac/marknotes-spec/issues/50). This is an intentional contract change; current-main apps
+still implement the previous repeated-error behaviour, tracked below until their coordinated updates land.
 
 ## Known divergences
 
@@ -234,7 +239,8 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     ([#37](https://github.com/MaxDac/marknotes-spec/issues/37)).
 32. Resolved in the 0.3 source integrations: known files are deleted with individual guards, followed by deepest-first
     empty-only folder removal. New files, conflicted copies and planned folders are create-only. Unsupported safe
-    removal or creation fails explicitly and retains the affected records instead of adopting or replacing an entry
+    creation fails explicitly and retains the affected records instead of adopting or replacing an entry.
+    Unsupported empty-only removal now has the intentional deferred-notice contract in item 38
     (`sync/plan`, `sync/executor-safety`;
     [#38](https://github.com/MaxDac/marknotes-spec/issues/38),
     [#41](https://github.com/MaxDac/marknotes-spec/issues/41)).
@@ -259,6 +265,12 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
 37. **Moving to a reserved name on Android** (not in fixtures): a folder named `attachments` can be moved to the root,
     after which it is hidden from the note tree
     ([MaxDac/marknotes-android#29](https://github.com/MaxDac/marknotes-android/issues/29)).
+38. **Deferred remote folder removal** (`sync/plan`, `sync/executor-safety`): current-main Android, Desktop and Web
+    still report an unsupported-operation error on every attempt and have no durable preserved-folder marker or
+    notice lifecycle. The new `preserveRemoteFolder` action and lifecycle scenarios require coordinated shared
+    library, persistence, adapter-capability, UI and runner updates. Evidence was checked at Android `d0203b9`,
+    Desktop `15f4f1d` and Web `c76ec3e`; remove each app's fixture annotations only when it implements the contract
+    ([#50](https://github.com/MaxDac/marknotes-spec/issues/50)).
 
 Shared algorithm fixtures (`fixtures/sync/*`, `manifest/*`, `merge/*`, except `sync/executor-safety.json`) are run by
 marknotes-sync for every app. App runners may map those algorithms to the library, but must still map every file.
