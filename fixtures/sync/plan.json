@@ -895,7 +895,6 @@
       },
       "knownDivergence": {
         "android": "The app's pinned sync library rejects all case-only differences; requires the 0.3 rename contract.",
-        "desktop": "The app's pinned sync library rejects all case-only differences; requires the 0.3 rename contract.",
         "web": "The app's pinned sync library rejects all case-only differences; requires the 0.3 rename contract."
       }
     },
@@ -1361,7 +1360,6 @@
       },
       "knownDivergence": {
         "android": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal.",
-        "desktop": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal.",
         "web": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal."
       }
     },
@@ -1454,7 +1452,6 @@
       },
       "knownDivergence": {
         "android": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal.",
-        "desktop": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal.",
         "web": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal."
       }
     },
@@ -1529,7 +1526,6 @@
       },
       "knownDivergence": {
         "android": "The app's pinned sync library groups recursive folder deletion; requires conditional child deletions and empty-only folder removal.",
-        "desktop": "The app's pinned sync library groups recursive folder deletion; requires conditional child deletions and empty-only folder removal.",
         "web": "The app's pinned sync library groups recursive folder deletion; requires conditional child deletions and empty-only folder removal."
       }
     },
@@ -1795,7 +1791,6 @@
       },
       "knownDivergence": {
         "android": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal.",
-        "desktop": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal.",
         "web": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal."
       }
     },
@@ -2048,7 +2043,6 @@
       },
       "knownDivergence": {
         "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
-        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
         "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
     },
@@ -2127,7 +2121,6 @@
       },
       "knownDivergence": {
         "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
-        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
         "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
     },
@@ -2182,7 +2175,6 @@
       },
       "knownDivergence": {
         "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
-        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
         "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
     },
@@ -2236,7 +2228,6 @@
       },
       "knownDivergence": {
         "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
-        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
         "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
     },
@@ -2292,7 +2283,6 @@
       },
       "knownDivergence": {
         "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
-        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
         "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
     },
@@ -2346,7 +2336,6 @@
       },
       "knownDivergence": {
         "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
-        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
         "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
     },
@@ -2395,7 +2384,6 @@
       },
       "knownDivergence": {
         "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
-        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
         "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
     },
@@ -2455,7 +2443,6 @@
       },
       "knownDivergence": {
         "android": "marknotes-sync 0.2 ignores localDeleted; fixed when Android picks up marknotes-sync 0.3.0 and flags records.",
-        "desktop": "marknotes-sync 0.2 ignores localDeleted; fixed when Desktop picks up marknotes-sync 0.3.0 and flags records.",
         "web": "marknotes-sync 0.2 ignores localDeleted; fixed when Web picks up marknotes-sync 0.3.0 and flags records."
       }
     },
@@ -2622,7 +2609,6 @@
       },
       "knownDivergence": {
         "android": "marknotes-sync 0.2 ignores localDeleted; fixed when Android picks up marknotes-sync 0.3.0 and flags records.",
-        "desktop": "marknotes-sync 0.2 ignores localDeleted; fixed when Desktop picks up marknotes-sync 0.3.0 and flags records.",
         "web": "marknotes-sync 0.2 ignores localDeleted; fixed when Web picks up marknotes-sync 0.3.0 and flags records."
       }
     },
@@ -2877,7 +2863,6 @@
       },
       "knownDivergence": {
         "android": "marknotes-sync 0.2 ignores localDeleted; fixed when Android picks up marknotes-sync 0.3.0 and flags records.",
-        "desktop": "marknotes-sync 0.2 ignores localDeleted; fixed when Desktop picks up marknotes-sync 0.3.0 and flags records.",
         "web": "marknotes-sync 0.2 ignores localDeleted; fixed when Web picks up marknotes-sync 0.3.0 and flags records."
       }
     },
@@ -2916,7 +2901,6 @@
       },
       "knownDivergence": {
         "android": "marknotes-sync 0.2 ignores localDeleted; fixed when Android picks up marknotes-sync 0.3.0 and flags records.",
-        "desktop": "marknotes-sync 0.2 ignores localDeleted; fixed when Desktop picks up marknotes-sync 0.3.0 and flags records.",
         "web": "marknotes-sync 0.2 ignores localDeleted; fixed when Web picks up marknotes-sync 0.3.0 and flags records."
       }
     },
@@ -2972,7 +2956,6 @@
       },
       "knownDivergence": {
         "android": "marknotes-sync 0.2 ignores localDeleted; fixed when Android picks up marknotes-sync 0.3.0 and flags records.",
-        "desktop": "marknotes-sync 0.2 ignores localDeleted; fixed when Desktop picks up marknotes-sync 0.3.0 and flags records.",
         "web": "marknotes-sync 0.2 ignores localDeleted; fixed when Web picks up marknotes-sync 0.3.0 and flags records."
       }
     },
@@ -3048,7 +3031,6 @@
       },
       "knownDivergence": {
         "android": "The app's pinned sync library groups recursive folder deletion; requires conditional child deletions and empty-only folder removal.",
-        "desktop": "The app's pinned sync library groups recursive folder deletion; requires conditional child deletions and empty-only folder removal.",
         "web": "The app's pinned sync library groups recursive folder deletion; requires conditional child deletions and empty-only folder removal."
       }
     },
@@ -3104,7 +3086,6 @@
       },
       "knownDivergence": {
         "android": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
-        "desktop": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
         "web": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3."
       }
     },
@@ -3394,7 +3375,6 @@
       },
       "knownDivergence": {
         "android": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
-        "desktop": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
         "web": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3."
       }
     },
@@ -3451,7 +3431,6 @@
       },
       "knownDivergence": {
         "android": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
-        "desktop": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
         "web": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3."
       }
     },
@@ -3507,7 +3486,6 @@
       },
       "knownDivergence": {
         "android": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
-        "desktop": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
         "web": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3."
       }
     },
@@ -3583,7 +3561,6 @@
       },
       "knownDivergence": {
         "android": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
-        "desktop": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
         "web": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3."
       }
     },
@@ -3659,7 +3636,6 @@
       },
       "knownDivergence": {
         "android": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
-        "desktop": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
         "web": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3."
       }
     },
@@ -3866,7 +3842,6 @@
       },
       "knownDivergence": {
         "android": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
-        "desktop": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
         "web": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3."
       }
     },
@@ -3950,7 +3925,6 @@
       },
       "knownDivergence": {
         "android": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
-        "desktop": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
         "web": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3."
       }
     },
@@ -4067,7 +4041,6 @@
       },
       "knownDivergence": {
         "android": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
-        "desktop": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
         "web": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3."
       }
     }
