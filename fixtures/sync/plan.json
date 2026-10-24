@@ -1941,6 +1941,357 @@
           }
         ]
       }
+    },
+    {
+      "name": "path listed twice locally is an error",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          },
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 1000
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "a.md",
+            "message": "is listed more than once"
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
+        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
+        "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
+      }
+    },
+    {
+      "name": "path listed twice on the drive is skipped with everything inside it",
+      "input": {
+        "local": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "A/x.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "A",
+            "id": "fA",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "A",
+            "id": "fB",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "A/x.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "remoteId": "fA",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 1000
+          },
+          {
+            "path": "A/x.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 1000
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "A",
+            "message": "is listed more than once"
+          },
+          {
+            "kind": "error",
+            "path": "A/x.md",
+            "message": "is listed more than once"
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
+        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
+        "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
+      }
+    },
+    {
+      "name": "path recorded twice is an error",
+      "input": {
+        "local": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          }
+        ],
+        "remote": [
+          {
+            "path": "a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 1000
+          },
+          {
+            "path": "a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h2",
+            "syncedAt": 1000
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "a.md",
+            "message": "is listed more than once"
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
+        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
+        "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
+      }
+    },
+    {
+      "name": "folder missing from the drive listing is not deleted locally",
+      "input": {
+        "local": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "A/x.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "A/x.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "remoteId": "fA",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 1000
+          },
+          {
+            "path": "A/x.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 1000
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": []
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
+        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
+        "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
+      }
+    },
+    {
+      "name": "folder missing from the local listing is not deleted on the drive",
+      "input": {
+        "local": [
+          {
+            "path": "A/x.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "A",
+            "id": "fA",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "A/x.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "remoteId": "fA",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 1000
+          },
+          {
+            "path": "A/x.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 1000
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": []
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
+        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
+        "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
+      }
+    },
+    {
+      "name": "folder missing from a listing still has its deleted contents deleted one by one",
+      "input": {
+        "local": [],
+        "remote": [
+          {
+            "path": "A/x.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "A",
+            "isFolder": true,
+            "remoteId": "fA",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 1000
+          },
+          {
+            "path": "A/x.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 1000
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "deleteRemote",
+            "path": "A/x.md",
+            "remote": {
+              "path": "A/x.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            }
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
+        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
+        "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
+      }
     }
   ]
 }
