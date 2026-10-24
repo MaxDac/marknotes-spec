@@ -91,9 +91,6 @@
           "copyModifiedMillis": 2000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -136,9 +133,6 @@
           "copyModifiedMillis": 1000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -181,9 +175,6 @@
           "copyModifiedMillis": 2000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -226,9 +217,6 @@
           "copyModifiedMillis": 1000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -271,9 +259,6 @@
           "copyModifiedMillis": 2000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -316,9 +301,6 @@
           "copyModifiedMillis": 2000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -361,9 +343,6 @@
           "copyModifiedMillis": 2000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -406,9 +385,6 @@
           "copyModifiedMillis": 2000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -453,9 +429,6 @@
           "copyModifiedMillis": 1
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -517,9 +490,6 @@
           "copyModifiedMillis": 1000
         },
         "reuseCopy": true
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -575,9 +545,6 @@
           "copyModifiedMillis": 1000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -639,9 +606,6 @@
           "copyModifiedMillis": 1000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -703,9 +667,6 @@
           "copyModifiedMillis": 1000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -767,9 +728,6 @@
           "copyModifiedMillis": 1000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -831,9 +789,6 @@
           "copyModifiedMillis": 1000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -895,9 +850,6 @@
           "copyModifiedMillis": 1000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -959,9 +911,6 @@
           "copyModifiedMillis": 999
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -1023,9 +972,6 @@
           "copyModifiedMillis": 1000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -1082,9 +1028,6 @@
           "copyModifiedMillis": 1000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -1127,9 +1070,6 @@
           "copyModifiedMillis": 0
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -1190,9 +1130,6 @@
           "copyModifiedMillis": 1000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -1254,9 +1191,6 @@
           "copyModifiedMillis": 1000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     },
     {
@@ -1318,9 +1252,6 @@
           "copyModifiedMillis": 1000
         },
         "reuseCopy": false
-      },
-      "knownDivergence": {
-        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
     }
   ]
