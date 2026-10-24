@@ -37,6 +37,29 @@ Apps: **Android** ([libre](https://github.com/MaxDac/marknotes-android) and
 | Remote images blocked by default | Attachments only | Yes | Attachments only | Desktop: per-note "Load remote images", `https:` only, for the session. Android and Web never load remote images |
 | App lock with idle timeout | No (planned) | No (planned) | No (planned) | Android: biometric or device credential. Desktop and Web: passphrase |
 | Local encryption at rest | Yes (device file-based encryption, app-private storage) | No (planned) | No (planned) | Web: only with the app lock on. See [Local data and privacy](#local-data-and-privacy) |
+| Links to the other apps in Settings → About | No (planned) | No (planned) | No (planned) | See [Links between apps](#links-between-apps). App-only, no format change |
+
+## Links between apps
+
+App behaviour only; none of it changes the note format, the manifest or the fixtures.
+
+Settings → About in every app, and every app's README, list the other MarkNotes apps so users can find them. Android
+Libre and Pro are listed separately, so each app shows exactly three entries and never links to itself. Android
+Libre and Pro share the list; each host app tells the shared code which edition it is.
+
+| App | Link | Label |
+| --- | --- | --- |
+| Android (Libre) | <https://f-droid.org/packages/io.github.maxdac.marknotes.libre/> | MarkNotes for Android (F-Droid) |
+| Android Pro | <https://github.com/MaxDac/MarkNotes/releases> | MarkNotes Pro for Android (GitHub Releases) |
+| Desktop | <https://github.com/MaxDac/marknotes-electron/releases> | MarkNotes Desktop (GitHub Releases) |
+| Web | <https://marknotes.fly.dev> | MarkNotes Web |
+
+- Links open in the external browser (a new tab on Web) only when the user picks one; opening Settings loads
+  nothing. The URLs are fixed: no tracking parameters and no note, drive or account data.
+- GitHub links point at the releases list, not `/releases/latest`, which is empty while an app has only
+  prereleases. Labels say "GitHub Releases" rather than promising a download.
+- If the link cannot be opened (no browser, or the system blocks it), the app shows an error.
+- The F-Droid listing is not published yet, so that link returns 404 until it is.
 
 ## Local data and privacy
 
