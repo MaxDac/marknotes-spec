@@ -228,13 +228,13 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     [#40](https://github.com/MaxDac/marknotes-spec/issues/40),
     [#42](https://github.com/MaxDac/marknotes-spec/issues/42)).
 35. **`file:` images on Android** (not in fixtures): the preview renders an explicit `file:` image destination outside
-    `attachments/`, although `file:` images must never be loaded 
+    `attachments/`, although `file:` images must never be loaded
     ([MaxDac/marknotes-android#26](https://github.com/MaxDac/marknotes-android/issues/26)).
 36. **Titles on Web** (not in fixtures): the note tree, breadcrumb and rename dialog use the file name with `.md`
-    instead of the title 
+    instead of the title
     ([MaxDac/marknotes-web#50](https://github.com/MaxDac/marknotes-web/issues/50)).
 37. **Moving to a reserved name on Android** (not in fixtures): a folder named `attachments` can be moved to the root,
-    after which it is hidden from the note tree 
+    after which it is hidden from the note tree
     ([MaxDac/marknotes-android#29](https://github.com/MaxDac/marknotes-android/issues/29)).
 
 Shared algorithm fixtures (`fixtures/sync/*`, `manifest/*`, `merge/*`, except `sync/executor-safety.json`) are run by
@@ -242,6 +242,6 @@ marknotes-sync for every app. App runners may map those algorithms to the librar
 `sync/executor-safety.json` describes executor races and durable restart boundaries that planner inputs cannot
 express. marknotes-sync runs it against its reference executor, and Desktop and Web run it against their own
 executors, reporting observed store state rather than returning the expected object. The Android runner maps the file
-but does not run its cases; it relies on the reference suite and `SyncEngineTest` 
+but does not run its cases; it relies on the reference suite and `SyncEngineTest`
 ([MaxDac/marknotes-android#28](https://github.com/MaxDac/marknotes-android/issues/28)).
 Apps also keep their own SDK-facing contract tests for the [drive adapters](note-format.md#drive-adapter-contract).
