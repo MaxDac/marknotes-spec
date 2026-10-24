@@ -113,6 +113,10 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     the last of several entries for the same path win, deletes a folder that a listing omits although it lists
     entries inside it, and picks conflicted-copy names case-insensitively by lowercasing instead of by simple case
     folding. Resolved when each app picks up marknotes-sync 0.2.0.
+30. **Byte order mark and control characters** (`front-matter/split`, `front-matter/read-id`, `front-matter/with-id`,
+    `chords/detect`, `sync/plan`): no app recognises a front-matter block after a UTF-8 byte order mark, and the apps
+    on marknotes-sync 0.1 sync names with control characters. Resolved when each app handles the byte order mark and
+    picks up marknotes-sync 0.2.0.
 
 Sync fixtures (`fixtures/sync/*`, `manifest/*`, `merge/*`) are run by marknotes-sync, which implements them for every
 app. App runners may map them to the library instead of running them again, but must still map the files. Apps keep

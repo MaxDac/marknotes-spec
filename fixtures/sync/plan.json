@@ -2292,6 +2292,55 @@
         "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
         "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
+    },
+    {
+      "name": "names with control characters are ignored",
+      "input": {
+        "local": [
+          {
+            "path": "a\nb.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          },
+          {
+            "path": "Tab\tFolder",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "Tab\tFolder/x.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          }
+        ],
+        "remote": [
+          {
+            "path": "c\u0000d.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "e\u007f.md",
+            "id": "r2",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": []
+      },
+      "expected": {
+        "actions": []
+      },
+      "knownDivergence": {
+        "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
+        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
+        "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
+      }
     }
   ]
 }

@@ -18,7 +18,8 @@ when the [Chord sequences setting](#chord-sequences-setting) is on. It is still 
 
 ## Note ids (front-matter)
 
-Each note has a stable id stored in a YAML front-matter block at the very top of the file:
+Each note has a stable id stored in a YAML front-matter block at the very top of the file (after a UTF-8 byte order
+mark, if the file starts with one):
 
 ```markdown
 ---
@@ -35,6 +36,8 @@ Note body…
   the normal save path, so it syncs like any other edit.
 - Any other front-matter keys are kept verbatim. When the block has an `id:` line it is replaced; otherwise `id` is
   added as the first key. The block keeps its line endings (CRLF if it uses CRLF).
+- A byte order mark before the opening fence belongs to the block: it is hidden with it and stays first. When a note
+  that starts with a byte order mark gets a new block, the mark stays before it.
 - The front-matter is hidden in the editor and preview: you edit only the body, and the header is re-attached on save.
   When the header does not end with a line break (its closing `---` is the last line of the file) and the body is not
   empty, a line break is inserted between them: `\r\n` if the block's opening fence line ends with `\r\n`, `\n`
@@ -95,7 +98,8 @@ fixtures check; an app must not add its own sync decisions.
 
 - Notes (`.md`, any case) outside `attachments/`, [attachments](#images-attachments), and every folder.
 - Paths are relative, `/`-separated and already normalised: no empty segment, no segment that is `.`, `..`, starts with
-  `.` or has leading or trailing whitespace. Anything else (other files, hidden files and folders such as
+  `.`, has leading or trailing whitespace or contains a control character (U+0000 to U+001F, or U+007F), which some
+  file systems and drives reject. Anything else (other files, hidden files and folders such as
   `.marknotes/`, notes inside `attachments/`) is ignored on both sides.
 - A path that is a file on one side and a folder on the other is reported as the error
   `is a file on one side and a folder on the other` and skipped.
@@ -195,6 +199,10 @@ remote) or neither. Unresolved regions are written with the markers `<<<<<<< thi
 `>>>>>>> drive`. Pending conflicts (copy path, note path, drive and base text) are kept across restarts until they
 are resolved or one of the two files is gone.
 
+The three-way merge always takes this device's text (the note) first and the other text (the drive's version, or the
+copy) second, as `local` and `remote` in the `merge/merge3` fixtures. The merged text, the conflicting regions and
+their number can depend on that order, notably without a base, so swapping the two is not allowed.
+
 ### Sync manifest
 
 Each linked drive has `.marknotes/manifest.json` in the synced folder:
@@ -278,7 +286,8 @@ frets: 5/1 7/3 7/4 x
 ### Detection
 
 A note is a chord sequence when its front-matter block (as in [Note ids](#note-ids-front-matter): opening fence on the
-first line, trailing spaces or tabs allowed, and a closing `---` line) contains a `type` line whose value is `chords`:
+first line, after a byte order mark if there is one, trailing spaces or tabs allowed, and a closing `---` line)
+contains a `type` line whose value is `chords`:
 
 - The key is `type` at the start of the line, followed by `:` and at least one space or tab. Indented lines,
   `Type:` and `type:chords` do not count.

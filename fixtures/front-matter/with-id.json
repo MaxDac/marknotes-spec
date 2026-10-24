@@ -24,6 +24,18 @@
       "input": { "text": "---\nid: not valid\n---\nBody", "id": "m4n5p6q7" },
       "expected": { "text": "---\nid: m4n5p6q7\n---\nBody" },
       "knownDivergence": { "web": "Keeps the invalid id line and inserts a second id line." }
+    },
+    {
+      "name": "byte order mark stays before the block",
+      "input": { "text": "\ufeff---\r\ntitle: R\r\n---\r\nBody", "id": "m4n5p6q7" },
+      "expected": { "text": "\ufeff---\r\nid: m4n5p6q7\r\ntitle: R\r\n---\r\nBody" },
+      "knownDivergence": { "android": "Doesn't handle a leading byte order mark yet.", "desktop": "Doesn't handle a leading byte order mark yet.", "web": "Doesn't handle a leading byte order mark yet." }
+    },
+    {
+      "name": "byte order mark stays before a new block",
+      "input": { "text": "\ufeffBody", "id": "m4n5p6q7" },
+      "expected": { "text": "\ufeff---\nid: m4n5p6q7\n---\nBody" },
+      "knownDivergence": { "android": "Doesn't handle a leading byte order mark yet.", "desktop": "Doesn't handle a leading byte order mark yet.", "web": "Doesn't handle a leading byte order mark yet." }
     }
   ]
 }

@@ -25,6 +25,7 @@
     { "name": "mismatched quotes", "input": { "text": "---\ntype: \"chords'\n---\n" }, "expected": { "chords": false } },
     { "name": "trailing comment", "input": { "text": "---\ntype: chords # song\n---\n" }, "expected": { "chords": false } },
     { "name": "empty value", "input": { "text": "---\ntype:\n---\n" }, "expected": { "chords": false } },
-    { "name": "only the first type line counts", "input": { "text": "---\ntype: note\ntype: chords\n---\n" }, "expected": { "chords": false } }
+    { "name": "only the first type line counts", "input": { "text": "---\ntype: note\ntype: chords\n---\n" }, "expected": { "chords": false } },
+    { "name": "front-matter after a byte order mark", "input": { "text": "\ufeff---\ntype: chords\n---\n" }, "expected": { "chords": true }, "knownDivergence": { "android": "Doesn't handle a leading byte order mark yet.", "desktop": "Doesn't handle a leading byte order mark yet.", "web": "Doesn't handle a leading byte order mark yet." } }
   ]
 }
