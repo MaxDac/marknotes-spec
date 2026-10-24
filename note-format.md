@@ -99,13 +99,20 @@ fixtures check; an app must not add its own sync decisions.
   `.marknotes/`, notes inside `attachments/`) is ignored on both sides.
 - A path that is a file on one side and a folder on the other is reported as the error
   `is a file on one side and a folder on the other` and skipped.
+- A path listed more than once in the local tree or on the drive, or recorded more than once, is reported as the
+  error `is listed more than once` and skipped together with everything inside it: the listing or the records are
+  inconsistent, so nothing is uploaded, downloaded, deleted, recorded or forgotten for it.
+- A folder that a listing does not include, although it includes entries inside it (some drives do not list the
+  folders that hold files, such as `attachments/`), certainly exists on that side: it gets no folder action (it is
+  neither created, recorded, deleted nor forgotten) and its contents are handled one by one.
 - Paths are identified case-insensitively, by Unicode simple case folding, because Dropbox and OneDrive ignore case
   (`Über.md` and `über.md` are the same path; `Straße.md` and `STRASSE.md` are not). Synced paths that differ only in
   case, whether on the same side or across the local tree, the drive and the records, are each reported as the error
   `differs only in case from another path` and skipped, together with everything inside them: nothing is uploaded,
   downloaded, deleted, recorded or forgotten for them. To change only the case of a name, rename it to another name,
   sync, then rename it again.
-- Errors come first in the plan, one per path, by path; the file/folder message wins when both apply.
+- Errors come first in the plan, one per path, by path; when several apply, the file/folder message wins, then
+  `is listed more than once`, then the case message.
 - Paths are ordered by UTF-16 code units, the order of JavaScript's default string sort.
 
 ### Records and base copies
@@ -173,7 +180,8 @@ A note that changed on both sides is reconciled:
    recorded.
 3. Otherwise **the newest version wins**, by [modification time](#modification-time); on a tie the drive wins. The
    winner is kept at the note's path on both sides. The other version is saved next to it as
-   `<name> (conflicted copy).md` (or `<name> (conflicted copy) <n>.md`, with the first free `n` from 2) and synced
+   `<name> (conflicted copy).md` (or `<name> (conflicted copy) <n>.md`, with the first free `n` from 2; a name is
+   taken when an existing local path equals it by [simple case folding](#what-is-synced)) and synced
    as a new note. The copy always gets a new valid id (set as in [Note ids](#note-ids-front-matter)), even when the
    losing version had no id or an invalid one.
 

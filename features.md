@@ -109,6 +109,10 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     ([#8](https://github.com/MaxDac/marknotes-spec/issues/8), [#14](https://github.com/MaxDac/marknotes-spec/issues/14),
     [#19](https://github.com/MaxDac/marknotes-spec/issues/19), [#20](https://github.com/MaxDac/marknotes-spec/issues/20),
     [MaxDac/marknotes-sync#8](https://github.com/MaxDac/marknotes-sync/issues/8)).
+29. **marknotes-sync 0.2.0** (`sync/plan`, `merge/conflict-copy-name`): the apps run marknotes-sync 0.1, which lets
+    the last of several entries for the same path win, deletes a folder that a listing omits although it lists
+    entries inside it, and picks conflicted-copy names case-insensitively by lowercasing instead of by simple case
+    folding. Resolved when each app picks up marknotes-sync 0.2.0.
 
 Sync fixtures (`fixtures/sync/*`, `manifest/*`, `merge/*`) are run by marknotes-sync, which implements them for every
 app. App runners may map them to the library instead of running them again, but must still map the files. Apps keep
