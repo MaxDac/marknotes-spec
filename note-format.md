@@ -222,7 +222,10 @@ generation, so deleting the same folder identity again after recreation is a new
 - Local recreation ends the deletion lifecycle. Before planning any linked drive, atomically retire the active
   notice and remove only the affected preserved **folder records** for **every** linked drive whose folder now
   exists locally. Do not remove descendant file records or base copies, ordinary folder history or acknowledged
-  generation history. This prevents another drive's stale history from deleting the restored local folder:
+  generation history. Capture durable evidence of the retired folder's remote identity in that same transaction,
+  scoped to this drive, path and recreation, so simultaneous remote replacement cannot be mistaken for unchanged
+  recreation after the old folder record is removed. This prevents another drive's stale history from deleting
+  the restored local folder:
   if remote is absent it gets `createRemoteFolder`, and if both sides exist it gets `recordFolder`.
   Interrupted preflight resumes before planning. If the planner receives a preserved record with both folders
   present and the same identity, it still emits `recordFolder` to clear that marker rather than doing nothing.
@@ -239,6 +242,10 @@ generation, so deleting the same folder identity again after recreation is a new
   record to authorize deletion, even if the child retained its own identity and revision. If the transaction fails,
   report the error and retain the previous records and notice state; do not save the replacement identity separately.
   Unlike local recreation preflight, remote identity replacement invalidates descendant history.
+  After a complete remote listing and before planning, compare any recreation identity evidence with the listed
+  folder identity. A mismatch requires the same descendant-history retirement before planning child actions.
+  Keep that evidence through failed folder adoption and restart; clear it only with successful root adoption.
+  A matching identity alone authorizes no descendant retirement, and remote absence is not identity replacement.
   A failed or incomplete listing never proves absence.
 - State and notice issuance are independent for different drives, accounts, folder paths and identities.
   Disconnecting one drive must not reset another drive's notices. This metadata is device-local sync history;
