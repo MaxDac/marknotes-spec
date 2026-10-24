@@ -844,7 +844,7 @@
       }
     },
     {
-      "name": "case-only rename is an error on both spellings",
+      "name": "recorded unchanged drive spelling follows a local case-only rename",
       "input": {
         "local": [
           {
@@ -878,16 +878,25 @@
       "expected": {
         "actions": [
           {
-            "kind": "error",
-            "path": "Todo.md",
-            "message": "differs only in case from another path"
-          },
-          {
-            "kind": "error",
+            "kind": "renameRemote",
             "path": "todo.md",
-            "message": "differs only in case from another path"
+            "toPath": "Todo.md",
+            "isFolder": false,
+            "remote": {
+              "path": "todo.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "sha256": null
           }
         ]
+      },
+      "knownDivergence": {
+        "android": "The app's pinned sync library rejects all case-only differences; requires the 0.3 rename contract.",
+        "desktop": "The app's pinned sync library rejects all case-only differences; requires the 0.3 rename contract.",
+        "web": "The app's pinned sync library rejects all case-only differences; requires the 0.3 rename contract."
       }
     },
     {
@@ -1327,16 +1336,33 @@
       "expected": {
         "actions": [
           {
+            "kind": "deleteLocal",
+            "path": "A/B/m.md"
+          },
+          {
+            "kind": "deleteLocal",
+            "path": "A/n.md"
+          },
+          {
+            "kind": "deleteLocalFolder",
+            "path": "A/B",
+            "forget": [
+              "A/B"
+            ]
+          },
+          {
             "kind": "deleteLocalFolder",
             "path": "A",
             "forget": [
-              "A",
-              "A/B",
-              "A/B/m.md",
-              "A/n.md"
+              "A"
             ]
           }
         ]
+      },
+      "knownDivergence": {
+        "android": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal.",
+        "desktop": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal.",
+        "web": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal."
       }
     },
     {
@@ -1410,6 +1436,10 @@
             "path": "A"
           },
           {
+            "kind": "deleteLocal",
+            "path": "A/B/m.md"
+          },
+          {
             "kind": "uploadNew",
             "path": "A/n.md"
           },
@@ -1417,11 +1447,15 @@
             "kind": "deleteLocalFolder",
             "path": "A/B",
             "forget": [
-              "A/B",
-              "A/B/m.md"
+              "A/B"
             ]
           }
         ]
+      },
+      "knownDivergence": {
+        "android": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal.",
+        "desktop": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal.",
+        "web": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal."
       }
     },
     {
@@ -1467,6 +1501,17 @@
       "expected": {
         "actions": [
           {
+            "kind": "deleteRemote",
+            "path": "A/n.md",
+            "remote": {
+              "path": "A/n.md",
+              "id": "rn",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            }
+          },
+          {
             "kind": "deleteRemoteFolder",
             "path": "A",
             "remote": {
@@ -1477,11 +1522,15 @@
               "modifiedMillis": 1000
             },
             "forget": [
-              "A",
-              "A/n.md"
+              "A"
             ]
           }
         ]
+      },
+      "knownDivergence": {
+        "android": "The app's pinned sync library groups recursive folder deletion; requires conditional child deletions and empty-only folder removal.",
+        "desktop": "The app's pinned sync library groups recursive folder deletion; requires conditional child deletions and empty-only folder removal.",
+        "web": "The app's pinned sync library groups recursive folder deletion; requires conditional child deletions and empty-only folder removal."
       }
     },
     {
@@ -1732,14 +1781,22 @@
             "path": "A"
           },
           {
+            "kind": "deleteLocal",
+            "path": "A/B/m.md"
+          },
+          {
             "kind": "deleteLocalFolder",
             "path": "A/B",
             "forget": [
-              "A/B",
-              "A/B/m.md"
+              "A/B"
             ]
           }
         ]
+      },
+      "knownDivergence": {
+        "android": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal.",
+        "desktop": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal.",
+        "web": "The pinned sync library groups recursive local folder deletion; requires guarded child deletion and empty-only folder removal."
       }
     },
     {
@@ -2324,7 +2381,7 @@
             "modifiedMillis": 1000
           },
           {
-            "path": "e\u007f.md",
+            "path": "e.md",
             "id": "r2",
             "isFolder": false,
             "version": "v1",
@@ -2963,6 +3020,17 @@
       "expected": {
         "actions": [
           {
+            "kind": "deleteRemote",
+            "path": "F/d.md",
+            "remote": {
+              "path": "F/d.md",
+              "id": "rd",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            }
+          },
+          {
             "kind": "deleteRemoteFolder",
             "path": "F",
             "remote": {
@@ -2973,11 +3041,833 @@
               "modifiedMillis": 1000
             },
             "forget": [
-              "F",
-              "F/d.md"
+              "F"
             ]
           }
         ]
+      },
+      "knownDivergence": {
+        "android": "The app's pinned sync library groups recursive folder deletion; requires conditional child deletions and empty-only folder removal.",
+        "desktop": "The app's pinned sync library groups recursive folder deletion; requires conditional child deletions and empty-only folder removal.",
+        "web": "The app's pinned sync library groups recursive folder deletion; requires conditional child deletions and empty-only folder removal."
+      }
+    },
+    {
+      "name": "recorded unchanged local spelling follows a drive case-only rename",
+      "input": {
+        "local": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameLocal",
+            "path": "Note.md",
+            "toPath": "note.md",
+            "isFolder": false,
+            "remote": {
+              "path": "note.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "sha256": "h1"
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
+        "desktop": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
+        "web": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3."
+      }
+    },
+    {
+      "name": "an edited stale local spelling remains a collision",
+      "input": {
+        "local": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "edited"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Note.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "note.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
+      "name": "an edited stale drive revision remains a collision",
+      "input": {
+        "local": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v2",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Note.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "note.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
+      "name": "a replaced stale drive identity remains a collision",
+      "input": {
+        "local": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "another",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Note.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "note.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
+      "name": "a case-only difference without a record remains a collision",
+      "input": {
+        "local": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Note.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "note.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
+      "name": "inconsistent recorded spellings remain a collision",
+      "input": {
+        "local": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          },
+          {
+            "path": "note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Note.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "note.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
+      "name": "a change on the renamed side is handled only after the stale spelling converges",
+      "input": {
+        "local": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "edited"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameRemote",
+            "path": "note.md",
+            "toPath": "Note.md",
+            "isFolder": false,
+            "remote": {
+              "path": "note.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "sha256": null
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
+        "desktop": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
+        "web": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3."
+      }
+    },
+    {
+      "name": "a localDeleted flag does not delete an unchanged stale case alias",
+      "input": {
+        "local": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500,
+            "localDeleted": true
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameRemote",
+            "path": "note.md",
+            "toPath": "Note.md",
+            "isFolder": false,
+            "remote": {
+              "path": "note.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "sha256": null
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
+        "desktop": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
+        "web": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3."
+      }
+    },
+    {
+      "name": "safe rename inference uses Unicode simple folding",
+      "input": {
+        "local": [
+          {
+            "path": "Σ.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "ς.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Σ.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameLocal",
+            "path": "Σ.md",
+            "toPath": "ς.md",
+            "isFolder": false,
+            "remote": {
+              "path": "ς.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "sha256": "h1"
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
+        "desktop": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
+        "web": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3."
+      }
+    },
+    {
+      "name": "an unchanged stale local folder converges as one guarded subtree rename",
+      "input": {
+        "local": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "work",
+            "id": "fW",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "remoteId": "fW",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameLocal",
+            "path": "Work",
+            "toPath": "work",
+            "isFolder": true,
+            "remote": {
+              "path": "work",
+              "id": "fW",
+              "isFolder": true,
+              "version": "",
+              "modifiedMillis": 1000
+            },
+            "sha256": null
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
+        "desktop": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
+        "web": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3."
+      }
+    },
+    {
+      "name": "an unchanged stale remote folder converges as one guarded subtree rename",
+      "input": {
+        "local": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "work",
+            "id": "fW",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "work",
+            "isFolder": true,
+            "remoteId": "fW",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "work/a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameRemote",
+            "path": "work",
+            "toPath": "Work",
+            "isFolder": true,
+            "remote": {
+              "path": "work",
+              "id": "fW",
+              "isFolder": true,
+              "version": "",
+              "modifiedMillis": 1000
+            },
+            "sha256": null
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
+        "desktop": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
+        "web": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3."
+      }
+    },
+    {
+      "name": "an edited stale folder descendant prevents automatic rename",
+      "input": {
+        "local": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "edited"
+          }
+        ],
+        "remote": [
+          {
+            "path": "work",
+            "id": "fW",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "remoteId": "fW",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Work",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "Work/a.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "work",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "work/a.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
+      "name": "known remote files are deleted before folders deepest first",
+      "input": {
+        "local": [],
+        "remote": [
+          {
+            "path": "F",
+            "id": "fF",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "F/G",
+            "id": "fG",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "F/a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "F/G/b.md",
+            "id": "r2",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "F",
+            "isFolder": true,
+            "remoteId": "fF",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "F/G",
+            "isFolder": true,
+            "remoteId": "fG",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "F/a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          },
+          {
+            "path": "F/G/b.md",
+            "isFolder": false,
+            "remoteId": "r2",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "deleteRemote",
+            "path": "F/G/b.md",
+            "remote": {
+              "path": "F/G/b.md",
+              "id": "r2",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            }
+          },
+          {
+            "kind": "deleteRemote",
+            "path": "F/a.md",
+            "remote": {
+              "path": "F/a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            }
+          },
+          {
+            "kind": "deleteRemoteFolder",
+            "path": "F/G",
+            "remote": {
+              "path": "F/G",
+              "id": "fG",
+              "isFolder": true,
+              "version": "",
+              "modifiedMillis": 1000
+            },
+            "forget": [
+              "F/G"
+            ]
+          },
+          {
+            "kind": "deleteRemoteFolder",
+            "path": "F",
+            "remote": {
+              "path": "F",
+              "id": "fF",
+              "isFolder": true,
+              "version": "",
+              "modifiedMillis": 1000
+            },
+            "forget": [
+              "F"
+            ]
+          }
+        ]
+      },
+      "knownDivergence": {
+        "android": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
+        "desktop": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3.",
+        "web": "The pinned sync library lacks record-backed safe case-only convergence and empty-only folder-deletion planning; requires 0.3."
       }
     }
   ]

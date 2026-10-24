@@ -1,0 +1,61 @@
+{
+  "$schema": "../../schemas/fixture-file.schema.json",
+  "description": "Execution-level races and restart recovery, not planner-only cases. input.scenario selects a reference-executor setup: folder-delete-concurrent-upload inserts an unseen F/new.md after listing; folder-delete-unsupported has no atomic empty-only primitive; new-file-create-race and new-folder-create-race occupy a planned creation path after listing. conflict-copy-restart runs one overlapping edit with losing edit time 1000, injects a crash at input.crashAfter, restarts with durable metadata and completes sync. Existing entries and failed-action records must remain intact. App runners map this file to the shared library's executor contract tests and keep their own adapter/persistence tests.",
+  "cases": [
+    {
+      "name": "a concurrent child upload survives a planned folder deletion",
+      "input": { "scenario": "folder-delete-concurrent-upload" },
+      "expected": { "errors": 1, "unseenPreserved": true, "folderRecordRetained": true }
+    },
+    {
+      "name": "an unsupported empty-only folder removal fails without a recursive request",
+      "input": { "scenario": "folder-delete-unsupported" },
+      "expected": { "errors": 1, "recursiveDeleteRequests": 0, "folderRecordRetained": true }
+    },
+    {
+      "name": "a failed conditional child deletion prevents destructive folder removal",
+      "input": { "scenario": "folder-delete-child-revision-race" },
+      "expected": { "errors": 2, "changedChildPreserved": true, "childRecordRetained": true, "folderRecordRetained": true }
+    },
+    {
+      "name": "a new file upload cannot replace a path created after listing",
+      "input": { "scenario": "new-file-create-race" },
+      "expected": { "errors": 1, "existingTextPreserved": true, "creationRecorded": false }
+    },
+    {
+      "name": "a planned folder creation cannot adopt an entry created after listing",
+      "input": { "scenario": "new-folder-create-race" },
+      "expected": { "errors": 1, "existingIdentityPreserved": true, "creationRecorded": false }
+    },
+    {
+      "name": "restart after durable intent creation writes only one losing copy",
+      "input": { "scenario": "conflict-copy-restart", "crashAfter": "intent" },
+      "expected": { "errors": 0, "copyCount": 1, "copyModifiedMillis": 1000, "losingTextPreserved": true, "intentCleared": true }
+    },
+    {
+      "name": "restart after writing the losing copy reuses it rather than numbering a duplicate",
+      "input": { "scenario": "conflict-copy-restart", "crashAfter": "copy" },
+      "expected": { "errors": 0, "copyCount": 1, "copyModifiedMillis": 1000, "losingTextPreserved": true, "intentCleared": true }
+    },
+    {
+      "name": "restart after replacing the winner finishes the original copy",
+      "input": { "scenario": "conflict-copy-restart", "crashAfter": "winner" },
+      "expected": { "errors": 0, "copyCount": 1, "copyModifiedMillis": 1000, "losingTextPreserved": true, "intentCleared": true }
+    },
+    {
+      "name": "restart after recording the winner finishes the original copy",
+      "input": { "scenario": "conflict-copy-restart", "crashAfter": "winner-record" },
+      "expected": { "errors": 0, "copyCount": 1, "copyModifiedMillis": 1000, "losingTextPreserved": true, "intentCleared": true }
+    },
+    {
+      "name": "restart after uploading the copy recognizes the completed create-only write",
+      "input": { "scenario": "conflict-copy-restart", "crashAfter": "copy-upload" },
+      "expected": { "errors": 0, "copyCount": 1, "copyModifiedMillis": 1000, "losingTextPreserved": true, "intentCleared": true }
+    },
+    {
+      "name": "restart after recording the copy clears intent without a duplicate upload",
+      "input": { "scenario": "conflict-copy-restart", "crashAfter": "copy-record" },
+      "expected": { "errors": 0, "copyCount": 1, "copyModifiedMillis": 1000, "losingTextPreserved": true, "intentCleared": true }
+    }
+  ]
+}
