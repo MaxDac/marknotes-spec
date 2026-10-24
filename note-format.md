@@ -219,9 +219,11 @@ one consistent recorded spelling for a case-folded path, and both entries have t
   side keep the collision errors.
 
 Renames do not change content, note ids or modification times. They use no-overwrite operations and recheck the
-stale-side identity/content before changing it. A failed precondition is an explicit step error that keeps the
-records. A platform may use a private temporary name to implement a case-only rename, but must make an interrupted
-rename recoverable and must not overwrite another entry at either step.
+stale-side identity/content before changing it. A failed precondition or an unsupported safe rename is an explicit
+step error that keeps the records. A local file system may use a private temporary name to implement a case-only
+rename, but must make an interrupted rename recoverable and must not overwrite another entry at either step.
+Do not emulate a drive rename with an unannounced temporary path: another device could interpret the missing
+original as a deletion between the two moves.
 
 After a successful rename, migrate the current drive's affected record and base-copy paths together. Keep the
 other drives' records and bases at their previous paths until those drives perform their own convergence; their
@@ -341,6 +343,12 @@ layer. Every adapter must provide:
   `@microsoft.graph.conflictBehavior=fail` on the creation operation. Other providers must give the equivalent
   no-replacement guarantee or fail explicitly. A folder conflict must not be converted to success by looking up
   and adopting the existing entry.
+- **Case-only rename capabilities.** A drive rename must preserve the stable entry identity and all content,
+  fail without overwriting an occupied destination, and leave recorded content versions unchanged until verified
+  by a fresh plan. Dropbox's [`move_v2`](https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-v-2)
+  explicitly does not support case-only renames, so an adapter must report that limitation instead of claiming a
+  successful direct move. This does not prevent a device from converging its unchanged local spelling to a
+  case-only rename it observes on the drive.
 - **Modification times.** Uploads write the note's [modification time](#modification-time) to Dropbox
   `client_modified`, OneDrive `fileSystemInfo.lastModifiedDateTime` or the Proton Drive claimed `modificationTime`.
   Listings read the same fields, falling back to the server time when they are missing, and downloads set the local

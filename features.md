@@ -133,7 +133,9 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
 33. **Case-only rename convergence** (`sync/plan`): existing app pins reject every case-only difference, even when
     a record proves that one side retains an unchanged stale spelling. The 0.3 contract renames only that stale
     side, preserves content and edit time, and keeps ambiguous collisions as errors
-    ([#39](https://github.com/MaxDac/marknotes-spec/issues/39)).
+    ([#39](https://github.com/MaxDac/marknotes-spec/issues/39)). Local stale-side convergence is separate from
+    provider rename capabilities: Dropbox does not support a direct case-only drive move, and unsupported safe
+    operations remain explicit step errors rather than temporary moves that could look like deletions to peers.
 34. **Conflict-copy metadata and replay** (`sync/reconcile`, `sync/executor-safety`): the pinned shared API lacks
     the losing modification time and durable verified copy intent. Android and Desktop currently stamp a copy
     with its creation time; Web already carries the losing time. None of the current executors durably associates
