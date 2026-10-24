@@ -23,20 +23,20 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Feature | Libre | Pro | Desktop | Web | Notes |
 | --- | --- | --- | --- | --- | --- |
 | Markdown notes in nested folders | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#notes-and-folders) |
-| Note title is the file name without `.md` | Yes | Yes | Yes | Partial: the tree, breadcrumb and rename dialog use `.md` [ISSUE:web-md-titles] | See known divergence 36 |
-| `attachments` reserved as a root name | Partial: a folder can be moved to the root as `attachments` [ISSUE:android-move-attachments] | Partial (inherits Libre) | Yes | Yes | On create, rename and move. See known divergence 37 |
+| Note title is the file name without `.md` | Yes | Yes | Yes | Partial: the tree, breadcrumb and rename dialog use `.md` [MaxDac/marknotes-web#50](https://github.com/MaxDac/marknotes-web/issues/50) | See known divergence 36 |
+| `attachments` reserved as a root name | Partial: a folder can be moved to the root as `attachments` [MaxDac/marknotes-android#29](https://github.com/MaxDac/marknotes-android/issues/29) | Partial (inherits Libre) | Yes | Yes | On create, rename and move. See known divergence 37 |
 | Folder tree with current location | Drawer, folder name | Drawer, folder name | Sidebar, folder name | Sidebar, breadcrumb | |
-| Editor views | Edit or Preview | Edit or Preview | Edit, Split or Preview | Partial: always side by side [ISSUE:web-view-toggle] | |
-| Formatting toolbar | Yes | Yes | Yes | Partial: no strikethrough or numbered list; Heading always inserts `##` [ISSUE:web-toolbar] | Android and Desktop cycle the heading through none, H1, H2 and H3. Note links are inserted with `@` in every app |
-| Undo and redo | No [ISSUE:android-undo] | No (inherits Libre) | Keyboard | Keyboard | |
+| Editor views | Edit or Preview | Edit or Preview | Edit, Split or Preview | Partial: always side by side [MaxDac/marknotes-web#49](https://github.com/MaxDac/marknotes-web/issues/49) | |
+| Formatting toolbar | Yes | Yes | Yes | Partial: no strikethrough or numbered list; Heading always inserts `##` [MaxDac/marknotes-web#48](https://github.com/MaxDac/marknotes-web/issues/48) | Android and Desktop cycle the heading through none, H1, H2 and H3. Note links are inserted with `@` in every app |
+| Undo and redo | No [MaxDac/marknotes-android#24](https://github.com/MaxDac/marknotes-android/issues/24) | No (inherits Libre) | Keyboard | Keyboard | |
 | Autosave | Yes (800 ms) | Yes (800 ms) | Yes (500 ms) | Yes (400 ms) | Debounce after the last edit |
 | Stable note ids in front-matter | Yes | Yes | Yes | Yes | |
 | Note links and `@` picker | Yes | Yes | Yes | Yes | Picker ordering differs, see below |
 | Duplicate ids given a new id | When the `@` picker opens | When the `@` picker opens | When the `@` picker opens | When the `@` picker opens or a note is opened | [note-format.md](note-format.md#note-ids-front-matter) leaves the timing to the app; links resolve the same way meanwhile |
 | Chord sequence editor | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#chord-sequences); `fixtures/chords/*` |
 | Chord sequences opt-in setting (off by default) | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#chord-sequences-setting). App-only, no format change |
-| Bass fret 12 marker after the fret | Yes | Yes | No: drawn before it [ISSUE:desktop-bass-marker] | Yes | App-only, no format change |
-| Import shared text and documents as Markdown | Yes | Yes | No [ISSUE:desktop-import] | No [ISSUE:web-import] | Android share sheet: text, HTML, `.txt`/`.md`/`.html`, `.docx`, PDF text, images. App-only, no format change |
+| Bass fret 12 marker after the fret | Yes | Yes | No: drawn before it [MaxDac/marknotes-electron#47](https://github.com/MaxDac/marknotes-electron/issues/47) | Yes | App-only, no format change |
+| Import shared text and documents as Markdown | Yes | Yes | No [MaxDac/marknotes-electron#43](https://github.com/MaxDac/marknotes-electron/issues/43) | No [MaxDac/marknotes-web#46](https://github.com/MaxDac/marknotes-web/issues/46) | Android share sheet: text, HTML, `.txt`/`.md`/`.html`, `.docx`, PDF text, images. App-only, no format change |
 | Themes and accent colours | 8 + Dynamic | 8 + Dynamic | 8 | 9 | Light, dark or system everywhere. Dynamic (Material You) needs Android 12. Web adds Pink and defaults to Violet |
 
 ### Images
@@ -44,9 +44,9 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Feature | Libre | Pro | Desktop | Web | Notes |
 | --- | --- | --- | --- | --- | --- |
 | Images from file picker / toolbar | Yes | Yes | Yes | Yes | Android also takes a photo with the camera |
-| Image paste and drag-and-drop | No [ISSUE:android-paste] | No (inherits Libre) | Yes | Yes | Android supports both through the clipboard and multi-window drag-and-drop |
+| Image paste and drag-and-drop | No [MaxDac/marknotes-android#25](https://github.com/MaxDac/marknotes-android/issues/25) | No (inherits Libre) | Yes | Yes | Android supports both through the clipboard and multi-window drag-and-drop |
 | Unused attachment clean-up | Yes | Yes | Yes | Yes | |
-| Remote images blocked | Partial: renders `file:` images [ISSUE:android-file-images] | Partial (inherits Libre) | Yes | Yes | See known divergence 35 |
+| Remote images blocked | Partial: renders `file:` images [MaxDac/marknotes-android#26](https://github.com/MaxDac/marknotes-android/issues/26) | Partial (inherits Libre) | Yes | Yes | See known divergence 35 |
 | Load remote images on request | Never (by design) | Never (by design) | Per note, `https:` only, for the session | Never (by design) | Android and Web document "never loads remote images" as a privacy property |
 
 ### Sync
@@ -56,18 +56,18 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Dropbox sync | Yes | Yes | Yes | Yes | |
 | OneDrive sync | No (Pro only) | Yes | Yes | Yes | Every app links several drives, each mirroring the same notes |
 | Proton Drive sync | No (Pro only) | Yes | Yes | No | Web: deferred to [MaxDac/marknotes-web#1](https://github.com/MaxDac/marknotes-web/issues/1). Pro and Desktop: folder typed by name; no CAPTCHA, two-password or FIDO2-only accounts. Pro: 64-bit devices only |
-| Several Proton Drive accounts | No (Pro only) | No: one account [ISSUE:pro-proton-accounts] | Yes | No | |
+| Several Proton Drive accounts | No (Pro only) | No: one account [MaxDac/MarkNotes#40](https://github.com/MaxDac/MarkNotes/issues/40) | Yes | No | |
 | Shared sync algorithm ([marknotes-sync](https://github.com/MaxDac/marknotes-sync)) | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#sync); `fixtures/sync/*` |
 | Sync manifest (`.marknotes/manifest.json`) | Yes | Yes | Yes | Yes | |
 | Three-way merge, newest wins on conflict | Yes | Yes | Yes | Yes | The other version is saved as a conflicted copy |
 | Safe sync mutations and crash recovery (sync 0.3 contract) | Yes (0.3 source) | Yes (0.3 source) | Yes (0.3 source) | Yes (0.3 source) | Source-pinned integrations, not an assumed published release. Unsupported safe mutations fail explicitly; see resolved divergences 32-34 and [Folder deletion](#folder-deletion) |
 | Merge a conflicted copy back, with conflict choices | Yes | Yes | Yes | Yes | |
 | When sync runs | Launch, Sync now, drive added, after a merge | Same as Libre | Launch or unlock, Sync now, drive added, after a merge | Page load and Sync now | No app polls in the background |
-| Sync when the network comes back (opt-in, app open) | No [ISSUE:android-reconnect-sync] | No (inherits Libre) | No [ISSUE:desktop-reconnect-sync] | Yes | Web: "Sync when reconnected", off by default, only while the tab is visible and unlocked |
-| Sync status | Progress, last sync per drive | Same as Libre | Last sync per drive, "Syncing…" | Partial: per-drive state, no last sync time [ISSUE:web-sync-status] | |
-| Expired sign-in | Partial: remove and re-add the drive [ISSUE:android-reconnect] | Partial (inherits Libre) | Partial: remove and re-add the drive [ISSUE:desktop-reconnect] | Reconnect action | |
-| Disconnect signs out of the provider | Yes | Yes (OneDrive: local sign-out) | Yes (OneDrive: local sign-out) | Partial: forgets credentials, revokes nothing [ISSUE:web-dropbox-revoke] | Microsoft offers public clients no single-session revoke |
-| Case-only renames on the drive | Explicit error | Partial: OneDrive files only [ISSUE:pro-onedrive-folder-rename] | OneDrive only | OneDrive only | Dropbox and Proton Drive have no safe case-only move |
+| Sync when the network comes back (opt-in, app open) | No [MaxDac/marknotes-android#30](https://github.com/MaxDac/marknotes-android/issues/30) | No (inherits Libre) | No [MaxDac/marknotes-electron#48](https://github.com/MaxDac/marknotes-electron/issues/48) | Yes | Web: "Sync when reconnected", off by default, only while the tab is visible and unlocked |
+| Sync status | Progress, last sync per drive | Same as Libre | Last sync per drive, "Syncing…" | Partial: per-drive state, no last sync time [MaxDac/marknotes-web#51](https://github.com/MaxDac/marknotes-web/issues/51) | |
+| Expired sign-in | Partial: remove and re-add the drive [MaxDac/marknotes-android#27](https://github.com/MaxDac/marknotes-android/issues/27) | Partial (inherits Libre) | Partial: remove and re-add the drive [MaxDac/marknotes-electron#46](https://github.com/MaxDac/marknotes-electron/issues/46) | Reconnect action | |
+| Disconnect signs out of the provider | Yes | Yes (OneDrive: local sign-out) | Yes (OneDrive: local sign-out) | Partial: forgets credentials, revokes nothing [MaxDac/marknotes-web#52](https://github.com/MaxDac/marknotes-web/issues/52) | Microsoft offers public clients no single-session revoke |
+| Case-only renames on the drive | Explicit error | Partial: OneDrive files only [MaxDac/MarkNotes#39](https://github.com/MaxDac/MarkNotes/issues/39) | OneDrive only | OneDrive only | Dropbox and Proton Drive have no safe case-only move |
 | Attachment hash check on download | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#attachment-sync) |
 
 ### Privacy, diagnostics and app information
@@ -77,10 +77,10 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | App lock with idle timeout | Yes | Yes | Yes | Yes (passphrase mode) | See [Local data and privacy](#local-data-and-privacy) |
 | Local encryption at rest | Device encryption | Device encryption | Yes | Passphrase mode only | |
 | Delete local data | Yes | Yes | Yes | Yes ("Forget this device") | |
-| Block screenshots and hide in recent apps | Yes | Yes | No [ISSUE:desktop-screen-protection] | N/A | Browsers offer no such API |
+| Block screenshots and hide in recent apps | Yes | Yes | No [MaxDac/marknotes-electron#45](https://github.com/MaxDac/marknotes-electron/issues/45) | N/A | Browsers offer no such API |
 | Memory-only notes | Not offered | Not offered | Not offered (credentials only, without a keyring) | Yes | Web: notes, images, sync state and credentials stay in memory, single tab. Meant for shared browsers; installed apps keep notes on the device |
-| Only the permissions the app needs | Yes (checked on release) | Partial: the `libre/` pin builds marknotes-sync without the AAR permission fix [ISSUE:pro-libre-pin] | N/A | N/A | |
-| Local error diagnostics and user-initiated GitHub reporting | Yes | Yes | No [ISSUE:desktop-diagnostics] | No [ISSUE:web-diagnostics] | See [Android diagnostics](#android-diagnostics). App-only, no format change |
+| Only the permissions the app needs | Yes (checked on release) | Partial: the `libre/` pin builds marknotes-sync without the AAR permission fix [MaxDac/MarkNotes#38](https://github.com/MaxDac/MarkNotes/issues/38) | N/A | N/A | |
+| Local error diagnostics and user-initiated GitHub reporting | Yes | Yes | No [MaxDac/marknotes-electron#44](https://github.com/MaxDac/marknotes-electron/issues/44) | No [MaxDac/marknotes-web#47](https://github.com/MaxDac/marknotes-web/issues/47) | See [Android diagnostics](#android-diagnostics). App-only, no format change |
 | About | Licence notices, Ko-fi link | Same as Libre, plus the Proton Drive notice | Short text | No About view; `/security` page and `licenses.txt` | No app shows its version |
 | Updates | F-Droid or GitHub releases | GitHub releases | In-app updater | Service worker update | |
 
@@ -141,7 +141,7 @@ format or add fixture requirements.
 A folder deleted locally is never removed from a drive. No provider adapter offers the atomic empty-only folder
 deletion that [safe folder removal](note-format.md#drive-adapter-contract) requires, so every app keeps the folder
 and its records and reports a step error on each sync. This is the same in every app; see
-[ISSUE:spec-folder-deletion].
+[#50](https://github.com/MaxDac/marknotes-spec/issues/50).
 
 ## Known divergences
 
@@ -228,16 +228,20 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     [#40](https://github.com/MaxDac/marknotes-spec/issues/40),
     [#42](https://github.com/MaxDac/marknotes-spec/issues/42)).
 35. **`file:` images on Android** (not in fixtures): the preview renders an explicit `file:` image destination outside
-    `attachments/`, although `file:` images must never be loaded ([ISSUE:android-file-images]).
+    `attachments/`, although `file:` images must never be loaded 
+    ([MaxDac/marknotes-android#26](https://github.com/MaxDac/marknotes-android/issues/26)).
 36. **Titles on Web** (not in fixtures): the note tree, breadcrumb and rename dialog use the file name with `.md`
-    instead of the title ([ISSUE:web-md-titles]).
+    instead of the title 
+    ([MaxDac/marknotes-web#50](https://github.com/MaxDac/marknotes-web/issues/50)).
 37. **Moving to a reserved name on Android** (not in fixtures): a folder named `attachments` can be moved to the root,
-    after which it is hidden from the note tree ([ISSUE:android-move-attachments]).
+    after which it is hidden from the note tree 
+    ([MaxDac/marknotes-android#29](https://github.com/MaxDac/marknotes-android/issues/29)).
 
 Shared algorithm fixtures (`fixtures/sync/*`, `manifest/*`, `merge/*`, except `sync/executor-safety.json`) are run by
 marknotes-sync for every app. App runners may map those algorithms to the library, but must still map every file.
 `sync/executor-safety.json` describes executor races and durable restart boundaries that planner inputs cannot
 express. marknotes-sync runs it against its reference executor, and Desktop and Web run it against their own
 executors, reporting observed store state rather than returning the expected object. The Android runner maps the file
-but does not run its cases; it relies on the reference suite and `SyncEngineTest` ([ISSUE:android-executor-safety]).
+but does not run its cases; it relies on the reference suite and `SyncEngineTest` 
+([MaxDac/marknotes-android#28](https://github.com/MaxDac/marknotes-android/issues/28)).
 Apps also keep their own SDK-facing contract tests for the [drive adapters](note-format.md#drive-adapter-contract).
