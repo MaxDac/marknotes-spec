@@ -33,6 +33,7 @@ Apps: **Android** ([libre](https://github.com/MaxDac/marknotes-android) and
 | When sync runs | Launch and Sync now | Launch and Sync now | Page load and Sync now | No app polls in the background |
 | Attachment hash check on download | Yes | Yes | Yes | [note-format.md](note-format.md#attachment-sync) |
 | Delete local data | No (planned) | Yes | No (planned) | See [Local data and privacy](#local-data-and-privacy). Desktop: [MaxDac/marknotes-electron#35](https://github.com/MaxDac/marknotes-electron/pull/35) |
+| Local error diagnostics and user-initiated GitHub reporting | Yes (Libre and Pro) | No | No | Android-only; see [Android diagnostics](#android-diagnostics). App-only, no format change |
 | Remote images blocked by default | Attachments only | Yes | Attachments only | Desktop: per-note "Load remote images", `https:` only, for the session. Android and Web never load remote images |
 | App lock with idle timeout | No (planned) | No (planned) | No (planned) | Android: biometric or device credential. Desktop and Web: passphrase |
 | Local encryption at rest | Yes (device file-based encryption, app-private storage) | No (planned) | No (planned) | Web: only with the app lock on. See [Local data and privacy](#local-data-and-privacy) |
@@ -54,6 +55,28 @@ App behaviour only; none of it changes the note format, the manifest or the fixt
   enabled, with a key derived from the passphrase (PBKDF2-SHA256, 600,000 iterations). Android adds no app-level
   cipher: with minSdk 29, file-based encryption is mandatory, so notes in app-private storage are already encrypted
   under the device credential and sandboxed from other apps.
+
+### Android diagnostics
+
+MarkNotes Libre and Pro share this Android-only behaviour. It does not change the note or sync format, add fixture
+requirements or imply Desktop or Web support.
+
+- **Local logging** is on by default for Java/Kotlin crashes and handled errors. Native crashes and ANRs are
+  excluded initially. Retention is capped at seven days and 5 MiB total, including export snapshots, with pruning
+  on startup, write and export; deletion is not guaranteed while the app is force-stopped.
+- **Sanitization** uses allowlisted error codes and failure categories only, excluding all user content, paths,
+  identifiers, credentials and raw error messages from stored records, draft excerpts and exports.
+- **Clear logs** removes local diagnostics, including export snapshots. The delete-local-data flow must also
+  remove them; this requirement does not mark Android's broader delete-local-data feature as implemented.
+- **Report an error** primarily opens a GitHub issue draft after explicit consent and review of a sanitized,
+  bounded recent-error excerpt. The complete encoded URL is limited to 2,000 ASCII characters; include whole
+  records only and indicate truncation when records are omitted. The user submits the issue in the browser.
+  Before opening, warn that opening the draft already transmits the URL's logs to GitHub, before submission,
+  and can leave them in browser history. Libre targets
+  [MaxDac/marknotes-android](https://github.com/MaxDac/marknotes-android/issues/new); Pro targets
+  [MaxDac/MarkNotes](https://github.com/MaxDac/MarkNotes/issues/new).
+- **Share logs** is a secondary, offline local export of the full retained sanitized logs, subject to the same
+  retention and total storage limits. Nothing is sent automatically.
 
 ## Known divergences
 
@@ -114,11 +137,11 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
 29. **marknotes-sync 0.2.0** (`sync/plan`, `merge/conflict-copy-name`): the apps run marknotes-sync 0.1, which lets
     the last of several entries for the same path win, deletes a folder that a listing omits although it lists
     entries inside it, and picks conflicted-copy names case-insensitively by lowercasing instead of by simple case
-    folding. Resolved when each app picks up marknotes-sync 0.2.0.
+    folding. Resolved for Android, which runs marknotes-sync 0.2.0; resolved for Desktop and Web when they pick it up.
 30. **Byte order mark and control characters** (`front-matter/split`, `front-matter/read-id`, `front-matter/with-id`,
     `chords/detect`, `sync/plan`): no app recognises a front-matter block after a UTF-8 byte order mark, and the apps
-    on marknotes-sync 0.1 sync names with control characters. Resolved when each app handles the byte order mark and
-    picks up marknotes-sync 0.2.0.
+    on marknotes-sync 0.1 sync names with control characters (resolved for Android, on marknotes-sync 0.2.0).
+    Resolved when each app handles the byte order mark and picks up marknotes-sync 0.2.0.
 31. **Records flagged as deleted locally** (`sync/plan`, `sync/local-deletions`): marknotes-sync 0.2 has no
     `localDeleted` flag and no `local_deletions`, and no app flags records, so with several drives a note moved away
     and back can be deleted everywhere through another drive's out-of-date record
