@@ -124,8 +124,8 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     ([#37](https://github.com/MaxDac/marknotes-spec/issues/37)). Resolved when marknotes-sync implements the flag
     (0.3.0) and each app stores it per record and drive, flags the records of every drive after listing the local tree,
     and maps the new `sync/local-deletions.json` fixture file.
-32. **Safe drive mutations** (`sync/plan`, `sync/executor-safety`): existing app pins group recursive drive folder
-    deletion instead of conditionally deleting known files before empty-only folder removal. Some adapters also
+32. **Safe drive mutations** (`sync/plan`, `sync/executor-safety`): existing app pins group recursive folder
+    deletion instead of individually guarding known file deletions before empty-only folder removal. Some adapters also
     adopt an existing folder or omit strict create-only conflict checks. New files, copies and planned folders must
     not replace an entry created since listing; unsafe or unsupported folder removal must fail explicitly and
     retain its records ([#38](https://github.com/MaxDac/marknotes-spec/issues/38),

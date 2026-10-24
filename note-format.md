@@ -263,6 +263,9 @@ A note that changed on both sides is reconciled:
    new note id, exact copy text and losing modification time. After a crash, reuse that intent only for the same
    conflict, and reuse an existing copy only after verifying its exact text (including the replacement id) and
    modification time. If the intended path is absent, retry its create-only write with the same id and time.
+   Validate persisted intent paths and ids before reuse: the copy must have a conventional conflicted-copy name
+   beside the original, never the original path itself or an arbitrary destination, and its replacement id must
+   be valid.
    An unrelated or edited file is never accepted as the saved losing version or overwritten: preserve it and
    allocate a new free copy path and intent. A stale intent must not permanently prevent a new conflict from
    being reconciled. Persist the intent before the copy, and verify the copy is durable before overwriting the

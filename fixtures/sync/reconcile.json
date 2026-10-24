@@ -1171,6 +1171,203 @@
         "desktop": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract.",
         "web": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
       }
+    },
+    {
+      "name": "an intent cannot use the original note as its own losing copy",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 1000,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "a.md"
+        ],
+        "newId": "r2s3t4v5",
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "a.md",
+          "copyModifiedMillis": 1000
+        },
+        "existingCopy": {
+          "path": "a.md",
+          "text": "---\nid: m4n5p6q7\n---\na\nlocal\n",
+          "modifiedMillis": 1000
+        }
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy).md",
+        "copyText": "---\nid: r2s3t4v5\n---\na\nlocal\n",
+        "copyModifiedMillis": 1000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "r2s3t4v5",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "reuseCopy": false
+      },
+      "knownDivergence": {
+        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract.",
+        "desktop": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract.",
+        "web": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
+      }
+    },
+    {
+      "name": "an intent cannot reuse a copy in another folder",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 1000,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "Work/a (conflicted copy).md",
+          "a.md"
+        ],
+        "newId": "r2s3t4v5",
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "Work/a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "existingCopy": {
+          "path": "Work/a (conflicted copy).md",
+          "text": "---\nid: m4n5p6q7\n---\na\nlocal\n",
+          "modifiedMillis": 1000
+        }
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy).md",
+        "copyText": "---\nid: r2s3t4v5\n---\na\nlocal\n",
+        "copyModifiedMillis": 1000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "r2s3t4v5",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "reuseCopy": false
+      },
+      "knownDivergence": {
+        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract.",
+        "desktop": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract.",
+        "web": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
+      }
+    },
+    {
+      "name": "an intent with an invalid replacement id is discarded",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 1000,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "a.md",
+          "a (conflicted copy).md"
+        ],
+        "newId": "r2s3t4v5",
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "INVALID",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "existingCopy": {
+          "path": "a (conflicted copy).md",
+          "text": "---\nid: INVALID\n---\na\nlocal\n",
+          "modifiedMillis": 1000
+        }
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy) 2.md",
+        "copyText": "---\nid: r2s3t4v5\n---\na\nlocal\n",
+        "copyModifiedMillis": 1000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "r2s3t4v5",
+          "copyPath": "a (conflicted copy) 2.md",
+          "copyModifiedMillis": 1000
+        },
+        "reuseCopy": false
+      },
+      "knownDivergence": {
+        "android": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract.",
+        "desktop": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract.",
+        "web": "The pinned sync library lacks copyModifiedMillis and durable verified conflict-copy replay; requires the 0.3 reconcile contract."
+      }
     }
   ]
 }
