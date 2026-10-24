@@ -31,6 +31,7 @@ Apps: **Android** ([MaxDac/MarkNotes](https://github.com/MaxDac/MarkNotes)), **D
 | When sync runs | Launch and Sync now | Launch and Sync now | Page load and Sync now | No app polls in the background |
 | Attachment hash check on download | Yes | Yes | Yes | [note-format.md](note-format.md#attachment-sync) |
 | Delete local data | No (planned) | Yes | No (planned) | See [Local data and privacy](#local-data-and-privacy). Desktop: [MaxDac/marknotes-electron#35](https://github.com/MaxDac/marknotes-electron/pull/35) |
+| Local error diagnostics and user-initiated GitHub reporting | Yes (Libre and Pro) | No | No | Android-only; see [Android diagnostics](#android-diagnostics). App-only, no format change |
 | Remote images blocked by default | Attachments only | Yes | Attachments only | Desktop: per-note "Load remote images", `https:` only, for the session. Android and Web never load remote images |
 | App lock with idle timeout | No (planned) | No (planned) | No (planned) | Android: biometric or device credential. Desktop and Web: passphrase |
 | Local encryption at rest | Yes (device file-based encryption, app-private storage) | No (planned) | No (planned) | Web: only with the app lock on. See [Local data and privacy](#local-data-and-privacy) |
@@ -52,6 +53,28 @@ App behaviour only; none of it changes the note format, the manifest or the fixt
   enabled, with a key derived from the passphrase (PBKDF2-SHA256, 600,000 iterations). Android adds no app-level
   cipher: with minSdk 29, file-based encryption is mandatory, so notes in app-private storage are already encrypted
   under the device credential and sandboxed from other apps.
+
+### Android diagnostics
+
+MarkNotes Libre and Pro share this Android-only behaviour. It does not change the note or sync format, add fixture
+requirements or imply Desktop or Web support.
+
+- **Local logging** is on by default for Java/Kotlin crashes and handled errors. Native crashes and ANRs are
+  excluded initially. Retention is capped at seven days and 5 MiB total, including export snapshots, with pruning
+  on startup, write and export; deletion is not guaranteed while the app is force-stopped.
+- **Sanitization** uses allowlisted error codes and failure categories only, excluding all user content, paths,
+  identifiers, credentials and raw error messages from stored records, draft excerpts and exports.
+- **Clear logs** removes local diagnostics, including export snapshots. The delete-local-data flow must also
+  remove them; this requirement does not mark Android's broader delete-local-data feature as implemented.
+- **Report an error** primarily opens a GitHub issue draft after explicit consent and review of a sanitized,
+  bounded recent-error excerpt. The complete encoded URL is limited to 2,000 ASCII characters; include whole
+  records only and indicate truncation when records are omitted. The user submits the issue in the browser.
+  Before opening, warn that opening the draft already transmits the URL's logs to GitHub, before submission,
+  and can leave them in browser history. Libre targets
+  [MaxDac/marknotes-android](https://github.com/MaxDac/marknotes-android/issues/new); Pro targets
+  [MaxDac/MarkNotes](https://github.com/MaxDac/MarkNotes/issues/new).
+- **Share logs** is a secondary, offline local export of the full retained sanitized logs, subject to the same
+  retention and total storage limits. Nothing is sent automatically.
 
 ## Known divergences
 
