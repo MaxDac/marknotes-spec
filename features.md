@@ -140,6 +140,12 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     `chords/detect`, `sync/plan`): no app recognises a front-matter block after a UTF-8 byte order mark, and the apps
     on marknotes-sync 0.1 sync names with control characters. Resolved when each app handles the byte order mark and
     picks up marknotes-sync 0.2.0.
+31. **Records flagged as deleted locally** (`sync/plan`, `sync/local-deletions`): marknotes-sync 0.2 has no
+    `localDeleted` flag and no `local_deletions`, and no app flags records, so with several drives a note moved away
+    and back can be deleted everywhere through another drive's out-of-date record
+    ([#37](https://github.com/MaxDac/marknotes-spec/issues/37)). Resolved when marknotes-sync implements the flag
+    (0.3.0) and each app stores it per record and drive, flags the records of every drive after listing the local tree,
+    and maps the new `sync/local-deletions.json` fixture file.
 
 Sync fixtures (`fixtures/sync/*`, `manifest/*`, `merge/*`) are run by marknotes-sync, which implements them for every
 app. App runners may map them to the library instead of running them again, but must still map the files. Apps keep
