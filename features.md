@@ -28,7 +28,7 @@ Apps: **Android** ([libre](https://github.com/MaxDac/marknotes-android) and
 | Shared sync algorithm ([marknotes-sync](https://github.com/MaxDac/marknotes-sync)) | Yes | Yes | Yes | [note-format.md](note-format.md#sync); `fixtures/sync/*` |
 | Sync manifest (`.marknotes/manifest.json`) | Yes | Yes | Yes | |
 | Three-way merge, newest wins on conflict | Yes | Yes | Yes | The other version is saved as a conflicted copy |
-| Safe sync mutations and crash recovery (sync 0.3 contract) | Pending | Pending | Pending | Empty-only remote folder removal, create-only writes, record-backed case renames, losing-copy timestamps and durable replay; divergences 32-34 |
+| Safe sync mutations and crash recovery (sync 0.3 contract) | Yes (0.3 source) | Yes (0.3 source) | Yes (0.3 source) | Source-pinned integrations, not an assumed published release. Unsupported safe mutations fail explicitly; see resolved divergences 32-34 |
 | Merge a conflicted copy back, with conflict choices | Yes | Yes | Yes | |
 | When sync runs | Launch and Sync now | Launch and Sync now | Page load and Sync now | No app polls in the background |
 | Attachment hash check on download | Yes | Yes | Yes | [note-format.md](note-format.md#attachment-sync) |
@@ -134,41 +134,37 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     ([#8](https://github.com/MaxDac/marknotes-spec/issues/8), [#14](https://github.com/MaxDac/marknotes-spec/issues/14),
     [#19](https://github.com/MaxDac/marknotes-spec/issues/19), [#20](https://github.com/MaxDac/marknotes-spec/issues/20),
     [MaxDac/marknotes-sync#8](https://github.com/MaxDac/marknotes-sync/issues/8)).
-29. **marknotes-sync 0.2.0** (`sync/plan`, `merge/conflict-copy-name`): the apps run marknotes-sync 0.1, which lets
-    the last of several entries for the same path win, deletes a folder that a listing omits although it lists
-    entries inside it, and picks conflicted-copy names case-insensitively by lowercasing instead of by simple case
-    folding. Resolved for Android, which runs marknotes-sync 0.2.0; resolved for Desktop and Web when they pick it up.
-30. **Byte order mark and control characters** (`front-matter/split`, `front-matter/read-id`, `front-matter/with-id`,
-    `chords/detect`, `sync/plan`): no app recognises a front-matter block after a UTF-8 byte order mark, and the apps
-    on marknotes-sync 0.1 sync names with control characters (resolved for Android, on marknotes-sync 0.2.0).
-    Resolved when each app handles the byte order mark and picks up marknotes-sync 0.2.0.
-31. **Records flagged as deleted locally** (`sync/plan`, `sync/local-deletions`): marknotes-sync 0.2 has no
-    `localDeleted` flag and no `local_deletions`, and no app flags records, so with several drives a note moved away
-    and back can be deleted everywhere through another drive's out-of-date record
-    ([#37](https://github.com/MaxDac/marknotes-spec/issues/37)). Resolved when marknotes-sync implements the flag
-    (0.3.0) and each app stores it per record and drive, flags the records of every drive after listing the local tree,
-    and maps the new `sync/local-deletions.json` fixture file.
-32. **Safe drive mutations** (`sync/plan`, `sync/executor-safety`): existing app pins group recursive folder
-    deletion instead of individually guarding known file deletions before empty-only folder removal. Some adapters also
-    adopt an existing folder or omit strict create-only conflict checks. New files, copies and planned folders must
-    not replace an entry created since listing; unsafe or unsupported folder removal must fail explicitly and
-    retain its records ([#38](https://github.com/MaxDac/marknotes-spec/issues/38),
+29. Resolved in the 0.3 source integrations: all three apps reject duplicate listed paths, preserve a folder omitted
+    from a listing that still includes its descendants, and allocate conflicted-copy names using Unicode simple
+    case folding (`sync/plan`, `merge/conflict-copy-name`), including the fixes introduced in marknotes-sync 0.2.
+30. **Byte order mark** (`front-matter/split`, `front-matter/read-id`, `front-matter/with-id`, `chords/detect`): no
+    app recognises a front-matter block after a UTF-8 byte order mark. The related sync-path control-character
+    filtering is resolved in all three apps' 0.3 source integrations; front-matter and chord annotations remain.
+31. Resolved in the 0.3 source integrations: every app persists `localDeleted` per record and drive, flags records
+    for all linked drives after listing the shared local tree, and maps `sync/local-deletions.json`. A restored note
+    cannot be deleted through another drive's outdated record
+    ([#37](https://github.com/MaxDac/marknotes-spec/issues/37)).
+32. Resolved in the 0.3 source integrations: known files are deleted with individual guards, followed by deepest-first
+    empty-only folder removal. New files, conflicted copies and planned folders are create-only. Unsupported safe
+    removal or creation fails explicitly and retains the affected records instead of adopting or replacing an entry
+    (`sync/plan`, `sync/executor-safety`;
+    [#38](https://github.com/MaxDac/marknotes-spec/issues/38),
     [#41](https://github.com/MaxDac/marknotes-spec/issues/41)).
-33. **Case-only rename convergence** (`sync/plan`): existing app pins reject every case-only difference, even when
-    a record proves that one side retains an unchanged stale spelling. The 0.3 contract renames only that stale
-    side, or migrates the current drive's stale recorded spelling when both listed sides already agree. It
-    preserves content and edit time, and keeps ambiguous collisions as errors
-    ([#39](https://github.com/MaxDac/marknotes-spec/issues/39)). Local stale-side convergence is separate from
-    provider rename capabilities: Dropbox does not support a direct case-only drive move, and unsupported safe
-    operations remain explicit step errors rather than temporary moves that could look like deletions to peers.
-34. **Conflict-copy metadata and replay** (`sync/reconcile`, `sync/executor-safety`): the pinned shared API lacks
-    the losing modification time and durable verified copy intent. Android and Desktop currently stamp a copy
-    with its creation time; Web already carries the losing time. None of the current executors durably associates
-    the saved copy with its conflict before creating it, so a restart can produce duplicates. The 0.3 contract
-    retains the losing time and reuses only a verified same-conflict copy and its replacement id
-    ([#40](https://github.com/MaxDac/marknotes-spec/issues/40),
+33. Resolved in the 0.3 source integrations: record-proven unchanged stale case spellings converge without changing
+    content or edit times. When both listed sides already agree, only the current drive's stale history is migrated.
+    Rename journals recover interrupted moves and history migration; ambiguous or edited stale sides remain errors
+    (`sync/plan`; [#39](https://github.com/MaxDac/marknotes-spec/issues/39)). Provider capability is separate:
+    Dropbox does not support a direct case-only drive move, and unsupported safe operations remain explicit step
+    errors rather than temporary moves that could look like deletions to peers.
+34. Resolved in the 0.3 source integrations: conflicted copies retain the losing edit time, including epoch zero.
+    Every executor persists intent and recovery data before mutation, reuses only an exact verified same-conflict
+    copy and its replacement id, and repairs interrupted winner/copy uploads, bases and records without erasing
+    intervening edits (`sync/reconcile`, `sync/executor-safety`;
+    [#40](https://github.com/MaxDac/marknotes-spec/issues/40),
     [#42](https://github.com/MaxDac/marknotes-spec/issues/42)).
 
-Sync fixtures (`fixtures/sync/*`, `manifest/*`, `merge/*`) are run by marknotes-sync, which implements them for every
-app. App runners may map them to the library instead of running them again, but must still map the files. Apps keep
-their own contract tests for the [drive adapters](note-format.md#drive-adapter-contract), which no fixture reaches.
+Shared algorithm fixtures (`fixtures/sync/*`, `manifest/*`, `merge/*`, except `sync/executor-safety.json`) are run by
+marknotes-sync for every app. App runners may map those algorithms to the library, but must still map every file.
+`sync/executor-safety.json` instead exercises each actual app executor with injected races and durable restart
+boundaries, reporting observed store state rather than returning the expected object. Apps also keep their own
+SDK-facing contract tests for the [drive adapters](note-format.md#drive-adapter-contract).

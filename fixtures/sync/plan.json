@@ -3985,9 +3985,6 @@
             "sha256": "h1"
           }
         ]
-      },
-      "knownDivergence": {
-        "web": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation."
       }
     },
     {
@@ -4059,9 +4056,6 @@
             "sha256": null
           }
         ]
-      },
-      "knownDivergence": {
-        "web": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation."
       }
     },
     {
@@ -4174,9 +4168,6 @@
             "sha256": null
           }
         ]
-      },
-      "knownDivergence": {
-        "web": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation."
       }
     },
     {
@@ -4228,9 +4219,6 @@
             "sha256": "h1"
           }
         ]
-      },
-      "knownDivergence": {
-        "web": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation."
       }
     },
     {
