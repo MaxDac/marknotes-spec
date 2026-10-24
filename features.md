@@ -32,7 +32,7 @@ Apps: **Android** ([MaxDac/MarkNotes](https://github.com/MaxDac/MarkNotes)), **D
 | Delete local data | No (planned) | Yes | No (planned) | See [Local data and privacy](#local-data-and-privacy). Desktop: [MaxDac/marknotes-electron#35](https://github.com/MaxDac/marknotes-electron/pull/35) |
 | Remote images blocked by default | Attachments only | Yes | Attachments only | Desktop: per-note "Load remote images", `https:` only, for the session. Android and Web never load remote images |
 | App lock with idle timeout | No (planned) | No (planned) | No (planned) | Android: biometric or device credential. Desktop and Web: passphrase |
-| Local encryption at rest | No (planned) | No (planned) | No (planned) | See [Local data and privacy](#local-data-and-privacy) |
+| Local encryption at rest | Yes (device file-based encryption, app-private storage) | No (planned) | No (planned) | Web: only with the app lock on. See [Local data and privacy](#local-data-and-privacy) |
 
 ## Local data and privacy
 
@@ -47,8 +47,10 @@ App behaviour only; none of it changes the note format, the manifest or the fixt
 - **App lock**: optional, with an idle timeout, and also locks on system suspend or screen lock where the platform
   reports it.
 - **Encryption at rest**: Desktop encrypts the local note database with a data key protected by the OS keychain, or by
-  the app-lock passphrase when set. Web encrypts local notes only when the app lock is enabled, with a key derived from
-  the passphrase. Android relies on its app-private storage; an optional Keystore-backed cipher is still to be decided.
+  the app-lock passphrase when set. Web encrypts every local record, paths included, only when the app lock is
+  enabled, with a key derived from the passphrase (PBKDF2-SHA256, 600,000 iterations). Android adds no app-level
+  cipher: with minSdk 29, file-based encryption is mandatory, so notes in app-private storage are already encrypted
+  under the device credential and sandboxed from other apps.
 
 ## Known divergences
 
