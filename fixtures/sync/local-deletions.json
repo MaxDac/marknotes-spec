@@ -53,9 +53,6 @@
       },
       "expected": {
         "paths": []
-      },
-      "knownDivergence": {
-        "android": "marknotes-sync 0.2 has no local_deletions; mapped when Android picks up the localDeleted flag (#37)."
       }
     },
     {
@@ -73,9 +70,6 @@
       },
       "expected": {
         "paths": []
-      },
-      "knownDivergence": {
-        "android": "marknotes-sync 0.2 has no local_deletions; mapped when Android picks up the localDeleted flag (#37)."
       }
     },
     {
@@ -102,9 +96,6 @@
       },
       "expected": {
         "paths": []
-      },
-      "knownDivergence": {
-        "android": "marknotes-sync 0.2 has no local_deletions; mapped when Android picks up the localDeleted flag (#37)."
       }
     },
     {
@@ -146,9 +137,6 @@
         "paths": [
           "F/d.md"
         ]
-      },
-      "knownDivergence": {
-        "android": "marknotes-sync 0.2 has no local_deletions; mapped when Android picks up the localDeleted flag (#37)."
       }
     },
     {
@@ -187,9 +175,6 @@
           "F/d.md",
           "F/e.md"
         ]
-      },
-      "knownDivergence": {
-        "android": "marknotes-sync 0.2 has no local_deletions; mapped when Android picks up the localDeleted flag (#37)."
       }
     },
     {
@@ -220,9 +205,6 @@
         "paths": [
           "b.md"
         ]
-      },
-      "knownDivergence": {
-        "android": "marknotes-sync 0.2 has no local_deletions; mapped when Android picks up the localDeleted flag (#37)."
       }
     },
     {
@@ -250,9 +232,6 @@
         "paths": [
           "a.md"
         ]
-      },
-      "knownDivergence": {
-        "android": "marknotes-sync 0.2 has no local_deletions; mapped when Android picks up the localDeleted flag (#37)."
       }
     },
     {
@@ -281,9 +260,6 @@
         "paths": [
           "a.md"
         ]
-      },
-      "knownDivergence": {
-        "android": "marknotes-sync 0.2 has no local_deletions; mapped when Android picks up the localDeleted flag (#37)."
       }
     },
     {
@@ -305,9 +281,6 @@
         "paths": [
           "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png"
         ]
-      },
-      "knownDivergence": {
-        "android": "marknotes-sync 0.2 has no local_deletions; mapped when Android picks up the localDeleted flag (#37)."
       }
     },
     {
@@ -356,9 +329,6 @@
           "😀.md",
           "Ａ.md"
         ]
-      },
-      "knownDivergence": {
-        "android": "marknotes-sync 0.2 has no local_deletions; mapped when Android picks up the localDeleted flag (#37)."
       }
     }
   ]

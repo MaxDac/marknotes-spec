@@ -844,7 +844,7 @@
       }
     },
     {
-      "name": "case-only rename is an error on both spellings",
+      "name": "recorded unchanged drive spelling follows a local case-only rename",
       "input": {
         "local": [
           {
@@ -878,14 +878,18 @@
       "expected": {
         "actions": [
           {
-            "kind": "error",
-            "path": "Todo.md",
-            "message": "differs only in case from another path"
-          },
-          {
-            "kind": "error",
+            "kind": "renameRemote",
             "path": "todo.md",
-            "message": "differs only in case from another path"
+            "toPath": "Todo.md",
+            "isFolder": false,
+            "remote": {
+              "path": "todo.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "sha256": null
           }
         ]
       }
@@ -1327,13 +1331,25 @@
       "expected": {
         "actions": [
           {
+            "kind": "deleteLocal",
+            "path": "A/B/m.md"
+          },
+          {
+            "kind": "deleteLocal",
+            "path": "A/n.md"
+          },
+          {
+            "kind": "deleteLocalFolder",
+            "path": "A/B",
+            "forget": [
+              "A/B"
+            ]
+          },
+          {
             "kind": "deleteLocalFolder",
             "path": "A",
             "forget": [
-              "A",
-              "A/B",
-              "A/B/m.md",
-              "A/n.md"
+              "A"
             ]
           }
         ]
@@ -1410,6 +1426,10 @@
             "path": "A"
           },
           {
+            "kind": "deleteLocal",
+            "path": "A/B/m.md"
+          },
+          {
             "kind": "uploadNew",
             "path": "A/n.md"
           },
@@ -1417,8 +1437,7 @@
             "kind": "deleteLocalFolder",
             "path": "A/B",
             "forget": [
-              "A/B",
-              "A/B/m.md"
+              "A/B"
             ]
           }
         ]
@@ -1467,6 +1486,17 @@
       "expected": {
         "actions": [
           {
+            "kind": "deleteRemote",
+            "path": "A/n.md",
+            "remote": {
+              "path": "A/n.md",
+              "id": "rn",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            }
+          },
+          {
             "kind": "deleteRemoteFolder",
             "path": "A",
             "remote": {
@@ -1477,8 +1507,7 @@
               "modifiedMillis": 1000
             },
             "forget": [
-              "A",
-              "A/n.md"
+              "A"
             ]
           }
         ]
@@ -1732,11 +1761,14 @@
             "path": "A"
           },
           {
+            "kind": "deleteLocal",
+            "path": "A/B/m.md"
+          },
+          {
             "kind": "deleteLocalFolder",
             "path": "A/B",
             "forget": [
-              "A/B",
-              "A/B/m.md"
+              "A/B"
             ]
           }
         ]
@@ -1988,10 +2020,6 @@
             "message": "is listed more than once"
           }
         ]
-      },
-      "knownDivergence": {
-        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
-        "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
     },
     {
@@ -2066,10 +2094,6 @@
             "message": "is listed more than once"
           }
         ]
-      },
-      "knownDivergence": {
-        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
-        "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
     },
     {
@@ -2120,10 +2144,6 @@
             "message": "is listed more than once"
           }
         ]
-      },
-      "knownDivergence": {
-        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
-        "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
     },
     {
@@ -2173,10 +2193,6 @@
       },
       "expected": {
         "actions": []
-      },
-      "knownDivergence": {
-        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
-        "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
     },
     {
@@ -2228,10 +2244,6 @@
       },
       "expected": {
         "actions": []
-      },
-      "knownDivergence": {
-        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
-        "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
     },
     {
@@ -2281,10 +2293,6 @@
             }
           }
         ]
-      },
-      "knownDivergence": {
-        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
-        "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
     },
     {
@@ -2318,7 +2326,7 @@
             "modifiedMillis": 1000
           },
           {
-            "path": "e\u007f.md",
+            "path": "e.md",
             "id": "r2",
             "isFolder": false,
             "version": "v1",
@@ -2329,10 +2337,6 @@
       },
       "expected": {
         "actions": []
-      },
-      "knownDivergence": {
-        "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
-        "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
     },
     {
@@ -2388,11 +2392,6 @@
             "path": "F/d.md"
           }
         ]
-      },
-      "knownDivergence": {
-        "android": "marknotes-sync 0.2 ignores localDeleted; fixed when Android picks up marknotes-sync 0.3.0 and flags records.",
-        "desktop": "marknotes-sync 0.2 ignores localDeleted; fixed when Desktop picks up marknotes-sync 0.3.0 and flags records.",
-        "web": "marknotes-sync 0.2 ignores localDeleted; fixed when Web picks up marknotes-sync 0.3.0 and flags records."
       }
     },
     {
@@ -2555,11 +2554,6 @@
             "updateBase": false
           }
         ]
-      },
-      "knownDivergence": {
-        "android": "marknotes-sync 0.2 ignores localDeleted; fixed when Android picks up marknotes-sync 0.3.0 and flags records.",
-        "desktop": "marknotes-sync 0.2 ignores localDeleted; fixed when Desktop picks up marknotes-sync 0.3.0 and flags records.",
-        "web": "marknotes-sync 0.2 ignores localDeleted; fixed when Web picks up marknotes-sync 0.3.0 and flags records."
       }
     },
     {
@@ -2810,11 +2804,6 @@
             "updateBase": false
           }
         ]
-      },
-      "knownDivergence": {
-        "android": "marknotes-sync 0.2 ignores localDeleted; fixed when Android picks up marknotes-sync 0.3.0 and flags records.",
-        "desktop": "marknotes-sync 0.2 ignores localDeleted; fixed when Desktop picks up marknotes-sync 0.3.0 and flags records.",
-        "web": "marknotes-sync 0.2 ignores localDeleted; fixed when Web picks up marknotes-sync 0.3.0 and flags records."
       }
     },
     {
@@ -2849,11 +2838,6 @@
             "path": "attachments/e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.png"
           }
         ]
-      },
-      "knownDivergence": {
-        "android": "marknotes-sync 0.2 ignores localDeleted; fixed when Android picks up marknotes-sync 0.3.0 and flags records.",
-        "desktop": "marknotes-sync 0.2 ignores localDeleted; fixed when Desktop picks up marknotes-sync 0.3.0 and flags records.",
-        "web": "marknotes-sync 0.2 ignores localDeleted; fixed when Web picks up marknotes-sync 0.3.0 and flags records."
       }
     },
     {
@@ -2905,11 +2889,6 @@
             "path": "F/d.md"
           }
         ]
-      },
-      "knownDivergence": {
-        "android": "marknotes-sync 0.2 ignores localDeleted; fixed when Android picks up marknotes-sync 0.3.0 and flags records.",
-        "desktop": "marknotes-sync 0.2 ignores localDeleted; fixed when Desktop picks up marknotes-sync 0.3.0 and flags records.",
-        "web": "marknotes-sync 0.2 ignores localDeleted; fixed when Web picks up marknotes-sync 0.3.0 and flags records."
       }
     },
     {
@@ -2956,6 +2935,17 @@
       "expected": {
         "actions": [
           {
+            "kind": "deleteRemote",
+            "path": "F/d.md",
+            "remote": {
+              "path": "F/d.md",
+              "id": "rd",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            }
+          },
+          {
             "kind": "deleteRemoteFolder",
             "path": "F",
             "remote": {
@@ -2966,9 +2956,1693 @@
               "modifiedMillis": 1000
             },
             "forget": [
-              "F",
-              "F/d.md"
+              "F"
             ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "recorded unchanged local spelling follows a drive case-only rename",
+      "input": {
+        "local": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameLocal",
+            "path": "Note.md",
+            "toPath": "note.md",
+            "isFolder": false,
+            "remote": {
+              "path": "note.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "sha256": "h1"
+          }
+        ]
+      }
+    },
+    {
+      "name": "an edited stale local spelling remains a collision",
+      "input": {
+        "local": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "edited"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Note.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "note.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
+      "name": "an edited stale drive revision remains a collision",
+      "input": {
+        "local": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v2",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Note.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "note.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
+      "name": "a replaced stale drive identity remains a collision",
+      "input": {
+        "local": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "another",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Note.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "note.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
+      "name": "a case-only difference without a record remains a collision",
+      "input": {
+        "local": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Note.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "note.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
+      "name": "inconsistent recorded spellings remain a collision",
+      "input": {
+        "local": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          },
+          {
+            "path": "note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Note.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "note.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
+      "name": "a change on the renamed side is handled only after the stale spelling converges",
+      "input": {
+        "local": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "edited"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameRemote",
+            "path": "note.md",
+            "toPath": "Note.md",
+            "isFolder": false,
+            "remote": {
+              "path": "note.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "sha256": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "a localDeleted flag does not delete an unchanged stale case alias",
+      "input": {
+        "local": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500,
+            "localDeleted": true
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameRemote",
+            "path": "note.md",
+            "toPath": "Note.md",
+            "isFolder": false,
+            "remote": {
+              "path": "note.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "sha256": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "safe rename inference uses Unicode simple folding",
+      "input": {
+        "local": [
+          {
+            "path": "Σ.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "ς.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Σ.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameLocal",
+            "path": "Σ.md",
+            "toPath": "ς.md",
+            "isFolder": false,
+            "remote": {
+              "path": "ς.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "sha256": "h1"
+          }
+        ]
+      }
+    },
+    {
+      "name": "an unchanged stale local folder converges as one guarded subtree rename",
+      "input": {
+        "local": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "work",
+            "id": "fW",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "remoteId": "fW",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameLocal",
+            "path": "Work",
+            "toPath": "work",
+            "isFolder": true,
+            "remote": {
+              "path": "work",
+              "id": "fW",
+              "isFolder": true,
+              "version": "",
+              "modifiedMillis": 1000
+            },
+            "sha256": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "an unchanged stale remote folder converges as one guarded subtree rename",
+      "input": {
+        "local": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "work",
+            "id": "fW",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "work",
+            "isFolder": true,
+            "remoteId": "fW",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "work/a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameRemote",
+            "path": "work",
+            "toPath": "Work",
+            "isFolder": true,
+            "remote": {
+              "path": "work",
+              "id": "fW",
+              "isFolder": true,
+              "version": "",
+              "modifiedMillis": 1000
+            },
+            "sha256": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "an edited stale folder descendant prevents automatic rename",
+      "input": {
+        "local": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "edited"
+          }
+        ],
+        "remote": [
+          {
+            "path": "work",
+            "id": "fW",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "remoteId": "fW",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Work",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "Work/a.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "work",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "work/a.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
+      "name": "known remote files are deleted before folders deepest first",
+      "input": {
+        "local": [],
+        "remote": [
+          {
+            "path": "F",
+            "id": "fF",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "F/G",
+            "id": "fG",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "F/a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "F/G/b.md",
+            "id": "r2",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "F",
+            "isFolder": true,
+            "remoteId": "fF",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "F/G",
+            "isFolder": true,
+            "remoteId": "fG",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "F/a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          },
+          {
+            "path": "F/G/b.md",
+            "isFolder": false,
+            "remoteId": "r2",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "deleteRemote",
+            "path": "F/G/b.md",
+            "remote": {
+              "path": "F/G/b.md",
+              "id": "r2",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            }
+          },
+          {
+            "kind": "deleteRemote",
+            "path": "F/a.md",
+            "remote": {
+              "path": "F/a.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            }
+          },
+          {
+            "kind": "deleteRemoteFolder",
+            "path": "F/G",
+            "remote": {
+              "path": "F/G",
+              "id": "fG",
+              "isFolder": true,
+              "version": "",
+              "modifiedMillis": 1000
+            },
+            "forget": [
+              "F/G"
+            ]
+          },
+          {
+            "kind": "deleteRemoteFolder",
+            "path": "F",
+            "remote": {
+              "path": "F",
+              "id": "fF",
+              "isFolder": true,
+              "version": "",
+              "modifiedMillis": 1000
+            },
+            "forget": [
+              "F"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "safe rename preserves unrelated errors first and normal file actions",
+      "input": {
+        "local": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          },
+          {
+            "path": "X.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "hx"
+          },
+          {
+            "path": "b.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "hb"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "X.md",
+            "id": "fX",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "X.md",
+            "message": "is a file on one side and a folder on the other"
+          },
+          {
+            "kind": "renameLocal",
+            "path": "Note.md",
+            "toPath": "note.md",
+            "isFolder": false,
+            "remote": {
+              "path": "note.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "sha256": "h1"
+          },
+          {
+            "kind": "uploadNew",
+            "path": "b.md"
+          }
+        ]
+      }
+    },
+    {
+      "name": "a nested case-only folder rename emits only the guarded parent rename",
+      "input": {
+        "local": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          },
+          {
+            "path": "Work/Sub",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "Work/Sub/b.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          }
+        ],
+        "remote": [
+          {
+            "path": "work",
+            "id": "fW",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/Sub",
+            "id": "fS",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/Sub/b.md",
+            "id": "r2",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "remoteId": "fW",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          },
+          {
+            "path": "Work/Sub",
+            "isFolder": true,
+            "remoteId": "fS",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "Work/Sub/b.md",
+            "isFolder": false,
+            "remoteId": "r2",
+            "remoteVersion": "v1",
+            "localHash": "h2",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameLocal",
+            "path": "Work",
+            "toPath": "work",
+            "isFolder": true,
+            "remote": {
+              "path": "work",
+              "id": "fW",
+              "isFolder": true,
+              "version": "",
+              "modifiedMillis": 1000
+            },
+            "sha256": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "already-agreed file spelling migrates the current drive's stale recorded alias",
+      "input": {
+        "local": [
+          {
+            "path": "note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameLocal",
+            "path": "Note.md",
+            "toPath": "note.md",
+            "isFolder": false,
+            "remote": {
+              "path": "note.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "sha256": "h1"
+          }
+        ]
+      },
+      "knownDivergence": {
+        "web": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation."
+      }
+    },
+    {
+      "name": "already-agreed folder spelling migrates the current drive's stale recorded subtree",
+      "input": {
+        "local": [
+          {
+            "path": "work",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "work",
+            "id": "fW",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "remoteId": "fW",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameLocal",
+            "path": "Work",
+            "toPath": "work",
+            "isFolder": true,
+            "remote": {
+              "path": "work",
+              "id": "fW",
+              "isFolder": true,
+              "version": "",
+              "modifiedMillis": 1000
+            },
+            "sha256": null
+          }
+        ]
+      },
+      "knownDivergence": {
+        "web": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation."
+      }
+    },
+    {
+      "name": "already-agreed nested folder spelling emits only one recorded-subtree migration",
+      "input": {
+        "local": [
+          {
+            "path": "work",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          },
+          {
+            "path": "work/Sub",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/Sub/b.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          }
+        ],
+        "remote": [
+          {
+            "path": "work",
+            "id": "fW",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/Sub",
+            "id": "fS",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/Sub/b.md",
+            "id": "r2",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "remoteId": "fW",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          },
+          {
+            "path": "Work/Sub",
+            "isFolder": true,
+            "remoteId": "fS",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "Work/Sub/b.md",
+            "isFolder": false,
+            "remoteId": "r2",
+            "remoteVersion": "v1",
+            "localHash": "h2",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameLocal",
+            "path": "Work",
+            "toPath": "work",
+            "isFolder": true,
+            "remote": {
+              "path": "work",
+              "id": "fW",
+              "isFolder": true,
+              "version": "",
+              "modifiedMillis": 1000
+            },
+            "sha256": null
+          }
+        ]
+      },
+      "knownDivergence": {
+        "web": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation."
+      }
+    },
+    {
+      "name": "record-only case migration preserves a changed drive revision for the next plan",
+      "input": {
+        "local": [
+          {
+            "path": "note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v2",
+            "modifiedMillis": 2000
+          }
+        ],
+        "records": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameLocal",
+            "path": "Note.md",
+            "toPath": "note.md",
+            "isFolder": false,
+            "remote": {
+              "path": "note.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v2",
+              "modifiedMillis": 2000
+            },
+            "sha256": "h1"
+          }
+        ]
+      },
+      "knownDivergence": {
+        "web": "The pinned sync library does not migrate stale recorded spellings when local and drive names already agree; requires the updated 0.3 implementation."
+      }
+    },
+    {
+      "name": "an edited agreed file prevents record-only case migration",
+      "input": {
+        "local": [
+          {
+            "path": "note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h2"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Note.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "note.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
+      "name": "a replaced agreed drive identity prevents record-only case migration",
+      "input": {
+        "local": [
+          {
+            "path": "note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "note.md",
+            "id": "another",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Note.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "note.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
+      "name": "an edited agreed folder descendant prevents record-only case migration",
+      "input": {
+        "local": [
+          {
+            "path": "work",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "edited"
+          }
+        ],
+        "remote": [
+          {
+            "path": "work",
+            "id": "fW",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "remoteId": "fW",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Work",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "Work/a.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "work",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "work/a.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
+      "name": "a replaced agreed folder descendant prevents record-only case migration",
+      "input": {
+        "local": [
+          {
+            "path": "work",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "work",
+            "id": "fW",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "id": "another",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "remoteId": "fW",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Work",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "Work/a.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "work",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "work/a.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
+      "name": "a missing agreed local descendant prevents record-only case migration",
+      "input": {
+        "local": [
+          {
+            "path": "work",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          }
+        ],
+        "remote": [
+          {
+            "path": "work",
+            "id": "fW",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "remoteId": "fW",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Work",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "Work/a.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "work",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "work/a.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
+      "name": "an unrecorded agreed descendant prevents record-only case migration",
+      "input": {
+        "local": [
+          {
+            "path": "work",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          },
+          {
+            "path": "work/new.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "new"
+          }
+        ],
+        "remote": [
+          {
+            "path": "work",
+            "id": "fW",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/a.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "work/new.md",
+            "isFolder": false,
+            "id": "rNew",
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Work",
+            "isFolder": true,
+            "remoteId": "fW",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "Work/a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Work",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "Work/a.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "work",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "work/a.md",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "work/new.md",
+            "message": "differs only in case from another path"
           }
         ]
       }

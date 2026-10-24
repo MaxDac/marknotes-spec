@@ -1,6 +1,6 @@
 {
   "$schema": "../../schemas/fixture-file.schema.json",
-  "description": "Reconciling a note that changed on both sides: same text, clean three-way merge, otherwise the newest version wins (ties go to the drive) and the other one is saved as a conflicted copy with a new id.",
+  "description": "Reconciling a note that changed on both sides: same text, clean three-way merge, otherwise the newest version wins (ties go to the drive) and the other one is saved as a conflicted copy with a new id. newestWins includes copyModifiedMillis (the losing edit time), conflictCopyIntent (SHA-256 hashes of exact UTF-8 sources, nullable baseHash), and reuseCopy. Optional input.conflictCopyIntent and existingCopy {path,text,modifiedMillis} allow verified durable replay.",
   "cases": [
     {
       "name": "same text",
@@ -75,7 +75,22 @@
         "kind": "newestWins",
         "winner": "local",
         "copyPath": "Work/a (conflicted copy).md",
-        "copyText": "---\nid: m4n5p6q7\n---\na\nremote\n"
+        "copyText": "---\nid: m4n5p6q7\n---\na\nremote\n",
+        "copyModifiedMillis": 2000,
+        "conflictCopyIntent": {
+          "path": "Work/a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 3000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "Work/a (conflicted copy).md",
+          "copyModifiedMillis": 2000
+        },
+        "reuseCopy": false
       }
     },
     {
@@ -102,7 +117,22 @@
         "kind": "newestWins",
         "winner": "remote",
         "copyPath": "a (conflicted copy).md",
-        "copyText": "---\nid: m4n5p6q7\n---\na\nlocal\n"
+        "copyText": "---\nid: m4n5p6q7\n---\na\nlocal\n",
+        "copyModifiedMillis": 1000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "reuseCopy": false
       }
     },
     {
@@ -129,7 +159,22 @@
         "kind": "newestWins",
         "winner": "remote",
         "copyPath": "a (conflicted copy).md",
-        "copyText": "---\nid: m4n5p6q7\n---\nl\n"
+        "copyText": "---\nid: m4n5p6q7\n---\nl\n",
+        "copyModifiedMillis": 2000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "6d7ebc44c5bc26207e62f4f628f912e1a0f41ed11764891aa7dd99eab83228e7",
+          "remoteHash": "8e54b0ca18020275e4aef1ca0eb5e197e066c065c1864817652a8a39c55402cd",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 2000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "0263829989b6fd954f72baaf2fc64bc2e2f01d692d4de72986ea808f6e99813f",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 2000
+        },
+        "reuseCopy": false
       }
     },
     {
@@ -156,7 +201,22 @@
         "kind": "newestWins",
         "winner": "remote",
         "copyPath": "a (conflicted copy).md",
-        "copyText": "---\nid: m4n5p6q7\n---\nA\nb\nc\n"
+        "copyText": "---\nid: m4n5p6q7\n---\nA\nb\nc\n",
+        "copyModifiedMillis": 1000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "f6fb7769ab63445df902db2ce591e84acd04580224342dfed94796161d0ad3bc",
+          "remoteHash": "a8f17a2f479dd80ee55ee157e6e8ff02fed0a56393e67580e0467201edaf18e6",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": null,
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "reuseCopy": false
       }
     },
     {
@@ -183,7 +243,22 @@
         "kind": "newestWins",
         "winner": "local",
         "copyPath": "a (conflicted copy).md",
-        "copyText": "---\nid: m4n5p6q7\n---\nremote\n"
+        "copyText": "---\nid: m4n5p6q7\n---\nremote\n",
+        "copyModifiedMillis": 2000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "6316f5e77dc39161250fab8d25a5a93a0a59852da1aee4fddf4d0152f0638456",
+          "remoteHash": "e13a53c1bba5dec4f480940a79d144c177150bf7b88fc99baa4e8375f9c1ebbc",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 3000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "ffd2bf682d6883950101d947f7e2d011cea92394e0e04affa591977de7c821eb",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 2000
+        },
+        "reuseCopy": false
       }
     },
     {
@@ -210,7 +285,22 @@
         "kind": "newestWins",
         "winner": "local",
         "copyPath": "a (conflicted copy).md",
-        "copyText": "---\nid: m4n5p6q7\n---\nremote\n"
+        "copyText": "---\nid: m4n5p6q7\n---\nremote\n",
+        "copyModifiedMillis": 2000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "5755a8b95c849d3e5ed14b4d89ddf03b82782d973b77c26827a60f24f2f7cca6",
+          "remoteHash": "c81662749eb30a2c7f6b6b9b1a561a7b0be5cc115759b72442ddb476e7712751",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 3000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "f34848ca92665c342abd5816c9e3eda0e82180671195362bcd0080544a3bc2ac",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 2000
+        },
+        "reuseCopy": false
       }
     },
     {
@@ -237,7 +327,22 @@
         "kind": "newestWins",
         "winner": "local",
         "copyPath": "a (conflicted copy).md",
-        "copyText": "---\nid: m4n5p6q7\ntitle: T\n---\nremote\n"
+        "copyText": "---\nid: m4n5p6q7\ntitle: T\n---\nremote\n",
+        "copyModifiedMillis": 2000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "efb83f2a277e9f49b38efd505f5cbb93885e721b6bd16b788937c9396174c006",
+          "remoteHash": "0f7e6054c0d81a60078ab53866ec343830bc8f2e238e41d042026cd2332611e4",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 3000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "f34848ca92665c342abd5816c9e3eda0e82180671195362bcd0080544a3bc2ac",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 2000
+        },
+        "reuseCopy": false
       }
     },
     {
@@ -264,7 +369,22 @@
         "kind": "newestWins",
         "winner": "local",
         "copyPath": "a (conflicted copy).md",
-        "copyText": "---\nid: m4n5p6q7\n---\nremote\n"
+        "copyText": "---\nid: m4n5p6q7\n---\nremote\n",
+        "copyModifiedMillis": 2000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "57951da91fd8550dc9012607acebc252c1cd91e1cebc327472f380238f2b34ba",
+          "remoteHash": "e919107aa8056a93e749d82f637d716910025447f505ed0e8f78534cb898304f",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 3000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "f34848ca92665c342abd5816c9e3eda0e82180671195362bcd0080544a3bc2ac",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 2000
+        },
+        "reuseCopy": false
       }
     },
     {
@@ -293,7 +413,845 @@
         "kind": "newestWins",
         "winner": "remote",
         "copyPath": "a (conflicted copy) 3.md",
-        "copyText": "---\nid: m4n5p6q7\n---\nl\n"
+        "copyText": "---\nid: m4n5p6q7\n---\nl\n",
+        "copyModifiedMillis": 1,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "6d7ebc44c5bc26207e62f4f628f912e1a0f41ed11764891aa7dd99eab83228e7",
+          "remoteHash": "8e54b0ca18020275e4aef1ca0eb5e197e066c065c1864817652a8a39c55402cd",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1,
+          "remoteModifiedMillis": 2,
+          "baseHash": "0263829989b6fd954f72baaf2fc64bc2e2f01d692d4de72986ea808f6e99813f",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy) 3.md",
+          "copyModifiedMillis": 1
+        },
+        "reuseCopy": false
+      }
+    },
+    {
+      "name": "restart after copy creation reuses the same copy and id",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 1000,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "a.md",
+          "a (conflicted copy).md"
+        ],
+        "newId": "r2s3t4v5",
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "existingCopy": {
+          "path": "a (conflicted copy).md",
+          "text": "---\nid: m4n5p6q7\n---\na\nlocal\n",
+          "modifiedMillis": 1000
+        }
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy).md",
+        "copyText": "---\nid: m4n5p6q7\n---\na\nlocal\n",
+        "copyModifiedMillis": 1000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "reuseCopy": true
+      }
+    },
+    {
+      "name": "restart before copy creation reuses reserved path and id",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 1000,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "a.md"
+        ],
+        "newId": "r2s3t4v5",
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        }
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy).md",
+        "copyText": "---\nid: m4n5p6q7\n---\na\nlocal\n",
+        "copyModifiedMillis": 1000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "reuseCopy": false
+      }
+    },
+    {
+      "name": "an edited saved copy is preserved and a new copy is allocated",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 1000,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "a.md",
+          "a (conflicted copy).md"
+        ],
+        "newId": "r2s3t4v5",
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "existingCopy": {
+          "path": "a (conflicted copy).md",
+          "text": "user edit\n",
+          "modifiedMillis": 1000
+        }
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy) 2.md",
+        "copyText": "---\nid: r2s3t4v5\n---\na\nlocal\n",
+        "copyModifiedMillis": 1000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "r2s3t4v5",
+          "copyPath": "a (conflicted copy) 2.md",
+          "copyModifiedMillis": 1000
+        },
+        "reuseCopy": false
+      }
+    },
+    {
+      "name": "a saved copy with a different id is not reused",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 1000,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "a.md",
+          "a (conflicted copy).md"
+        ],
+        "newId": "r2s3t4v5",
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "existingCopy": {
+          "path": "a (conflicted copy).md",
+          "text": "---\nid: z2s3t4v5\n---\na\nlocal\n",
+          "modifiedMillis": 1000
+        }
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy) 2.md",
+        "copyText": "---\nid: r2s3t4v5\n---\na\nlocal\n",
+        "copyModifiedMillis": 1000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "r2s3t4v5",
+          "copyPath": "a (conflicted copy) 2.md",
+          "copyModifiedMillis": 1000
+        },
+        "reuseCopy": false
+      }
+    },
+    {
+      "name": "a saved copy with changed modification time is not reused",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 1000,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "a.md",
+          "a (conflicted copy).md"
+        ],
+        "newId": "r2s3t4v5",
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "existingCopy": {
+          "path": "a (conflicted copy).md",
+          "text": "---\nid: m4n5p6q7\n---\na\nlocal\n",
+          "modifiedMillis": 9000
+        }
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy) 2.md",
+        "copyText": "---\nid: r2s3t4v5\n---\na\nlocal\n",
+        "copyModifiedMillis": 1000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "r2s3t4v5",
+          "copyPath": "a (conflicted copy) 2.md",
+          "copyModifiedMillis": 1000
+        },
+        "reuseCopy": false
+      }
+    },
+    {
+      "name": "a different remote revision invalidates a saved intent",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 1000,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v3",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "a.md",
+          "a (conflicted copy).md"
+        ],
+        "newId": "r2s3t4v5",
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "existingCopy": {
+          "path": "a (conflicted copy).md",
+          "text": "---\nid: m4n5p6q7\n---\na\nlocal\n",
+          "modifiedMillis": 1000
+        }
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy) 2.md",
+        "copyText": "---\nid: r2s3t4v5\n---\na\nlocal\n",
+        "copyModifiedMillis": 1000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v3",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "r2s3t4v5",
+          "copyPath": "a (conflicted copy) 2.md",
+          "copyModifiedMillis": 1000
+        },
+        "reuseCopy": false
+      }
+    },
+    {
+      "name": "changed base text invalidates a saved intent",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 1000,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "another base\n",
+        "existingPaths": [
+          "a.md",
+          "a (conflicted copy).md"
+        ],
+        "newId": "r2s3t4v5",
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "existingCopy": {
+          "path": "a (conflicted copy).md",
+          "text": "---\nid: m4n5p6q7\n---\na\nlocal\n",
+          "modifiedMillis": 1000
+        }
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy) 2.md",
+        "copyText": "---\nid: r2s3t4v5\n---\na\nlocal\n",
+        "copyModifiedMillis": 1000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "04502589ddfbb58cd3084274af55c27ffc066fc68617ed72013d8a0fd03d72b8",
+          "newId": "r2s3t4v5",
+          "copyPath": "a (conflicted copy) 2.md",
+          "copyModifiedMillis": 1000
+        },
+        "reuseCopy": false
+      }
+    },
+    {
+      "name": "a changed losing edit time invalidates a saved intent",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 999,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "a.md",
+          "a (conflicted copy).md"
+        ],
+        "newId": "r2s3t4v5",
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "existingCopy": {
+          "path": "a (conflicted copy).md",
+          "text": "---\nid: m4n5p6q7\n---\na\nlocal\n",
+          "modifiedMillis": 1000
+        }
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy) 2.md",
+        "copyText": "---\nid: r2s3t4v5\n---\na\nlocal\n",
+        "copyModifiedMillis": 999,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 999,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "r2s3t4v5",
+          "copyPath": "a (conflicted copy) 2.md",
+          "copyModifiedMillis": 999
+        },
+        "reuseCopy": false
+      }
+    },
+    {
+      "name": "an intent with the wrong losing time is not reused",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 1000,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "a.md",
+          "a (conflicted copy).md"
+        ],
+        "newId": "r2s3t4v5",
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 9000
+        },
+        "existingCopy": {
+          "path": "a (conflicted copy).md",
+          "text": "---\nid: m4n5p6q7\n---\na\nlocal\n",
+          "modifiedMillis": 1000
+        }
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy) 2.md",
+        "copyText": "---\nid: r2s3t4v5\n---\na\nlocal\n",
+        "copyModifiedMillis": 1000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "r2s3t4v5",
+          "copyPath": "a (conflicted copy) 2.md",
+          "copyModifiedMillis": 1000
+        },
+        "reuseCopy": false
+      }
+    },
+    {
+      "name": "an unrelated occupied intent path is not overwritten",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 1000,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "a.md",
+          "a (conflicted copy).md"
+        ],
+        "newId": "r2s3t4v5",
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        }
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy) 2.md",
+        "copyText": "---\nid: r2s3t4v5\n---\na\nlocal\n",
+        "copyModifiedMillis": 1000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "r2s3t4v5",
+          "copyPath": "a (conflicted copy) 2.md",
+          "copyModifiedMillis": 1000
+        },
+        "reuseCopy": false
+      }
+    },
+    {
+      "name": "a losing epoch timestamp is preserved rather than replaced with sync time",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 0,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "a.md"
+        ],
+        "newId": "m4n5p6q7"
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy).md",
+        "copyText": "---\nid: m4n5p6q7\n---\na\nlocal\n",
+        "copyModifiedMillis": 0,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 0,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 0
+        },
+        "reuseCopy": false
+      }
+    },
+    {
+      "name": "an intent cannot use the original note as its own losing copy",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 1000,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "a.md"
+        ],
+        "newId": "r2s3t4v5",
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "a.md",
+          "copyModifiedMillis": 1000
+        },
+        "existingCopy": {
+          "path": "a.md",
+          "text": "---\nid: m4n5p6q7\n---\na\nlocal\n",
+          "modifiedMillis": 1000
+        }
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy).md",
+        "copyText": "---\nid: r2s3t4v5\n---\na\nlocal\n",
+        "copyModifiedMillis": 1000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "r2s3t4v5",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "reuseCopy": false
+      }
+    },
+    {
+      "name": "an intent cannot reuse a copy in another folder",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 1000,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "Work/a (conflicted copy).md",
+          "a.md"
+        ],
+        "newId": "r2s3t4v5",
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "m4n5p6q7",
+          "copyPath": "Work/a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "existingCopy": {
+          "path": "Work/a (conflicted copy).md",
+          "text": "---\nid: m4n5p6q7\n---\na\nlocal\n",
+          "modifiedMillis": 1000
+        }
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy).md",
+        "copyText": "---\nid: r2s3t4v5\n---\na\nlocal\n",
+        "copyModifiedMillis": 1000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "r2s3t4v5",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "reuseCopy": false
+      }
+    },
+    {
+      "name": "an intent with an invalid replacement id is discarded",
+      "input": {
+        "path": "a.md",
+        "local": "a\nlocal\n",
+        "localModifiedMillis": 1000,
+        "remote": "a\nremote\n",
+        "remoteEntry": {
+          "path": "a.md",
+          "id": "r1",
+          "isFolder": false,
+          "version": "v2",
+          "modifiedMillis": 2000
+        },
+        "base": "a\nb\n",
+        "existingPaths": [
+          "a.md",
+          "a (conflicted copy).md"
+        ],
+        "newId": "r2s3t4v5",
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "INVALID",
+          "copyPath": "a (conflicted copy).md",
+          "copyModifiedMillis": 1000
+        },
+        "existingCopy": {
+          "path": "a (conflicted copy).md",
+          "text": "---\nid: INVALID\n---\na\nlocal\n",
+          "modifiedMillis": 1000
+        }
+      },
+      "expected": {
+        "kind": "newestWins",
+        "winner": "remote",
+        "copyPath": "a (conflicted copy) 2.md",
+        "copyText": "---\nid: r2s3t4v5\n---\na\nlocal\n",
+        "copyModifiedMillis": 1000,
+        "conflictCopyIntent": {
+          "path": "a.md",
+          "localHash": "3b08e3776a0c241dc44d38195b2a75ac7d83be5904f900755a1df69bb23cd022",
+          "remoteHash": "1880093a954775f00c999ffdd76aed510fdeca80026006ca620ffa7f8ebcd917",
+          "remoteId": "r1",
+          "remoteVersion": "v2",
+          "localModifiedMillis": 1000,
+          "remoteModifiedMillis": 2000,
+          "baseHash": "911169ddaaf146aff539f58c26c489af3b892dff0fe283c1c264c65ae5aa59a2",
+          "newId": "r2s3t4v5",
+          "copyPath": "a (conflicted copy) 2.md",
+          "copyModifiedMillis": 1000
+        },
+        "reuseCopy": false
       }
     }
   ]

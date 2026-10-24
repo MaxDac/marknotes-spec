@@ -2,12 +2,14 @@
 
 The shared specification of the MarkNotes apps:
 
-- [Android](https://github.com/MaxDac/MarkNotes)
+- [Android](https://github.com/MaxDac/marknotes-android) and its [Pro edition](https://github.com/MaxDac/MarkNotes)
 - [Desktop (Electron)](https://github.com/MaxDac/marknotes-electron)
 - [Web](https://github.com/MaxDac/marknotes-web)
 
 They share one sync implementation, [marknotes-sync](https://github.com/MaxDac/marknotes-sync) (Rust, with Kotlin
 and WebAssembly bindings), which runs the sync fixtures here.
+The Android editions share their executor in marknotes-android; the Pro repository pins it at `libre/` and adds
+OneDrive and Proton Drive adapters. Both use the `android` fixture key.
 
 All three read and write the same notes folder and sync it through the same drives, so they must agree on the format.
 
@@ -50,6 +52,7 @@ Each file under `fixtures/<area>/<function>.json` has this shape:
 | `duplicate-ids/resolve` | Which notes get a new id when ids collide |
 | `merge/merge3`, `conflict-copy-name` | Three-way merge and conflict copies |
 | `sync/plan`, `reconcile`, `multi-drive`, `local-deletions` | Sync plan for one drive, notes changed on both sides, order of drives, records to flag as deleted locally |
+| `sync/executor-safety` | Reference-executor races for safe folder deletion and create-only writes, and restart recovery at each conflicted-copy persistence boundary |
 | `chords/detect`, `parse`, `serialize`, `validate`, `display-names` | Chord sequences: detect `type: chords`, parse and write the body, validate before saving, number repeated chords |
 
 ## How apps consume this repository
@@ -65,6 +68,10 @@ Each file under `fixtures/<area>/<function>.json` has this shape:
 5. Let Dependabot (`gitsubmodule` ecosystem) open pull requests that bump the pin.
 
 The apps' `docs/note-format.md` should link here instead of keeping a copy.
+
+`sync/executor-safety` runs against marknotes-sync's reference executor, because planner inputs cannot express a
+provider race or a process restart. App runners must map it to that shared contract suite, not silently ignore it;
+apps also keep their own adapter and durable-store tests for the same guarantees.
 
 ## Changing the spec
 

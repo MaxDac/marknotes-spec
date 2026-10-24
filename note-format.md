@@ -1,7 +1,8 @@
 # MarkNotes note format
 
 This is the canonical on-disk format shared by the MarkNotes apps:
-[Android](https://github.com/MaxDac/MarkNotes), [desktop](https://github.com/MaxDac/marknotes-electron) and
+[Android](https://github.com/MaxDac/marknotes-android) (including [Pro](https://github.com/MaxDac/MarkNotes)),
+[desktop](https://github.com/MaxDac/marknotes-electron) and
 [web](https://github.com/MaxDac/marknotes-web). Notes and attachments written by one app must be readable by the
 others through the same synced drive folder (Proton Drive, Dropbox, OneDrive).
 
@@ -112,9 +113,10 @@ fixtures check; an app must not add its own sync decisions.
 - Paths are identified case-insensitively, by Unicode simple case folding, because Dropbox and OneDrive ignore case
   (`Über.md` and `über.md` are the same path; `Straße.md` and `STRASSE.md` are not). Synced paths that differ only in
   case, whether on the same side or across the local tree, the drive and the records, are each reported as the error
-  `differs only in case from another path` and skipped, together with everything inside them: nothing is uploaded,
-  downloaded, deleted, recorded or forgotten for them. To change only the case of a name, rename it to another name,
-  sync, then rename it again.
+  `differs only in case from another path` and skipped, together with everything inside them, except for a
+  [provably safe case-only rename](#case-only-renames): nothing is uploaded, downloaded, deleted, recorded or forgotten
+  for an ambiguous collision. A two-step rename through another name is still supported, but a device that misses
+  the intermediate name can converge using the saved record.
 - Errors come first in the plan, one per path, by path; when several apply, the file/folder message wins, then
   `is listed more than once`, then the case message.
 - Paths are ordered by UTF-16 code units, the order of JavaScript's default string sort.
@@ -166,14 +168,22 @@ Each sync of one drive lists the local tree (hashing every local file), the driv
      and put back here, so it is new to this drive); otherwise it was deleted on the drive, so it is deleted locally.
    - Only on the drive: downloaded if never synced or changed; otherwise it was deleted locally, so it is deleted on
      the drive.
-   - So a change wins over a deletion. A file whose deletion is part of a folder deletion (step 3) gets no action
-     here.
+   - So a change wins over a deletion. A file inside a folder to be deleted still gets its own guarded file
+     deletion before that folder is removed.
    - In this step the flag only changes the "only local" case above. Elsewhere a flagged record is compared as usual,
      and a file on both sides that would get no action is recorded again (no upload, no reconcile) to clear the flag.
    - On neither side: its record is dropped.
-3. **Folder deletions**, top-most first: a folder deleted on one side, with nothing changed under it on the other, is
-   deleted with everything inside. The records of the folder and everything under it are dropped only after the
-   deletion succeeds; when it fails they are kept, so the next sync tries again instead of recreating the folder.
+3. **Folder deletions**: a folder deleted on one side, with nothing changed under it on the other, is removed.
+   Folder deletions run deepest-first (then by path), after the guarded deletions of their known files.
+   Each local folder removal is non-recursive and fails if any entry remains. Each drive folder removal
+   must be an atomic empty-only operation: it must not remove any remaining descendant, including an ignored entry
+   or a file another device created after the listing. A fresh listing followed by an ordinary recursive deletion
+   does not provide this guarantee. If the folder is not empty, or the provider cannot guarantee empty-only removal,
+   the step fails explicitly without a recursive fallback.
+
+   Records are dropped only after their corresponding deletion succeeds. A failed folder removal retains its
+   folder record and any records not already successfully deleted, so a later sync can retry or pick up new
+   contents instead of recreating the folder from a failed deletion.
 
 A failed step is reported as `<path>: <message>` and the sync goes on with the next one.
 
@@ -181,10 +191,63 @@ A failed step is reported as `<path>: <message>` and the sync goes on with the n
 
 - Apps flush pending editor saves before a sync starts.
 - Before every local write or deletion (a download, a merge or conflict result, a local file or folder deletion), the
-  app hashes the local file again (for a folder, every file inside it) and skips the step if a hash differs from the
-  listing the plan was computed from: the file was edited during the sync. A skipped step is not an error and records
+  app hashes the local file again and skips the step if its hash differs from the listing the plan was computed
+  from: the file was edited during the sync. A new local file must not be overwritten.
+  Folder removal is non-recursive and empty-only, so
+  neither a new file nor an ignored descendant is deleted. A skipped changed-file step is not an error and records
   nothing; the next sync picks the edit up.
 - An upload records the hash of the bytes actually uploaded, not the hash from the listing.
+- Creating a new drive file (`uploadNew`), a conflicted copy or a drive folder (`createRemoteFolder`) is
+  **create-only**. If the path became occupied after the listing, the action fails without replacing or automatically
+  renaming the existing entry, and without saving a successful record for the attempted creation. The next sync
+  takes a fresh listing and reconciles the two sides. Creating an internal/root directory idempotently is a
+  separate adapter operation, not a substitute for a planned create-only action.
+- A new local conflicted copy is created atomically only if its path is absent. A name selected from a listing
+  is not a reservation and does not permit overwriting a file created since that listing.
+
+### Case-only renames
+
+A saved record can establish which spelling is stale when there is exactly one local entry, one drive entry and
+one consistent recorded spelling for a case-folded path, and both entries have the same kind:
+
+- If the record has the local spelling and the local file hash still matches the record, rename the local entry to
+  the drive spelling.
+- If the record has the drive spelling and the drive id and version still match the record, rename the drive entry
+  to the local spelling.
+- If the local and drive spellings already agree but the record retains an old case alias, emit the same local
+  rename from the recorded path to the agreed path only when the local hash matches the record and the drive id
+  still matches. The drive revision may have changed; preserve its recorded revision for the next plan. This
+  occurs when another drive's convergence has already renamed the shared local entry.
+- For a folder, all descendants must map one-to-one by the same prefix change, with records proving that every
+  stale-side file is unchanged. Missing, ignored, duplicate, differently typed or ambiguously cased descendants
+  prevent automatic inference. Genuine same-side collisions, absent or inconsistent records, and an edited stale
+  side keep the collision errors.
+
+  For the record-only stale case, folder inference requires the same complete descendant mapping, with every local
+  file hash and every drive identity matching its record. The executor rechecks the exact listed spelling and target
+  identity/content. If the old spelling is absent and the intended destination is already verified, it skips the
+  physical move and completes only the current drive's record/base migration. A case-insensitive filesystem lookup
+  of the old alias is not evidence that the old spelling still exists. An unverified occupied target remains an error.
+
+  Renames do not change content, note ids or modification times. They use no-overwrite operations and recheck the
+stale-side identity/content before changing it. A failed precondition or an unsupported safe rename is an explicit
+step error that keeps the records. A local file system may use a private temporary name to implement a case-only
+rename, but must make an interrupted rename recoverable and must not overwrite another entry at either step.
+Do not emulate a drive rename with an unannounced temporary path: another device could interpret the missing
+original as a deletion between the two moves.
+
+After a successful rename, migrate the current drive's affected record and base-copy paths together. Keep the
+other drives' records and bases at their previous paths until those drives perform their own convergence; their
+saved identity and version remain evidence of the unchanged stale drive spelling. A `localDeleted` flag is not
+permission to delete a case alias. Do not apply additional actions inside a renamed subtree from the old listing:
+take a fresh listing to plan its contents. A local rename counts as a local change for the other drives' queue.
+When the rename and history migration cannot commit atomically, persist a per-drive rename intent before the
+mutation and replay it before flagging local deletions or planning. A restart after the move but before metadata
+migration must finish migrating the records and bases, not leave an old recorded spelling as a permanent collision.
+Replay verifies the entry's identity at its source or intended destination and never overwrites an intervening edit.
+Migration preserves the recorded hashes and drive versions: a rename response is not proof that its returned
+revision contains the already-synced bytes. In particular, a stable-id no-overwrite drive move may preserve a
+concurrent content edit; its new revision must still be detected by the next plan, not adopted as synced.
 
 ### Modification time
 
@@ -205,11 +268,27 @@ A note that changed on both sides is reconciled:
    `<name> (conflicted copy).md` (or `<name> (conflicted copy) <n>.md`, with the first free `n` from 2; a name is
    taken when an existing local path equals it by [simple case folding](#what-is-synced)) and synced
    as a new note. The copy always gets a new valid id (set as in [Note ids](#note-ids-front-matter)), even when the
-   losing version had no id or an invalid one.
+   losing version had no id or an invalid one. Its modification time is the losing version's modification time,
+   not the time of the sync or the copy's creation. Creating or retrying the copy and uploading or downloading it
+   preserve that time; only a subsequent real edit makes it newer.
 
    The steps run in this order, so the losing version is never lost: write the copy locally; then overwrite the
    losing side (write the drive's text locally, or upload the local text as a new revision) and record the note;
    then upload the copy. If writing the copy fails, the note is left as it is and the step is reported.
+
+   Before creating the copy, persist a durable intent identifying the drive, original conflict, selected copy path,
+   new note id, exact copy text and losing modification time. After a crash, reuse that intent only for the same
+   conflict, and reuse an existing copy only after verifying its exact text (including the replacement id) and
+   modification time. If the intended path is absent, retry its create-only write with the same id and time.
+   Validate persisted intent paths and ids before reuse: the copy must have a conventional conflicted-copy name
+   beside the original, never the original path itself or an arbitrary destination, and its replacement id must
+   be valid.
+   An unrelated or edited file is never accepted as the saved losing version or overwritten: preserve it and
+   allocate a new free copy path and intent. A stale intent must not permanently prevent a new conflict from
+   being reconciled. Persist the intent before the copy, and verify the copy is durable before overwriting the
+   losing side. Keep enough recovery state through winner recording and copy upload to finish an interrupted
+   action without manufacturing a duplicate. Clear recovery state only after those steps are durably complete;
+   a replay must not overwrite a winner or copy that has since been edited.
 
 Every app tells the user about conflicted copies and offers to merge a copy back into its note: a three-way merge of
 the base, the note and the copy, where each conflicting region can be resolved as local, remote, both (local then
@@ -270,6 +349,21 @@ layer. Every adapter must provide:
   Dropbox `update` mode with the `rev` and `delete_v2` with `parent_rev`, OneDrive `If-Match` with the eTag, and on
   Proton Drive a check of the active revision before trashing. A failed precondition is a step error that keeps the
   record, so the next sync sees the other device's change.
+- **Safe folder removal.** Folder deletion must be atomic and empty-only, after individual conditional file
+  deletions. Recursive provider deletion, even after an empty listing or a file-revision check, is not equivalent.
+  If an adapter cannot provide this guarantee, it reports an unsupported-operation step error and leaves the
+  folder and its remaining records intact.
+- **Create-only writes.** New files, conflicted copies and planned new folders fail if an entry already exists:
+  Dropbox uses `mode: add`, `autorename: false` and `strict_conflict: true`; OneDrive uses
+  `@microsoft.graph.conflictBehavior=fail` on the creation operation. Other providers must give the equivalent
+  no-replacement guarantee or fail explicitly. A folder conflict must not be converted to success by looking up
+  and adopting the existing entry.
+- **Case-only rename capabilities.** A drive rename must preserve the stable entry identity and all content,
+  fail without overwriting an occupied destination, and leave recorded content versions unchanged until verified
+  by a fresh plan. Dropbox's [`move_v2`](https://docs.dropboxapi.com/dropbox-api/api-reference/user-endpoints/files/move-v-2)
+  explicitly does not support case-only renames, so an adapter must report that limitation instead of claiming a
+  successful direct move. This does not prevent a device from converging its unchanged local spelling to a
+  case-only rename it observes on the drive.
 - **Modification times.** Uploads write the note's [modification time](#modification-time) to Dropbox
   `client_modified`, OneDrive `fileSystemInfo.lastModifiedDateTime` or the Proton Drive claimed `modificationTime`.
   Listings read the same fields, falling back to the server time when they are missing, and downloads set the local
