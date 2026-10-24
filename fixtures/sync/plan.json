@@ -1,7 +1,100 @@
 {
   "$schema": "../../schemas/fixture-file.schema.json",
-  "description": "The sync plan for one drive (see note-format.md, Sync algorithm). input is a SyncInput: local entries (sha256 for files), remote entries (both may include entries that are not synced, which only keep their folder from being deleted), the records saved at the last sync and the manifest text (or null). expected.actions is the exact ordered list of actions.",
+  "description": "The sync plan for one drive (see note-format.md, Sync algorithm). input is a SyncInput: local entries (sha256 for files), remote entries (both may include entries that are not synced, which only keep their folder from being deleted), the records saved at the last sync and the manifest text (or null). remoteFolderDeletion is atomicEmptyOnly (also the omitted default) or unsupported; folder records may carry remoteFolderPreserved, default false. expected.actions is the exact ordered list of actions. Executors retire preserved folder records across all drives on local recreation before planning.",
   "cases": [
+    {
+      "name": "unsupported empty folder deletion preserves history instead of requesting removal",
+      "input": {
+        "local": [],
+        "remote": [{ "path": "F", "id": "rf", "isFolder": true, "version": "", "modifiedMillis": 0 }],
+        "records": [{ "path": "F", "isFolder": true, "remoteId": "rf", "remoteVersion": "", "localHash": "", "syncedAt": 500 }],
+        "manifest": null,
+        "remoteFolderDeletion": "unsupported"
+      },
+      "expected": {
+        "actions": [{ "kind": "preserveRemoteFolder", "path": "F", "remote": { "path": "F", "id": "rf", "isFolder": true, "version": "", "modifiedMillis": 0 } }]
+      },
+      "knownDivergence": {
+        "android": "The current shared planner has no unsupported-capability preservation action; spec#50.",
+        "desktop": "The current shared planner has no unsupported-capability preservation action; spec#50.",
+        "web": "The current shared planner has no unsupported-capability preservation action; spec#50."
+      }
+    },
+    {
+      "name": "an unchanged preserved remote folder produces no repeat action",
+      "input": {
+        "local": [],
+        "remote": [{ "path": "F", "id": "rf", "isFolder": true, "version": "", "modifiedMillis": 0 }],
+        "records": [{ "path": "F", "isFolder": true, "remoteId": "rf", "remoteVersion": "", "localHash": "", "syncedAt": 500, "remoteFolderPreserved": true }],
+        "manifest": null,
+        "remoteFolderDeletion": "unsupported"
+      },
+      "expected": { "actions": [] },
+      "knownDivergence": {
+        "android": "The current shared planner retries deletion and does not read remoteFolderPreserved; spec#50.",
+        "desktop": "The current shared planner retries deletion and does not read remoteFolderPreserved; spec#50.",
+        "web": "The current shared planner retries deletion and does not read remoteFolderPreserved; spec#50."
+      }
+    },
+    {
+      "name": "a newly supported safe removal retries a preserved folder",
+      "input": {
+        "local": [],
+        "remote": [{ "path": "F", "id": "rf", "isFolder": true, "version": "", "modifiedMillis": 0 }],
+        "records": [{ "path": "F", "isFolder": true, "remoteId": "rf", "remoteVersion": "", "localHash": "", "syncedAt": 500, "remoteFolderPreserved": true }],
+        "manifest": null,
+        "remoteFolderDeletion": "atomicEmptyOnly"
+      },
+      "expected": {
+        "actions": [{ "kind": "deleteRemoteFolder", "path": "F", "remote": { "path": "F", "id": "rf", "isFolder": true, "version": "", "modifiedMillis": 0 }, "forget": ["F"] }]
+      }
+    },
+    {
+      "name": "omitted folder capability retains the strict atomic deletion plan",
+      "input": {
+        "local": [],
+        "remote": [{ "path": "F", "id": "rf", "isFolder": true, "version": "", "modifiedMillis": 0 }],
+        "records": [{ "path": "F", "isFolder": true, "remoteId": "rf", "remoteVersion": "", "localHash": "", "syncedAt": 500 }],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [{ "kind": "deleteRemoteFolder", "path": "F", "remote": { "path": "F", "id": "rf", "isFolder": true, "version": "", "modifiedMillis": 0 }, "forget": ["F"] }]
+      }
+    },
+    {
+      "name": "a preserved folder replacement is new remote content",
+      "input": {
+        "local": [],
+        "remote": [{ "path": "F", "id": "replacement", "isFolder": true, "version": "", "modifiedMillis": 0 }],
+        "records": [{ "path": "F", "isFolder": true, "remoteId": "rf", "remoteVersion": "", "localHash": "", "syncedAt": 500, "remoteFolderPreserved": true }],
+        "manifest": null,
+        "remoteFolderDeletion": "unsupported"
+      },
+      "expected": { "actions": [{ "kind": "createLocalFolder", "path": "F", "remoteId": "replacement" }] },
+      "knownDivergence": {
+        "android": "The current shared planner does not retire preserved deletion intent on identity replacement; spec#50.",
+        "desktop": "The current shared planner does not retire preserved deletion intent on identity replacement; spec#50.",
+        "web": "The current shared planner does not retire preserved deletion intent on identity replacement; spec#50."
+      }
+    },
+    {
+      "name": "both present folders clear a preserved marker by recording",
+      "input": {
+        "local": [{ "path": "F", "isFolder": true }],
+        "remote": [{ "path": "F", "id": "rf", "isFolder": true, "version": "", "modifiedMillis": 0 }],
+        "records": [{ "path": "F", "isFolder": true, "remoteId": "rf", "remoteVersion": "", "localHash": "", "syncedAt": 500, "remoteFolderPreserved": true }],
+        "manifest": null,
+        "remoteFolderDeletion": "unsupported"
+      },
+      "expected": {
+        "actions": [{ "kind": "recordFolder", "path": "F", "remoteId": "rf" }]
+      },
+      "knownDivergence": {
+        "android": "The current shared planner treats the matching folder identity as already recorded; spec#50.",
+        "desktop": "The current shared planner treats the matching folder identity as already recorded; spec#50.",
+        "web": "The current shared planner treats the matching folder identity as already recorded; spec#50."
+      }
+    },
     {
       "name": "nothing to do",
       "input": {

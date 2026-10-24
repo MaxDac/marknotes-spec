@@ -52,7 +52,7 @@ Each file under `fixtures/<area>/<function>.json` has this shape:
 | `duplicate-ids/resolve` | Which notes get a new id when ids collide |
 | `merge/merge3`, `conflict-copy-name` | Three-way merge and conflict copies |
 | `sync/plan`, `reconcile`, `multi-drive`, `local-deletions` | Sync plan for one drive, notes changed on both sides, order of drives, records to flag as deleted locally |
-| `sync/executor-safety` | Reference-executor races for safe folder deletion and create-only writes, and restart recovery at each conflicted-copy persistence boundary |
+| `sync/executor-safety` | Safe folder deletion and deferred-removal notice lifecycles, create-only races, and conflicted-copy restart recovery |
 | `chords/detect`, `parse`, `serialize`, `validate`, `display-names` | Chord sequences: detect `type: chords`, parse and write the body, validate before saving, number repeated chords |
 
 ## How apps consume this repository
@@ -73,6 +73,14 @@ The apps' `docs/note-format.md` should link here instead of keeping a copy.
 provider race or a process restart. App runners must map it, not silently ignore it. Desktop and Web run its cases
 against their own executors; the Android runner does not run them yet and relies on the reference suite and its own
 executor tests. Apps also keep their own adapter and durable-store tests for the same guarantees.
+
+The deferred-folder cases for [#50](https://github.com/MaxDac/marknotes-spec/issues/50) intentionally change the
+unsupported-capability result and add executor scenarios to this existing file. The marknotes-sync Rust reference
+executor and its Kotlin/npm observation mappings, Desktop and Web executor runners, and Android's explicit mapping
+must be updated in coordination before consumers bump this pin. Unknown scenarios are not known-divergence
+observations: runners must execute a setup and compare its actual output, not skip it, return its golden result or
+catch an unmapped-scenario exception as an expected divergence. Current-main app divergences remain annotated until
+the corresponding implementation is verified; the reference executor must satisfy every expected result.
 
 ## Changing the spec
 
