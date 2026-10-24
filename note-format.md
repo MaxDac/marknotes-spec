@@ -275,12 +275,17 @@ one consistent recorded spelling for a case-folded path, and both entries have t
   still matches. The drive revision may have changed; preserve its recorded revision for the next plan. This
   occurs when another drive's convergence has already renamed the shared local entry.
 - For a folder, all descendants must map one-to-one by the same prefix change, with records proving that every
-  stale-side file is unchanged. Missing, ignored, duplicate, differently typed or ambiguously cased descendants
-  prevent automatic inference. Genuine same-side collisions, absent or inconsistent records, and an edited stale
-  side keep the collision errors.
+  stale-side file is unchanged. A remote-only descendant folder is the sole missing-local exception: its record
+  must have `remoteFolderPreserved: true`, its remote identity must still match, and its path must have the exact
+  suffix under the proven parent prefix change. The local absence is the recorded deferred deletion, not evidence
+  of an inconsistent rename. Every other descendant must satisfy the ordinary mapping checks; the exception does
+  not authorize a missing file, an unmarked or replaced folder, or ignored, duplicate, differently typed or
+  ambiguously cased entries. Other missing descendants prevent automatic inference. Genuine same-side collisions,
+  absent or inconsistent records, and an edited stale side keep the collision errors.
 
   For the record-only stale case, folder inference requires the same complete descendant mapping, with every local
-  file hash and every drive identity matching its record. The executor rechecks the exact listed spelling and target
+  file hash and every drive identity matching its record, including the preserved-folder exception above.
+  The executor rechecks the exact listed spelling and target
   identity/content. If the old spelling is absent and the intended destination is already verified, it skips the
   physical move and completes only the current drive's record/base migration. A case-insensitive filesystem lookup
   of the old alias is not evidence that the old spelling still exists. An unverified occupied target remains an error.
@@ -297,6 +302,8 @@ other drives' records and bases at their previous paths until those drives perfo
 saved identity and version remain evidence of the unchanged stale drive spelling. A `localDeleted` flag is not
 permission to delete a case alias. Do not apply additional actions inside a renamed subtree from the old listing:
 take a fresh listing to plan its contents. A local rename counts as a local change for the other drives' queue.
+Preserved remote-only descendants stay absent locally; migrate their markers and active notice paths with the
+current drive's history without allocating a new deletion generation or issuing a new notice.
 When the rename and history migration cannot commit atomically, persist a per-drive rename intent before the
 mutation and replay it before flagging local deletions or planning. A restart after the move but before metadata
 migration must finish migrating the records and bases, not leave an old recorded spelling as a permanent collision.

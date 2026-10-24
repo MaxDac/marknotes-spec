@@ -3,6 +3,62 @@
   "description": "The sync plan for one drive (see note-format.md, Sync algorithm). input is a SyncInput: local entries (sha256 for files), remote entries (both may include entries that are not synced, which only keep their folder from being deleted), the records saved at the last sync and the manifest text (or null). remoteFolderDeletion is atomicEmptyOnly (also the omitted default) or unsupported; folder records may carry remoteFolderPreserved, default false. expected.actions is the exact ordered list of actions. Executors retire preserved folder records across all drives on local recreation before planning.",
   "cases": [
     {
+      "name": "a local parent case rename migrates a remote-only preserved descendant",
+      "input": {
+        "local": [{ "path": "F", "isFolder": true }],
+        "remote": [
+          { "path": "f", "id": "parent", "isFolder": true, "version": "", "modifiedMillis": 0 },
+          { "path": "f/Sub", "id": "child", "isFolder": true, "version": "", "modifiedMillis": 0 }
+        ],
+        "records": [
+          { "path": "F", "isFolder": true, "remoteId": "parent", "remoteVersion": "", "localHash": "", "syncedAt": 500 },
+          { "path": "F/Sub", "isFolder": true, "remoteId": "child", "remoteVersion": "", "localHash": "", "syncedAt": 500, "remoteFolderPreserved": true }
+        ],
+        "manifest": null,
+        "remoteFolderDeletion": "unsupported"
+      },
+      "expected": {
+        "actions": [{
+          "kind": "renameLocal", "path": "F", "toPath": "f", "isFolder": true,
+          "remote": { "path": "f", "id": "parent", "isFolder": true, "version": "", "modifiedMillis": 0 },
+          "sha256": null
+        }]
+      },
+      "knownDivergence": {
+        "android": "The current planner rejects missing-local descendants even when preserved history proves absence; spec#50.",
+        "desktop": "The current planner rejects missing-local descendants even when preserved history proves absence; spec#50.",
+        "web": "The current planner rejects missing-local descendants even when preserved history proves absence; spec#50."
+      }
+    },
+    {
+      "name": "a drive parent case rename migrates a remote-only preserved descendant",
+      "input": {
+        "local": [{ "path": "f", "isFolder": true }],
+        "remote": [
+          { "path": "F", "id": "parent", "isFolder": true, "version": "", "modifiedMillis": 0 },
+          { "path": "F/Sub", "id": "child", "isFolder": true, "version": "", "modifiedMillis": 0 }
+        ],
+        "records": [
+          { "path": "F", "isFolder": true, "remoteId": "parent", "remoteVersion": "", "localHash": "", "syncedAt": 500 },
+          { "path": "F/Sub", "isFolder": true, "remoteId": "child", "remoteVersion": "", "localHash": "", "syncedAt": 500, "remoteFolderPreserved": true }
+        ],
+        "manifest": null,
+        "remoteFolderDeletion": "unsupported"
+      },
+      "expected": {
+        "actions": [{
+          "kind": "renameRemote", "path": "F", "toPath": "f", "isFolder": true,
+          "remote": { "path": "F", "id": "parent", "isFolder": true, "version": "", "modifiedMillis": 0 },
+          "sha256": null
+        }]
+      },
+      "knownDivergence": {
+        "android": "The current planner rejects missing-local descendants even when preserved history proves absence; spec#50.",
+        "desktop": "The current planner rejects missing-local descendants even when preserved history proves absence; spec#50.",
+        "web": "The current planner rejects missing-local descendants even when preserved history proves absence; spec#50."
+      }
+    },
+    {
       "name": "unsupported empty folder deletion preserves history instead of requesting removal",
       "input": {
         "local": [],
