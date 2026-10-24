@@ -14,6 +14,11 @@ and `web`.
 audit: 2026-10-24, at marknotes-android `24a84ee`, MarkNotes `ebdf80d` (Libre pin `76e0221`), marknotes-electron
 `a416c8e` and marknotes-web `53c5be4`.
 
+Verified default-branch updates after that audit: Libre's reserved-root move guard in
+[MaxDac/marknotes-android#33](https://github.com/MaxDac/marknotes-android/pull/33) (`130c441`) and Desktop's bass
+fret-12 marker in [MaxDac/marknotes-electron#49](https://github.com/MaxDac/marknotes-electron/pull/49) (`e601472`).
+Pro's checked Libre pin `a65aa93` does not yet include the reserved-root move fix.
+
 ## Features
 
 Search, tags, home-screen widgets and background sync while the app is closed are out of scope for every app.
@@ -24,7 +29,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | --- | --- | --- | --- | --- | --- |
 | Markdown notes in nested folders | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#notes-and-folders) |
 | Note title is the file name without `.md` | Yes | Yes | Yes | Partial: the tree, breadcrumb and rename dialog use `.md` [MaxDac/marknotes-web#50](https://github.com/MaxDac/marknotes-web/issues/50) | See known divergence 36 |
-| `attachments` reserved as a root name | Partial: a folder can be moved to the root as `attachments` [MaxDac/marknotes-android#29](https://github.com/MaxDac/marknotes-android/issues/29) | Partial (inherits Libre) | Yes | Yes | On create, rename and move. See known divergence 37 |
+| `attachments` reserved as a root name | Yes | Partial: awaiting the Libre move-guard pin | Yes | Yes | On create, rename and move. See known divergence 37 |
 | Folder tree with current location | Drawer, folder name | Drawer, folder name | Sidebar, folder name | Sidebar, breadcrumb | |
 | Editor views | Edit or Preview | Edit or Preview | Edit, Split or Preview | Partial: always side by side [MaxDac/marknotes-web#49](https://github.com/MaxDac/marknotes-web/issues/49) | |
 | Formatting toolbar | Yes | Yes | Yes | Partial: no strikethrough or numbered list; Heading always inserts `##` [MaxDac/marknotes-web#48](https://github.com/MaxDac/marknotes-web/issues/48) | Android and Desktop cycle the heading through none, H1, H2 and H3. Note links are inserted with `@` in every app |
@@ -35,7 +40,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Duplicate ids given a new id | When the `@` picker opens | When the `@` picker opens | When the `@` picker opens | When the `@` picker opens or a note is opened | [note-format.md](note-format.md#note-ids-front-matter) leaves the timing to the app; links resolve the same way meanwhile |
 | Chord sequence editor | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#chord-sequences); `fixtures/chords/*` |
 | Chord sequences opt-in setting (off by default) | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#chord-sequences-setting). App-only, no format change |
-| Bass fret 12 marker after the fret | Yes | Yes | No: drawn before it [MaxDac/marknotes-electron#47](https://github.com/MaxDac/marknotes-electron/issues/47) | Yes | App-only, no format change |
+| Bass fret 12 marker after the fret | Yes | Yes | Yes | Yes | App-only, no format change |
 | Import shared text and documents as Markdown | Yes | Yes | No [MaxDac/marknotes-electron#43](https://github.com/MaxDac/marknotes-electron/issues/43) | No [MaxDac/marknotes-web#46](https://github.com/MaxDac/marknotes-web/issues/46) | Android share sheet: text, HTML, `.txt`/`.md`/`.html`, `.docx`, PDF text, images. App-only, no format change |
 | Themes and accent colours | 8 + Dynamic | 8 + Dynamic | 8 | 9 | Light, dark or system everywhere. Dynamic (Material You) needs Android 12. Web adds Pink and defaults to Violet |
 
@@ -262,9 +267,10 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
 36. **Titles on Web** (not in fixtures): the note tree, breadcrumb and rename dialog use the file name with `.md`
     instead of the title
     ([MaxDac/marknotes-web#50](https://github.com/MaxDac/marknotes-web/issues/50)).
-37. **Moving to a reserved name on Android** (not in fixtures): a folder named `attachments` can be moved to the root,
-    after which it is hidden from the note tree
-    ([MaxDac/marknotes-android#29](https://github.com/MaxDac/marknotes-android/issues/29)).
+37. **Moving to a reserved name on Android** (not in fixtures): resolved in Libre by
+    [MaxDac/marknotes-android#33](https://github.com/MaxDac/marknotes-android/pull/33), with a real-store regression
+    checking the error and unchanged source contents. Pro still needs a Libre pin containing the fix; its checked
+    pin `a65aa93` can still move a nested `attachments` folder to the root, hiding it from the note tree.
 38. **Deferred remote folder removal** (`sync/plan`, `sync/executor-safety`): current-main Android, Desktop and Web
     still report an unsupported-operation error on every attempt and have no durable preserved-folder marker or
     notice lifecycle. The new `preserveRemoteFolder` action and lifecycle scenarios require coordinated shared
