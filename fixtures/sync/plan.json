@@ -3,6 +3,75 @@
   "description": "The sync plan for one drive (see note-format.md, Sync algorithm). input is a SyncInput: local entries (sha256 for files), remote entries (both may include entries that are not synced, which only keep their folder from being deleted), the records saved at the last sync and the manifest text (or null). remoteFolderDeletion is atomicEmptyOnly (also the omitted default) or unsupported; folder records may carry remoteFolderPreserved, default false. expected.actions is the exact ordered list of actions. Executors retire preserved folder records across all drives on local recreation before planning.",
   "cases": [
     {
+      "name": "an unmarked remote-only descendant prevents a parent case rename",
+      "input": {
+        "local": [{ "path": "f", "isFolder": true }],
+        "remote": [
+          { "path": "F", "id": "parent", "isFolder": true, "version": "", "modifiedMillis": 0 },
+          { "path": "F/Sub", "id": "child", "isFolder": true, "version": "", "modifiedMillis": 0 }
+        ],
+        "records": [
+          { "path": "F", "isFolder": true, "remoteId": "parent", "remoteVersion": "", "localHash": "", "syncedAt": 500 },
+          { "path": "F/Sub", "isFolder": true, "remoteId": "child", "remoteVersion": "", "localHash": "", "syncedAt": 500 }
+        ],
+        "manifest": null,
+        "remoteFolderDeletion": "unsupported"
+      },
+      "expected": {
+        "actions": [
+          { "kind": "error", "path": "F", "message": "differs only in case from another path" },
+          { "kind": "error", "path": "F/Sub", "message": "differs only in case from another path" },
+          { "kind": "error", "path": "f", "message": "differs only in case from another path" }
+        ]
+      }
+    },
+    {
+      "name": "a replaced preserved descendant prevents a parent case rename",
+      "input": {
+        "local": [{ "path": "f", "isFolder": true }],
+        "remote": [
+          { "path": "F", "id": "parent", "isFolder": true, "version": "", "modifiedMillis": 0 },
+          { "path": "F/Sub", "id": "replacement", "isFolder": true, "version": "", "modifiedMillis": 0 }
+        ],
+        "records": [
+          { "path": "F", "isFolder": true, "remoteId": "parent", "remoteVersion": "", "localHash": "", "syncedAt": 500 },
+          { "path": "F/Sub", "isFolder": true, "remoteId": "child", "remoteVersion": "", "localHash": "", "syncedAt": 500, "remoteFolderPreserved": true }
+        ],
+        "manifest": null,
+        "remoteFolderDeletion": "unsupported"
+      },
+      "expected": {
+        "actions": [
+          { "kind": "error", "path": "F", "message": "differs only in case from another path" },
+          { "kind": "error", "path": "F/Sub", "message": "differs only in case from another path" },
+          { "kind": "error", "path": "f", "message": "differs only in case from another path" }
+        ]
+      }
+    },
+    {
+      "name": "a folder preservation marker cannot authorize a missing file during parent rename",
+      "input": {
+        "local": [{ "path": "f", "isFolder": true }],
+        "remote": [
+          { "path": "F", "id": "parent", "isFolder": true, "version": "", "modifiedMillis": 0 },
+          { "path": "F/Sub.md", "id": "file", "isFolder": false, "version": "v1", "modifiedMillis": 0 }
+        ],
+        "records": [
+          { "path": "F", "isFolder": true, "remoteId": "parent", "remoteVersion": "", "localHash": "", "syncedAt": 500 },
+          { "path": "F/Sub.md", "isFolder": false, "remoteId": "file", "remoteVersion": "v1", "localHash": "h1", "syncedAt": 500, "remoteFolderPreserved": true }
+        ],
+        "manifest": null,
+        "remoteFolderDeletion": "unsupported"
+      },
+      "expected": {
+        "actions": [
+          { "kind": "error", "path": "F", "message": "differs only in case from another path" },
+          { "kind": "error", "path": "F/Sub.md", "message": "differs only in case from another path" },
+          { "kind": "error", "path": "f", "message": "differs only in case from another path" }
+        ]
+      }
+    },
+    {
       "name": "a local parent case rename migrates a remote-only preserved descendant",
       "input": {
         "local": [{ "path": "F", "isFolder": true }],
