@@ -14,7 +14,7 @@ Apps: **Android** ([MaxDac/MarkNotes](https://github.com/MaxDac/MarkNotes)), **D
 | --- | --- | --- | --- | --- |
 | Markdown notes in nested folders | Yes | Yes | Yes | [note-format.md](note-format.md#notes-and-folders) |
 | Chord sequence editor | Yes | Yes | Yes | [note-format.md](note-format.md#chord-sequences); `fixtures/chords/*` |
-| Chord sequences opt-in setting (off by default) | No (planned) | No (planned) | No (planned) | [note-format.md](note-format.md#chord-sequences-setting). App-only, no format change |
+| Chord sequences opt-in setting (off by default) | Yes | Yes | Yes | [note-format.md](note-format.md#chord-sequences-setting). App-only, no format change |
 | Stable note ids in front-matter | Yes | Yes | Yes | |
 | Note links and `@` picker | Yes | Yes | Yes | Picker ordering differs, see below |
 | Images from file picker / toolbar | Yes | Yes | Yes | |
