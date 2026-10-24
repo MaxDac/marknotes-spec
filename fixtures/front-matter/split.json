@@ -26,6 +26,17 @@
       "name": "unterminated block is body",
       "input": { "text": "---\nid: k7f3q2xa\nBody" },
       "expected": { "frontMatter": "", "body": "---\nid: k7f3q2xa\nBody" }
+    },
+    {
+      "name": "front-matter after a byte order mark keeps the mark in the block",
+      "input": { "text": "\ufeff---\nid: k7f3q2xa\n---\nBody" },
+      "expected": { "frontMatter": "\ufeff---\nid: k7f3q2xa\n---\n", "body": "Body" },
+      "knownDivergence": { "android": "Doesn't handle a leading byte order mark yet.", "desktop": "Doesn't handle a leading byte order mark yet.", "web": "Doesn't handle a leading byte order mark yet." }
+    },
+    {
+      "name": "byte order mark without front-matter is body",
+      "input": { "text": "\ufeffBody" },
+      "expected": { "frontMatter": "", "body": "\ufeffBody" }
     }
   ]
 }

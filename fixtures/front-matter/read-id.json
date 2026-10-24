@@ -24,6 +24,12 @@
       "input": { "text": "---  \nid: k7f3q2xa\n---\nBody" },
       "expected": { "id": "k7f3q2xa" },
       "knownDivergence": { "android": "The first line must be exactly ---." }
+    },
+    {
+      "name": "front-matter after a byte order mark",
+      "input": { "text": "\ufeff---\nid: k7f3q2xa\n---\nBody" },
+      "expected": { "id": "k7f3q2xa" },
+      "knownDivergence": { "android": "Doesn't handle a leading byte order mark yet.", "desktop": "Doesn't handle a leading byte order mark yet.", "web": "Doesn't handle a leading byte order mark yet." }
     }
   ]
 }

@@ -61,6 +61,16 @@
       "name": "two conflicts resolved separately",
       "input": { "base": "a\nb\nc\nd\ne\n", "local": "A1\nb\nc\nd\nE1\n", "remote": "A2\nb\nc\nd\nE2\n", "choices": { "0": "local", "1": "remote" } },
       "expected": { "text": "A1\nb\nc\nd\nE2\n", "conflicts": 2 }
+    },
+    {
+      "name": "no base: this device's text first, then the drive's",
+      "input": { "base": null, "local": "a\na\nb\n", "remote": "b\na\nb\na\na\n" },
+      "expected": { "text": "<<<<<<< this device\n=======\nb\n>>>>>>> drive\na\n<<<<<<< this device\na\n=======\n>>>>>>> drive\nb\n<<<<<<< this device\n=======\na\na\n>>>>>>> drive\n", "conflicts": 3 }
+    },
+    {
+      "name": "no base: the same texts the other way round give another result",
+      "input": { "base": null, "local": "b\na\nb\na\na\n", "remote": "a\na\nb\n" },
+      "expected": { "text": "<<<<<<< this device\nb\na\nb\n=======\n>>>>>>> drive\na\na\n<<<<<<< this device\n=======\nb\n>>>>>>> drive\n", "conflicts": 2 }
     }
   ]
 }
