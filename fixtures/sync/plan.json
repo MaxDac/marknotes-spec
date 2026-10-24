@@ -1990,7 +1990,6 @@
         ]
       },
       "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
         "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
         "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
@@ -2069,7 +2068,6 @@
         ]
       },
       "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
         "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
         "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
@@ -2124,7 +2122,6 @@
         ]
       },
       "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
         "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
         "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
@@ -2178,7 +2175,6 @@
         "actions": []
       },
       "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
         "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
         "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
@@ -2234,7 +2230,6 @@
         "actions": []
       },
       "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
         "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
         "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
@@ -2288,7 +2283,6 @@
         ]
       },
       "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
         "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
         "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
@@ -2337,7 +2331,6 @@
         "actions": []
       },
       "knownDivergence": {
-        "android": "Comes from marknotes-sync 0.1; fixed when Android picks up marknotes-sync 0.2.0.",
         "desktop": "Comes from marknotes-sync 0.1; fixed when Desktop picks up marknotes-sync 0.2.0.",
         "web": "Comes from marknotes-sync 0.1; fixed when Web picks up marknotes-sync 0.2.0."
       }
