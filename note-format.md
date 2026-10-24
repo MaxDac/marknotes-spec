@@ -214,12 +214,22 @@ one consistent recorded spelling for a case-folded path, and both entries have t
   the drive spelling.
 - If the record has the drive spelling and the drive id and version still match the record, rename the drive entry
   to the local spelling.
+- If the local and drive spellings already agree but the record retains an old case alias, emit the same local
+  rename from the recorded path to the agreed path only when the local hash matches the record and the drive id
+  still matches. The drive revision may have changed; preserve its recorded revision for the next plan. This
+  occurs when another drive's convergence has already renamed the shared local entry.
 - For a folder, all descendants must map one-to-one by the same prefix change, with records proving that every
   stale-side file is unchanged. Missing, ignored, duplicate, differently typed or ambiguously cased descendants
   prevent automatic inference. Genuine same-side collisions, absent or inconsistent records, and an edited stale
   side keep the collision errors.
 
-Renames do not change content, note ids or modification times. They use no-overwrite operations and recheck the
+  For the record-only stale case, folder inference requires the same complete descendant mapping, with every local
+  file hash and every drive identity matching its record. The executor rechecks the exact listed spelling and target
+  identity/content. If the old spelling is absent and the intended destination is already verified, it skips the
+  physical move and completes only the current drive's record/base migration. A case-insensitive filesystem lookup
+  of the old alias is not evidence that the old spelling still exists. An unverified occupied target remains an error.
+
+  Renames do not change content, note ids or modification times. They use no-overwrite operations and recheck the
 stale-side identity/content before changing it. A failed precondition or an unsupported safe rename is an explicit
 step error that keeps the records. A local file system may use a private temporary name to implement a case-only
 rename, but must make an interrupted rename recoverable and must not overwrite another entry at either step.

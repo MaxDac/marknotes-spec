@@ -133,7 +133,8 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     [#41](https://github.com/MaxDac/marknotes-spec/issues/41)).
 33. **Case-only rename convergence** (`sync/plan`): existing app pins reject every case-only difference, even when
     a record proves that one side retains an unchanged stale spelling. The 0.3 contract renames only that stale
-    side, preserves content and edit time, and keeps ambiguous collisions as errors
+    side, or migrates the current drive's stale recorded spelling when both listed sides already agree. It
+    preserves content and edit time, and keeps ambiguous collisions as errors
     ([#39](https://github.com/MaxDac/marknotes-spec/issues/39)). Local stale-side convergence is separate from
     provider rename capabilities: Dropbox does not support a direct case-only drive move, and unsupported safe
     operations remain explicit step errors rather than temporary moves that could look like deletions to peers.
