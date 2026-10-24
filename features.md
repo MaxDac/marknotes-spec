@@ -29,6 +29,28 @@ Apps: **Android** ([MaxDac/MarkNotes](https://github.com/MaxDac/MarkNotes)), **D
 | Merge a conflicted copy back, with conflict choices | Yes | Yes | Yes | |
 | When sync runs | Launch and Sync now | Launch and Sync now | Page load and Sync now | No app polls in the background |
 | Attachment hash check on download | Yes | Yes | Yes | [note-format.md](note-format.md#attachment-sync) |
+| Delete local data | No (planned) | Yes | No (planned) | See [Local data and privacy](#local-data-and-privacy). Desktop: [MaxDac/marknotes-electron#35](https://github.com/MaxDac/marknotes-electron/pull/35) |
+| Remote images blocked by default | Attachments only | Yes | Attachments only | Desktop: per-note "Load remote images", `https:` only, for the session. Android and Web never load remote images |
+| App lock with idle timeout | No (planned) | No (planned) | No (planned) | Android: biometric or device credential. Desktop and Web: passphrase |
+| Local encryption at rest | Yes (device file-based encryption, app-private storage) | No (planned) | No (planned) | Web: only with the app lock on. See [Local data and privacy](#local-data-and-privacy) |
+
+## Local data and privacy
+
+App behaviour only; none of it changes the note format, the manifest or the fixtures.
+
+- **Delete local data** removes the notes, images and sync state stored on the device. It is offered when the last
+  drive is disconnected ("Also delete the notes stored on this device") and as Settings → Privacy → "Delete all local
+  data", which disconnects every drive first. The local tree is shared by all drives, so it is deleted only when no
+  drive is connected, and the deletion never propagates to any drive.
+- **Remote images**: only note attachments render automatically. `https:` images in note bodies stay blocked until the
+  user loads them for that note; `http:`, protocol-relative (`//host`) and `file:` images are never loaded.
+- **App lock**: optional, with an idle timeout, and also locks on system suspend or screen lock where the platform
+  reports it.
+- **Encryption at rest**: Desktop encrypts the local note database with a data key protected by the OS keychain, or by
+  the app-lock passphrase when set. Web encrypts every local record, paths included, only when the app lock is
+  enabled, with a key derived from the passphrase (PBKDF2-SHA256, 600,000 iterations). Android adds no app-level
+  cipher: with minSdk 29, file-based encryption is mandatory, so notes in app-private storage are already encrypted
+  under the device credential and sandboxed from other apps.
 
 ## Known divergences
 
