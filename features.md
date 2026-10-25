@@ -17,7 +17,7 @@ audit: 2026-10-24, at marknotes-android `24a84ee`, MarkNotes `ebdf80d` (Libre pi
 Verified default-branch updates after that audit: Libre's reserved-root move guard in
 [MaxDac/marknotes-android#33](https://github.com/MaxDac/marknotes-android/pull/33) (`130c441`) and Desktop's bass
 fret-12 marker in [MaxDac/marknotes-electron#49](https://github.com/MaxDac/marknotes-electron/pull/49) (`e601472`).
-Pro's checked Libre pin `a65aa93` does not yet include the reserved-root move fix.
+Pro's checked Libre pin `d0203b9` does not yet include the reserved-root move fix.
 Cross-app links are also merged in
 [MaxDac/marknotes-android#23](https://github.com/MaxDac/marknotes-android/pull/23),
 [MaxDac/MarkNotes#37](https://github.com/MaxDac/MarkNotes/pull/37),
