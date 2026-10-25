@@ -92,10 +92,6 @@
           "remote": { "path": "f", "id": "parent", "isFolder": true, "version": "", "modifiedMillis": 0 },
           "sha256": null
         }]
-      },
-      "knownDivergence": {
-        "desktop": "The current planner rejects missing-local descendants even when preserved history proves absence; spec#50.",
-        "web": "The current planner rejects missing-local descendants even when preserved history proves absence; spec#50."
       }
     },
     {
@@ -119,10 +115,6 @@
           "remote": { "path": "F", "id": "parent", "isFolder": true, "version": "", "modifiedMillis": 0 },
           "sha256": null
         }]
-      },
-      "knownDivergence": {
-        "desktop": "The current planner rejects missing-local descendants even when preserved history proves absence; spec#50.",
-        "web": "The current planner rejects missing-local descendants even when preserved history proves absence; spec#50."
       }
     },
     {
@@ -136,10 +128,6 @@
       },
       "expected": {
         "actions": [{ "kind": "preserveRemoteFolder", "path": "F", "remote": { "path": "F", "id": "rf", "isFolder": true, "version": "", "modifiedMillis": 0 } }]
-      },
-      "knownDivergence": {
-        "desktop": "The current shared planner has no unsupported-capability preservation action; spec#50.",
-        "web": "The current shared planner has no unsupported-capability preservation action; spec#50."
       }
     },
     {
@@ -151,11 +139,7 @@
         "manifest": null,
         "remoteFolderDeletion": "unsupported"
       },
-      "expected": { "actions": [] },
-      "knownDivergence": {
-        "desktop": "The current shared planner retries deletion and does not read remoteFolderPreserved; spec#50.",
-        "web": "The current shared planner retries deletion and does not read remoteFolderPreserved; spec#50."
-      }
+      "expected": { "actions": [] }
     },
     {
       "name": "a newly supported safe removal retries a preserved folder",
@@ -191,11 +175,7 @@
         "manifest": null,
         "remoteFolderDeletion": "unsupported"
       },
-      "expected": { "actions": [{ "kind": "createLocalFolder", "path": "F", "remoteId": "replacement" }] },
-      "knownDivergence": {
-        "desktop": "The current shared planner does not retire preserved deletion intent on identity replacement; spec#50.",
-        "web": "The current shared planner does not retire preserved deletion intent on identity replacement; spec#50."
-      }
+      "expected": { "actions": [{ "kind": "createLocalFolder", "path": "F", "remoteId": "replacement" }] }
     },
     {
       "name": "both present folders clear a preserved marker by recording",
@@ -208,10 +188,6 @@
       },
       "expected": {
         "actions": [{ "kind": "recordFolder", "path": "F", "remoteId": "rf" }]
-      },
-      "knownDivergence": {
-        "desktop": "The current shared planner treats the matching folder identity as already recorded; spec#50.",
-        "web": "The current shared planner treats the matching folder identity as already recorded; spec#50."
       }
     },
     {
