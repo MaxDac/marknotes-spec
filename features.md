@@ -69,7 +69,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | OneDrive sync | No (Pro only) | Yes | Yes | Yes | Every app links several drives, each mirroring the same notes |
 | Proton Drive sync | No (Pro only) | Yes | Yes | No | Web: deferred to [MaxDac/marknotes-web#1](https://github.com/MaxDac/marknotes-web/issues/1). Pro and Desktop: folder typed by name; no CAPTCHA, two-password or FIDO2-only accounts. Pro: 64-bit devices only |
 | Several Proton Drive accounts | No (Pro only) | Yes ([MaxDac/MarkNotes#41](https://github.com/MaxDac/MarkNotes/pull/41)) | Yes | No | Pro gives every sign-in a new drive id, so the same Proton user can be added as two drives; Desktop keys Proton drives by user id |
-| Shared sync algorithm ([marknotes-sync](https://github.com/MaxDac/marknotes-sync)) | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#sync); `fixtures/sync/*` |
+| Shared sync algorithm ([marknotes-sync](https://github.com/MaxDac/marknotes-sync)) | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#sync); `fixtures/sync/*`. The case-insensitive descendant check for folder case-only renames needs marknotes-sync 0.4.1 ([MaxDac/marknotes-sync#19](https://github.com/MaxDac/marknotes-sync/pull/19)) |
 | Sync manifest (`.marknotes/manifest.json`) | Yes | Yes | Yes | Yes | |
 | Three-way merge, newest wins on conflict | Yes | Yes | Yes | Yes | The other version is saved as a conflicted copy |
 | Safe sync mutations and crash recovery (sync 0.3 contract) | Yes (0.3 source) | Yes (0.3 source) | Yes (0.3 source) | Yes (0.3 source) | Source-pinned integrations, not an assumed published release. Unsupported safe mutations fail explicitly; see resolved divergences 32-34 and [Folder deletion](#folder-deletion) |

@@ -119,6 +119,10 @@ fixtures check; an app must not add its own sync decisions.
   the intermediate name can converge using the saved record.
 - Errors come first in the plan, one per path, by path; when several apply, the file/folder message wins, then
   `is listed more than once`, then the case message.
+- [Case-only renames](#case-only-renames) come right after the errors and before step 1 of the
+  [sync plan](#sync-plan), outermost first (by depth, then path); a rename inside a renamed folder is not emitted.
+  Nothing else is planned for a renamed path, its other spelling, or anything inside either. A renamed entry is on
+  both sides, so its ancestors are too, and their step 1 actions only record them; these may follow the rename.
 - Paths are ordered by UTF-16 code units, the order of JavaScript's default string sort.
 
 ### Records and base copies
@@ -291,7 +295,10 @@ one consistent recorded spelling for a case-folded path, and both entries have t
   still matches. The drive revision may have changed; preserve its recorded revision for the next plan. This
   occurs when another drive's convergence has already renamed the shared local entry.
 - For a folder, all descendants must map one-to-one by the same prefix change, with records proving that every
-  stale-side file is unchanged. A remote-only descendant folder is the sole missing-local exception: its record
+  stale-side file is unchanged. Descendants are found case-insensitively: a local entry, drive entry or record
+  inside the folder but not under that side's own spelling of it (for example a record at `docs/a.md` when the
+  folder is recorded as `Docs`) cannot map one-to-one and prevents automatic inference. A remote-only descendant
+  folder is the sole missing-local exception: its record
   must have `remoteFolderPreserved: true`, its remote identity must still match, and its path must have the exact
   suffix under the proven parent prefix change. The local absence is the recorded deferred deletion, not evidence
   of an inconsistent rename. Every other descendant must satisfy the ordinary mapping checks; the exception does
