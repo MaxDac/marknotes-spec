@@ -37,7 +37,8 @@ The canonical skills are:
 | `marknotes-dependencies` | [SKILL.md](../.claude/skills/marknotes-dependencies/SKILL.md) | Trace ownership/consumption, plan or perform an authorized dependency change |
 | `marknotes-release` | [SKILL.md](../.claude/skills/marknotes-release/SKILL.md) | Coordinate upstream release readiness and manual downstream handoff |
 
-Both contain this compatibility marker as an exact standalone line in the skill body,
+Both canonical skills and the canonical dependency handbook (`docs/dependencies.md`)
+contain this compatibility marker as an exact standalone line in their Markdown body,
 not merely as a substring in other text:
 
 ```text
