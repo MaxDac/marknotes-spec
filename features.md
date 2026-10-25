@@ -49,6 +49,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Chord sequences opt-in setting (off by default) | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#chord-sequences-setting). App-only, no format change |
 | Bass fret 12 marker after the fret | Yes | Yes | Yes | Yes | App-only, no format change |
 | Import shared text and documents as Markdown | Yes | Yes | Yes | Yes ([MaxDac/marknotes-web#58](https://github.com/MaxDac/marknotes-web/pull/58)) | Android share sheet: text, HTML, `.txt`/`.md`/`.html`, `.docx`, PDF text, images. Desktop: Import… button, drop or paste ([MaxDac/marknotes-electron#55](https://github.com/MaxDac/marknotes-electron/pull/55)); relative links in pasted HTML are dropped. Web: New → Import document, drop or paste, fully offline; inline `data:` images become attachments and PDF import is text only. Web has no share target, because shared content would reach the server. Imported front matter is kept under a new block. App-only, no format change |
+| Share note text through Android's share sheet | Yes | Awaiting a Libre pin with sharing | N/A | N/A | Shares the current Markdown or chord body as `text/plain`, including edits awaiting autosave, with the title as subject and no hidden front matter. Images remain references, not attached files; internal note links require MarkNotes. Chord-builder drafts must be saved or closed first. Compatible receiving apps only. App-only, no format change |
 | Themes and accent colours | 8 + Dynamic | 8 + Dynamic | 8 | 9 | Light, dark or system everywhere. Dynamic (Material You) needs Android 12. Web adds Pink and defaults to Violet |
 
 ### Images
@@ -69,7 +70,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | OneDrive sync | No (Pro only) | Yes | Yes | Yes | Every app links several drives, each mirroring the same notes |
 | Proton Drive sync | No (Pro only) | Yes | Yes | No | Web: deferred to [MaxDac/marknotes-web#1](https://github.com/MaxDac/marknotes-web/issues/1). Pro and Desktop: folder typed by name; no CAPTCHA, two-password or FIDO2-only accounts. Pro: 64-bit devices only |
 | Several Proton Drive accounts | No (Pro only) | Yes ([MaxDac/MarkNotes#41](https://github.com/MaxDac/MarkNotes/pull/41)) | Yes | No | Pro gives every sign-in a new drive id, so the same Proton user can be added as two drives; Desktop keys Proton drives by user id |
-| Shared sync algorithm ([marknotes-sync](https://github.com/MaxDac/marknotes-sync)) | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#sync); `fixtures/sync/*` |
+| Shared sync algorithm ([marknotes-sync](https://github.com/MaxDac/marknotes-sync)) | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#sync); `fixtures/sync/*`. The case-insensitive descendant check for folder case-only renames needs marknotes-sync 0.4.1 ([MaxDac/marknotes-sync#19](https://github.com/MaxDac/marknotes-sync/pull/19)) |
 | Sync manifest (`.marknotes/manifest.json`) | Yes | Yes | Yes | Yes | |
 | Three-way merge, newest wins on conflict | Yes | Yes | Yes | Yes | The other version is saved as a conflicted copy |
 | Safe sync mutations and crash recovery (sync 0.3 contract) | Yes (0.3 source) | Yes (0.3 source) | Yes (0.3 source) | Yes (0.3 source) | Source-pinned integrations, not an assumed published release. Unsupported safe mutations fail explicitly; see resolved divergences 32-34 and [Folder deletion](#folder-deletion) |
@@ -94,6 +95,8 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Only the permissions the app needs | Yes (checked on release) | Partial: the `libre/` pin builds marknotes-sync without the AAR permission fix [MaxDac/MarkNotes#38](https://github.com/MaxDac/MarkNotes/issues/38) | N/A | N/A | |
 | Local error diagnostics and user-initiated GitHub reporting | Yes | Yes | Yes ([MaxDac/marknotes-electron#54](https://github.com/MaxDac/marknotes-electron/pull/54)) | Yes ([MaxDac/marknotes-web#54](https://github.com/MaxDac/marknotes-web/pull/54)) | See [Android diagnostics](#android-diagnostics). Desktop and Web: Settings › Local diagnostics with "Report a problem", export and Clear logs. Desktop also records renderer process exits; its log holds only times and codes and is not covered by the app lock. Web logs follow the storage mode and start only once storage is unlocked. App-only, no format change |
 | About | Licence notices, Ko-fi link | Same as Libre, plus the Proton Drive notice | Short text | No About view; `/security` page and `licenses.txt` | No app shows its version |
+| First-access guide with replay | No | No | No | No | [Shared content and acceptance criteria](docs/help.md). Rollout is tracked separately from existing Markdown rendering support |
+| Offline Markdown help page | No | No | No | No | [Current coverage and examples](docs/help.md#what-is-markdown). Documentation only: no renderer or format change |
 | Links to the other apps (Settings and README) | Yes | Yes | Yes | Yes | See [Links between apps](#links-between-apps). App-only, no format change |
 | Updates | F-Droid or GitHub releases | GitHub releases | In-app updater | Service worker update | |
 
