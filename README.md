@@ -21,6 +21,7 @@ and their issues and pull requests are tracked together on the
 | --- | --- |
 | [note-format.md](note-format.md) | The canonical note, link, attachment, sync, manifest, merge and chord-sequence format |
 | [features.md](features.md) | Feature parity matrix and known divergences between the apps |
+| [docs/help.md](docs/help.md) | Shared first-access guide content, current Markdown coverage and onboarding acceptance criteria |
 | [fixtures/](fixtures) | Golden test cases every app runs against its own implementation |
 | [schemas/](schemas) | JSON Schema the fixture files are validated against |
 
