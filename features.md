@@ -33,7 +33,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Feature | Libre | Pro | Desktop | Web | Notes |
 | --- | --- | --- | --- | --- | --- |
 | Markdown notes in nested folders | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#notes-and-folders) |
-| Note title is the file name without `.md` | Yes | Yes | Yes | Partial: the tree, breadcrumb and rename dialog use `.md` [MaxDac/marknotes-web#50](https://github.com/MaxDac/marknotes-web/issues/50) | See known divergence 36 |
+| Note title is the file name without `.md` | Yes | Yes | Yes | Yes ([MaxDac/marknotes-web#55](https://github.com/MaxDac/marknotes-web/pull/55)) | See known divergence 36 |
 | `attachments` reserved as a root name | Yes | Partial: awaiting the Libre move-guard pin | Yes | Yes | On create, rename and move. See known divergence 37 |
 | Folder tree with current location | Drawer, folder name | Drawer, folder name | Sidebar, folder name | Sidebar, breadcrumb | |
 | Editor views | Edit or Preview | Edit or Preview | Edit, Split or Preview | Partial: always side by side [MaxDac/marknotes-web#49](https://github.com/MaxDac/marknotes-web/issues/49) | |
@@ -73,7 +73,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Safe sync mutations and crash recovery (sync 0.3 contract) | Yes (0.3 source) | Yes (0.3 source) | Yes (0.3 source) | Yes (0.3 source) | Source-pinned integrations, not an assumed published release. Unsupported safe mutations fail explicitly; see resolved divergences 32-34 and [Folder deletion](#folder-deletion) |
 | Merge a conflicted copy back, with conflict choices | Yes | Yes | Yes | Yes | |
 | When sync runs | Launch, Sync now, drive added, after a merge | Same as Libre | Launch or unlock, Sync now, drive added, after a merge | Page load and Sync now | No app polls in the background |
-| Sync when the network comes back (opt-in, app open) | No [MaxDac/marknotes-android#30](https://github.com/MaxDac/marknotes-android/issues/30) | No (inherits Libre) | No [MaxDac/marknotes-electron#48](https://github.com/MaxDac/marknotes-electron/issues/48) | Yes | Web: "Sync when reconnected", off by default, only while the tab is visible and unlocked |
+| Sync when the network comes back (opt-in, app open) | Yes ([MaxDac/marknotes-android#38](https://github.com/MaxDac/marknotes-android/pull/38)) | Partial: awaiting a Libre pin with the setting | No [MaxDac/marknotes-electron#48](https://github.com/MaxDac/marknotes-electron/issues/48) | Yes | "Sync when reconnected", off by default. Web: only while the tab is visible and unlocked. Android: only in the foreground and unlocked, after a 2 s settle, with retries after 5, 15 and 30 s on temporary failures |
 | Sync status | Progress, last sync per drive | Same as Libre | Last sync per drive, "Syncing…" | Last sync per drive ([MaxDac/marknotes-web#53](https://github.com/MaxDac/marknotes-web/pull/53)) | Web records the time only after an error-free pass; Desktop updates it after every attempt |
 | Expired sign-in | Partial: remove and re-add the drive [MaxDac/marknotes-android#27](https://github.com/MaxDac/marknotes-android/issues/27) | Partial (inherits Libre) | Partial: remove and re-add the drive [MaxDac/marknotes-electron#46](https://github.com/MaxDac/marknotes-electron/issues/46) | Reconnect action | |
 | Disconnect signs out of the provider | Yes | Yes (OneDrive: local sign-out) | Yes (OneDrive: local sign-out) | Partial: forgets credentials, revokes nothing [MaxDac/marknotes-web#52](https://github.com/MaxDac/marknotes-web/issues/52) | Microsoft offers public clients no single-session revoke |
@@ -90,7 +90,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Block screenshots and hide in recent apps | Yes | Yes | No [MaxDac/marknotes-electron#45](https://github.com/MaxDac/marknotes-electron/issues/45) | N/A | Browsers offer no such API |
 | Memory-only notes | Not offered | Not offered | Not offered (credentials only, without a keyring) | Yes | Web: notes, images, sync state and credentials stay in memory, single tab. Meant for shared browsers; installed apps keep notes on the device |
 | Only the permissions the app needs | Yes (checked on release) | Partial: the `libre/` pin builds marknotes-sync without the AAR permission fix [MaxDac/MarkNotes#38](https://github.com/MaxDac/MarkNotes/issues/38) | N/A | N/A | |
-| Local error diagnostics and user-initiated GitHub reporting | Yes | Yes | No [MaxDac/marknotes-electron#44](https://github.com/MaxDac/marknotes-electron/issues/44) | No [MaxDac/marknotes-web#47](https://github.com/MaxDac/marknotes-web/issues/47) | See [Android diagnostics](#android-diagnostics). App-only, no format change |
+| Local error diagnostics and user-initiated GitHub reporting | Yes | Yes | No [MaxDac/marknotes-electron#44](https://github.com/MaxDac/marknotes-electron/issues/44) | Yes ([MaxDac/marknotes-web#54](https://github.com/MaxDac/marknotes-web/pull/54)) | See [Android diagnostics](#android-diagnostics). Web: Settings › Local diagnostics with "Report a problem", JSON export and Clear logs; logs follow the storage mode and start only once storage is unlocked. App-only, no format change |
 | About | Licence notices, Ko-fi link | Same as Libre, plus the Proton Drive notice | Short text | No About view; `/security` page and `licenses.txt` | No app shows its version |
 | Links to the other apps (Settings and README) | Yes | Yes | Yes | Yes | See [Links between apps](#links-between-apps). App-only, no format change |
 | Updates | F-Droid or GitHub releases | GitHub releases | In-app updater | Service worker update | |
@@ -150,8 +150,9 @@ App behaviour only; none of it changes the note format, the manifest or the fixt
 
 ### Android diagnostics
 
-MarkNotes Libre and Pro share this behaviour; Desktop and Web do not have it yet. It does not change the note or sync
-format or add fixture requirements.
+MarkNotes Libre and Pro share this behaviour, and Web follows the same rules
+([MaxDac/marknotes-web#54](https://github.com/MaxDac/marknotes-web/pull/54)); Desktop does not have it yet. It does
+not change the note or sync format or add fixture requirements.
 
 - **Local logging** is on by default for Java/Kotlin crashes and handled errors. Native crashes and ANRs are
   excluded initially. Retention is capped at seven days and 5 MiB total, including export snapshots, with pruning
@@ -275,9 +276,9 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     canonical `attachments/<sha256>.<ext>` destinations under the attachment root and renders nothing else. Pro still
     needs a Libre pin containing the fix; its checked pin `d0203b9` renders an explicit `file:` image destination
     outside `attachments/`.
-36. **Titles on Web** (not in fixtures): the note tree, breadcrumb and rename dialog use the file name with `.md`
-    instead of the title
-    ([MaxDac/marknotes-web#50](https://github.com/MaxDac/marknotes-web/issues/50)).
+36. Resolved: Web's note tree, breadcrumb, prompts and rename dialog show the title without `.md`, and a rename keeps
+    the note's own extension unless one is typed
+    ([MaxDac/marknotes-web#55](https://github.com/MaxDac/marknotes-web/pull/55)).
 37. **Moving to a reserved name on Android** (not in fixtures): resolved in Libre by
     [MaxDac/marknotes-android#33](https://github.com/MaxDac/marknotes-android/pull/33), with a real-store regression
     checking the error and unchanged source contents. Pro still needs a Libre pin containing the fix; its checked
