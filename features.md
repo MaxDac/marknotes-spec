@@ -77,7 +77,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Sync status | Progress, last sync per drive | Same as Libre | Last sync per drive, "Syncing…" | Partial: per-drive state, no last sync time [MaxDac/marknotes-web#51](https://github.com/MaxDac/marknotes-web/issues/51) | |
 | Expired sign-in | Partial: remove and re-add the drive [MaxDac/marknotes-android#27](https://github.com/MaxDac/marknotes-android/issues/27) | Partial (inherits Libre) | Partial: remove and re-add the drive [MaxDac/marknotes-electron#46](https://github.com/MaxDac/marknotes-electron/issues/46) | Reconnect action | |
 | Disconnect signs out of the provider | Yes | Yes (OneDrive: local sign-out) | Yes (OneDrive: local sign-out) | Partial: forgets credentials, revokes nothing [MaxDac/marknotes-web#52](https://github.com/MaxDac/marknotes-web/issues/52) | Microsoft offers public clients no single-session revoke |
-| Case-only renames on the drive | Explicit error | Partial: OneDrive files only [MaxDac/MarkNotes#39](https://github.com/MaxDac/MarkNotes/issues/39) | OneDrive only | OneDrive only | Dropbox and Proton Drive have no safe case-only move |
+| Case-only renames on the drive | Explicit error | OneDrive only ([MaxDac/MarkNotes#44](https://github.com/MaxDac/MarkNotes/pull/44)) | OneDrive only | OneDrive only | Dropbox and Proton Drive have no safe case-only move |
 | Attachment hash check on download | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#attachment-sync) |
 
 ### Privacy, diagnostics and app information
