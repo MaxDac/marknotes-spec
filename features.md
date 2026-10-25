@@ -56,7 +56,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Images from file picker / toolbar | Yes | Yes | Yes | Yes | Android also takes a photo with the camera |
 | Image paste and drag-and-drop | No [MaxDac/marknotes-android#25](https://github.com/MaxDac/marknotes-android/issues/25) | No (inherits Libre) | Yes | Yes | Android supports both through the clipboard and multi-window drag-and-drop |
 | Unused attachment clean-up | Yes | Yes | Yes | Yes | |
-| Remote images blocked | Partial: renders `file:` images [MaxDac/marknotes-android#26](https://github.com/MaxDac/marknotes-android/issues/26) | Partial (inherits Libre) | Yes | Yes | See known divergence 35 |
+| Remote images blocked | Yes | Partial: awaiting the Libre attachment-only preview pin | Yes | Yes | See known divergence 35 |
 | Load remote images on request | Never (by design) | Never (by design) | Per note, `https:` only, for the session | Never (by design) | Android and Web document "never loads remote images" as a privacy property |
 
 ### Sync
@@ -270,16 +270,18 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     intervening edits (`sync/reconcile`, `sync/executor-safety`;
     [#40](https://github.com/MaxDac/marknotes-spec/issues/40),
     [#42](https://github.com/MaxDac/marknotes-spec/issues/42)).
-35. **`file:` images on Android** (not in fixtures): the preview renders an explicit `file:` image destination outside
-    `attachments/`, although `file:` images must never be loaded
-    ([MaxDac/marknotes-android#26](https://github.com/MaxDac/marknotes-android/issues/26)).
+35. **`file:` images on Android** (not in fixtures): resolved in Libre by
+    [MaxDac/marknotes-android#34](https://github.com/MaxDac/marknotes-android/pull/34): the preview resolves only
+    canonical `attachments/<sha256>.<ext>` destinations under the attachment root and renders nothing else. Pro still
+    needs a Libre pin containing the fix; its checked pin `d0203b9` renders an explicit `file:` image destination
+    outside `attachments/`.
 36. **Titles on Web** (not in fixtures): the note tree, breadcrumb and rename dialog use the file name with `.md`
     instead of the title
     ([MaxDac/marknotes-web#50](https://github.com/MaxDac/marknotes-web/issues/50)).
 37. **Moving to a reserved name on Android** (not in fixtures): resolved in Libre by
     [MaxDac/marknotes-android#33](https://github.com/MaxDac/marknotes-android/pull/33), with a real-store regression
     checking the error and unchanged source contents. Pro still needs a Libre pin containing the fix; its checked
-    pin `a65aa93` can still move a nested `attachments` folder to the root, hiding it from the note tree.
+    pin `d0203b9` can still move a nested `attachments` folder to the root, hiding it from the note tree.
 38. **Deferred remote folder removal on Android** (`sync/executor-safety`): Libre implements the contract with
     marknotes-sync 0.4.0 ([MaxDac/marknotes-android#39](https://github.com/MaxDac/marknotes-android/pull/39)) and
     passes the `sync/plan` cases, but its parity runner does not yet run the deferred-folder executor scenarios, so
