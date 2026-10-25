@@ -4013,6 +4013,133 @@
       }
     },
     {
+      "name": "a case-only rename runs before its parent's recordFolder",
+      "input": {
+        "local": [
+          {
+            "path": "P",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "P/Note.md",
+            "isFolder": false,
+            "modifiedMillis": 1000,
+            "sha256": "h1"
+          }
+        ],
+        "remote": [
+          {
+            "path": "P",
+            "id": "fP",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          },
+          {
+            "path": "P/note.md",
+            "id": "r1",
+            "isFolder": false,
+            "version": "v1",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "P/note.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "renameRemote",
+            "path": "P/note.md",
+            "toPath": "P/Note.md",
+            "isFolder": false,
+            "remote": {
+              "path": "P/note.md",
+              "id": "r1",
+              "isFolder": false,
+              "version": "v1",
+              "modifiedMillis": 1000
+            },
+            "sha256": null
+          },
+          {
+            "kind": "recordFolder",
+            "path": "P",
+            "remoteId": "fP"
+          }
+        ]
+      }
+    },
+    {
+      "name": "a descendant recorded under the other folder spelling prevents a folder case rename",
+      "input": {
+        "local": [
+          {
+            "path": "Docs",
+            "isFolder": true,
+            "modifiedMillis": 1000
+          }
+        ],
+        "remote": [
+          {
+            "path": "docs",
+            "id": "fD",
+            "isFolder": true,
+            "version": "",
+            "modifiedMillis": 1000
+          }
+        ],
+        "records": [
+          {
+            "path": "Docs",
+            "isFolder": true,
+            "remoteId": "fD",
+            "remoteVersion": "",
+            "localHash": "",
+            "syncedAt": 500
+          },
+          {
+            "path": "docs/a.md",
+            "isFolder": false,
+            "remoteId": "r1",
+            "remoteVersion": "v1",
+            "localHash": "h1",
+            "syncedAt": 500
+          }
+        ],
+        "manifest": null
+      },
+      "expected": {
+        "actions": [
+          {
+            "kind": "error",
+            "path": "Docs",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "docs",
+            "message": "differs only in case from another path"
+          },
+          {
+            "kind": "error",
+            "path": "docs/a.md",
+            "message": "differs only in case from another path"
+          }
+        ]
+      }
+    },
+    {
       "name": "a nested case-only folder rename emits only the guarded parent rename",
       "input": {
         "local": [
