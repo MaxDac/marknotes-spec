@@ -94,7 +94,6 @@
         }]
       },
       "knownDivergence": {
-        "android": "The current planner rejects missing-local descendants even when preserved history proves absence; spec#50.",
         "desktop": "The current planner rejects missing-local descendants even when preserved history proves absence; spec#50.",
         "web": "The current planner rejects missing-local descendants even when preserved history proves absence; spec#50."
       }
@@ -122,7 +121,6 @@
         }]
       },
       "knownDivergence": {
-        "android": "The current planner rejects missing-local descendants even when preserved history proves absence; spec#50.",
         "desktop": "The current planner rejects missing-local descendants even when preserved history proves absence; spec#50.",
         "web": "The current planner rejects missing-local descendants even when preserved history proves absence; spec#50."
       }
@@ -140,7 +138,6 @@
         "actions": [{ "kind": "preserveRemoteFolder", "path": "F", "remote": { "path": "F", "id": "rf", "isFolder": true, "version": "", "modifiedMillis": 0 } }]
       },
       "knownDivergence": {
-        "android": "The current shared planner has no unsupported-capability preservation action; spec#50.",
         "desktop": "The current shared planner has no unsupported-capability preservation action; spec#50.",
         "web": "The current shared planner has no unsupported-capability preservation action; spec#50."
       }
@@ -156,7 +153,6 @@
       },
       "expected": { "actions": [] },
       "knownDivergence": {
-        "android": "The current shared planner retries deletion and does not read remoteFolderPreserved; spec#50.",
         "desktop": "The current shared planner retries deletion and does not read remoteFolderPreserved; spec#50.",
         "web": "The current shared planner retries deletion and does not read remoteFolderPreserved; spec#50."
       }
@@ -197,7 +193,6 @@
       },
       "expected": { "actions": [{ "kind": "createLocalFolder", "path": "F", "remoteId": "replacement" }] },
       "knownDivergence": {
-        "android": "The current shared planner does not retire preserved deletion intent on identity replacement; spec#50.",
         "desktop": "The current shared planner does not retire preserved deletion intent on identity replacement; spec#50.",
         "web": "The current shared planner does not retire preserved deletion intent on identity replacement; spec#50."
       }
@@ -215,7 +210,6 @@
         "actions": [{ "kind": "recordFolder", "path": "F", "remoteId": "rf" }]
       },
       "knownDivergence": {
-        "android": "The current shared planner treats the matching folder identity as already recorded; spec#50.",
         "desktop": "The current shared planner treats the matching folder identity as already recorded; spec#50.",
         "web": "The current shared planner treats the matching folder identity as already recorded; spec#50."
       }

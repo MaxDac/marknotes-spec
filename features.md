@@ -276,7 +276,9 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     [MaxDac/marknotes-android#33](https://github.com/MaxDac/marknotes-android/pull/33), with a real-store regression
     checking the error and unchanged source contents. Pro still needs a Libre pin containing the fix; its checked
     pin `a65aa93` can still move a nested `attachments` folder to the root, hiding it from the note tree.
-38. **Deferred remote folder removal** (`sync/plan`, `sync/executor-safety`): current-main Android, Desktop and Web
+38. **Deferred remote folder removal** (`sync/plan`, `sync/executor-safety`): Android implements the contract with
+    marknotes-sync 0.4.0 and passes the `sync/plan` cases; its `sync/executor-safety` annotations stay until its
+    parity runner runs the deferred-folder scenarios. Current-main Desktop and Web
     still report an unsupported-operation error on every attempt and have no durable preserved-folder marker or
     notice lifecycle. The new `preserveRemoteFolder` action and lifecycle scenarios require coordinated shared
     library, persistence, adapter-capability, UI and runner updates. Parent case-only rename inference must also
