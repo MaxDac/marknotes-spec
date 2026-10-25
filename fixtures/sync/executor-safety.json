@@ -7,9 +7,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "identity-replacement-restart" },
       "expected": { "errors": 2, "oldDescendantHistoryRetired": true, "childDownloaded": true, "remoteChildPreserved": true, "activeNotices": 0, "recursiveDeleteRequests": 0 },
       "knownDivergence": {
-        "android": "Replacement folder records do not yet atomically retire old descendant deletion authority; spec#50.",
-        "desktop": "Replacement folder records do not yet atomically retire old descendant deletion authority; spec#50.",
-        "web": "Replacement folder records do not yet atomically retire old descendant deletion authority; spec#50."
+        "android": "Replacement folder records do not yet atomically retire old descendant deletion authority; spec#50."
       }
     },
     {
@@ -22,9 +20,7 @@
       "input": { "scenario": "folder-delete-unsupported" },
       "expected": { "errors": 0, "recursiveDeleteRequests": 0, "folderRecordRetained": true, "notices": 1 },
       "knownDivergence": {
-        "android": "Current executor reports unsupported removal as an error and has no durable notice; spec#50.",
-        "desktop": "Current executor reports unsupported removal as an error and has no durable notice; spec#50.",
-        "web": "Current executor reports unsupported removal as an error and has no durable notice; spec#50."
+        "android": "Current executor reports unsupported removal as an error and has no durable notice; spec#50."
       }
     },
     {
@@ -42,9 +38,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "restart-pending" },
       "expected": { "errors": 0, "notices": 1, "pendingNotices": 1, "localFolderExists": false, "remoteFolderExists": true, "folderRecordRetained": true, "repeatActions": 0 },
       "knownDivergence": {
-        "android": "Durable deferred-folder and notice lifecycle is not implemented; spec#50.",
-        "desktop": "Durable deferred-folder and notice lifecycle is not implemented; spec#50.",
-        "web": "Durable deferred-folder and notice lifecycle is not implemented; spec#50."
+        "android": "Durable deferred-folder and notice lifecycle is not implemented; spec#50."
       }
     },
     {
@@ -52,9 +46,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "restart-acknowledged" },
       "expected": { "errors": 0, "notices": 1, "pendingNotices": 0, "acknowledgedNotices": 1, "localFolderExists": false, "repeatActions": 0 },
       "knownDivergence": {
-        "android": "Durable deferred-folder and notice lifecycle is not implemented; spec#50.",
-        "desktop": "Durable deferred-folder and notice lifecycle is not implemented; spec#50.",
-        "web": "Durable deferred-folder and notice lifecycle is not implemented; spec#50."
+        "android": "Durable deferred-folder and notice lifecycle is not implemented; spec#50."
       }
     },
     {
@@ -62,9 +54,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "new-child" },
       "expected": { "errors": 0, "localFolderExists": true, "newChildDownloaded": true, "preserved": false, "activeNotices": 0 },
       "knownDivergence": {
-        "android": "No preserved-marker or notice retirement lifecycle is implemented; spec#50.",
-        "desktop": "No preserved-marker or notice retirement lifecycle is implemented; spec#50.",
-        "web": "No preserved-marker or notice retirement lifecycle is implemented; spec#50."
+        "android": "No preserved-marker or notice retirement lifecycle is implemented; spec#50."
       }
     },
     {
@@ -72,9 +62,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "changed-child" },
       "expected": { "errors": 0, "localFolderExists": true, "changedChildDownloaded": true, "preserved": false, "activeNotices": 0 },
       "knownDivergence": {
-        "android": "No preserved-marker or notice retirement lifecycle is implemented; spec#50.",
-        "desktop": "No preserved-marker or notice retirement lifecycle is implemented; spec#50.",
-        "web": "No preserved-marker or notice retirement lifecycle is implemented; spec#50."
+        "android": "No preserved-marker or notice retirement lifecycle is implemented; spec#50."
       }
     },
     {
@@ -82,9 +70,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "ignored-child" },
       "expected": { "errors": 0, "localFolderExists": true, "ignoredChildPreserved": true, "ignoredChildDownloaded": false, "preserved": false, "activeNotices": 0 },
       "knownDivergence": {
-        "android": "No preserved-marker or notice retirement lifecycle is implemented; spec#50.",
-        "desktop": "No preserved-marker or notice retirement lifecycle is implemented; spec#50.",
-        "web": "No preserved-marker or notice retirement lifecycle is implemented; spec#50."
+        "android": "No preserved-marker or notice retirement lifecycle is implemented; spec#50."
       }
     },
     {
@@ -92,9 +78,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "new-empty-subfolder" },
       "expected": { "errors": 0, "localFolderExists": true, "localSubfolderExists": true, "preserved": false, "activeNotices": 0 },
       "knownDivergence": {
-        "android": "No preserved-marker or notice retirement lifecycle is implemented; spec#50.",
-        "desktop": "No preserved-marker or notice retirement lifecycle is implemented; spec#50.",
-        "web": "No preserved-marker or notice retirement lifecycle is implemented; spec#50."
+        "android": "No preserved-marker or notice retirement lifecycle is implemented; spec#50."
       }
     },
     {
@@ -102,9 +86,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "local-recreation" },
       "expected": { "errors": 0, "notices": 2, "pendingNotices": 1, "sameRemoteIdentity": true, "localFolderExists": false, "preserved": true },
       "knownDivergence": {
-        "android": "Deletion-generation notice deduplication is not implemented; spec#50.",
-        "desktop": "Deletion-generation notice deduplication is not implemented; spec#50.",
-        "web": "Deletion-generation notice deduplication is not implemented; spec#50."
+        "android": "Deletion-generation notice deduplication is not implemented; spec#50."
       }
     },
     {
@@ -112,9 +94,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "local-recreation-remote-missing" },
       "expected": { "errors": 0, "localFolderExists": true, "remoteFolderExists": true, "preserved": false, "activeNotices": 0 },
       "knownDivergence": {
-        "android": "All-drive retirement of preserved folder history is not implemented; spec#50.",
-        "desktop": "All-drive retirement of preserved folder history is not implemented; spec#50.",
-        "web": "All-drive retirement of preserved folder history is not implemented; spec#50."
+        "android": "All-drive retirement of preserved folder history is not implemented; spec#50."
       }
     },
     {
@@ -122,9 +102,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "remote-disappearance" },
       "expected": { "errors": 0, "localFolderExists": false, "remoteFolderExists": false, "folderRecordRetained": false, "activeNotices": 0 },
       "knownDivergence": {
-        "android": "Durable preserved-folder notice retirement is not implemented; spec#50.",
-        "desktop": "Durable preserved-folder notice retirement is not implemented; spec#50.",
-        "web": "Durable preserved-folder notice retirement is not implemented; spec#50."
+        "android": "Durable preserved-folder notice retirement is not implemented; spec#50."
       }
     },
     {
@@ -132,9 +110,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "identity-replacement" },
       "expected": { "errors": 0, "localFolderExists": true, "replacementChildDownloaded": true, "replacementIdentityRecorded": true, "preserved": false, "activeNotices": 0 },
       "knownDivergence": {
-        "android": "Identity-bound preserved-folder state is not implemented; spec#50.",
-        "desktop": "Identity-bound preserved-folder state is not implemented; spec#50.",
-        "web": "Identity-bound preserved-folder state is not implemented; spec#50."
+        "android": "Identity-bound preserved-folder state is not implemented; spec#50."
       }
     },
     {
@@ -142,9 +118,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "multi-drive" },
       "expected": { "errors": 0, "notices": 2, "distinctNoticeDrives": 2, "localFolderExists": true, "bothRemoteFoldersExist": true, "preservedRecords": 0, "activeNotices": 0 },
       "knownDivergence": {
-        "android": "All-drive preserved-folder recreation and notice isolation are not implemented; spec#50.",
-        "desktop": "All-drive preserved-folder recreation and notice isolation are not implemented; spec#50.",
-        "web": "All-drive preserved-folder recreation and notice isolation are not implemented; spec#50."
+        "android": "All-drive preserved-folder recreation and notice isolation are not implemented; spec#50."
       }
     },
     {
@@ -152,9 +126,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "supported" },
       "expected": { "errors": 0, "remoteFolderExists": false, "folderRecordRetained": false, "activeNotices": 0, "recursiveDeleteRequests": 0 },
       "knownDivergence": {
-        "android": "Durable preserved-folder capability transition is not implemented; spec#50.",
-        "desktop": "Durable preserved-folder capability transition is not implemented; spec#50.",
-        "web": "Durable preserved-folder capability transition is not implemented; spec#50."
+        "android": "Durable preserved-folder capability transition is not implemented; spec#50."
       }
     },
     {
@@ -162,9 +134,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "failed-listing" },
       "expected": { "errors": 1, "folderRecordRetained": true, "pendingNotices": 1, "localFolderExists": false, "remoteFolderExists": true },
       "knownDivergence": {
-        "android": "No durable pending folder-removal notice exists to retain; spec#50.",
-        "desktop": "No durable pending folder-removal notice exists to retain; spec#50.",
-        "web": "No durable pending folder-removal notice exists to retain; spec#50."
+        "android": "No durable pending folder-removal notice exists to retain; spec#50."
       }
     },
     {
@@ -172,9 +142,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "before-preserve-save" },
       "expected": { "errors": 0, "notices": 1, "pendingNotices": 1, "folderRecordRetained": true, "localFolderExists": false, "repeatActions": 0 },
       "knownDivergence": {
-        "android": "Atomic preserved-folder and pending-notice persistence is not implemented; spec#50.",
-        "desktop": "Atomic preserved-folder and pending-notice persistence is not implemented; spec#50.",
-        "web": "Atomic preserved-folder and pending-notice persistence is not implemented; spec#50."
+        "android": "Atomic preserved-folder and pending-notice persistence is not implemented; spec#50."
       }
     },
     {
@@ -182,9 +150,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "after-preserve-save" },
       "expected": { "errors": 0, "notices": 1, "pendingNotices": 1, "folderRecordRetained": true, "localFolderExists": false, "repeatActions": 0 },
       "knownDivergence": {
-        "android": "Atomic preserved-folder and pending-notice persistence is not implemented; spec#50.",
-        "desktop": "Atomic preserved-folder and pending-notice persistence is not implemented; spec#50.",
-        "web": "Atomic preserved-folder and pending-notice persistence is not implemented; spec#50."
+        "android": "Atomic preserved-folder and pending-notice persistence is not implemented; spec#50."
       }
     },
     {
@@ -192,9 +158,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "preserve-save-failure" },
       "expected": { "errors": 1, "notices": 1, "pendingNotices": 1, "folderRecordRetained": true, "localFolderExists": false, "repeatActions": 0 },
       "knownDivergence": {
-        "android": "Atomic preserved-folder and pending-notice persistence is not implemented; spec#50.",
-        "desktop": "Atomic preserved-folder and pending-notice persistence is not implemented; spec#50.",
-        "web": "Atomic preserved-folder and pending-notice persistence is not implemented; spec#50."
+        "android": "Atomic preserved-folder and pending-notice persistence is not implemented; spec#50."
       }
     },
     {
@@ -202,9 +166,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "ack-save-failure" },
       "expected": { "errors": 1, "notices": 1, "pendingNotices": 1, "acknowledgedNotices": 0, "repeatActions": 0 },
       "knownDivergence": {
-        "android": "Durable manual-removal notice acknowledgement is not implemented; spec#50.",
-        "desktop": "Durable manual-removal notice acknowledgement is not implemented; spec#50.",
-        "web": "Durable manual-removal notice acknowledgement is not implemented; spec#50."
+        "android": "Durable manual-removal notice acknowledgement is not implemented; spec#50."
       }
     },
     {
@@ -212,9 +174,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "local-recreation-preflight-restart" },
       "expected": { "errors": 0, "localFolderExists": true, "remoteFolderExists": true, "preserved": false, "activeNotices": 0 },
       "knownDivergence": {
-        "android": "Transactional preserved-folder recreation preflight is not implemented; spec#50.",
-        "desktop": "Transactional preserved-folder recreation preflight is not implemented; spec#50.",
-        "web": "Transactional preserved-folder recreation preflight is not implemented; spec#50."
+        "android": "Transactional preserved-folder recreation preflight is not implemented; spec#50."
       }
     },
     {
@@ -222,9 +182,7 @@
       "input": { "scenario": "folder-delete-unsupported-child-revision-race" },
       "expected": { "errors": 1, "changedChildPreserved": true, "childRecordRetained": true, "folderRecordRetained": true, "notices": 1, "recursiveDeleteRequests": 0 },
       "knownDivergence": {
-        "android": "Unsupported folder removal still adds a second error instead of a notice; spec#50.",
-        "desktop": "Unsupported folder removal still adds a second error instead of a notice; spec#50.",
-        "web": "Unsupported folder removal still adds a second error instead of a notice; spec#50."
+        "android": "Unsupported folder removal still adds a second error instead of a notice; spec#50."
       }
     },
     {
@@ -232,9 +190,7 @@
       "input": { "scenario": "folder-delete-deferred", "event": "unchanged-subfolders" },
       "expected": { "errors": 0, "notices": 2, "pendingNotices": 2, "localFolderExists": false, "preservedRecords": 2, "repeatActions": 0 },
       "knownDivergence": {
-        "android": "Nested durable folder preservation is not implemented; spec#50.",
-        "desktop": "Nested durable folder preservation is not implemented; spec#50.",
-        "web": "Nested durable folder preservation is not implemented; spec#50."
+        "android": "Nested durable folder preservation is not implemented; spec#50."
       }
     },
     {
@@ -242,9 +198,7 @@
       "input": { "scenario": "folder-delete-local-recreation-race" },
       "expected": { "errors": 0, "notices": 0, "localFolderExists": true, "remoteFolderExists": true, "preserved": false, "recursiveDeleteRequests": 0 },
       "knownDivergence": {
-        "android": "The executor has no preserveRemoteFolder recreation guard; spec#50.",
-        "desktop": "The executor has no preserveRemoteFolder recreation guard; spec#50.",
-        "web": "The executor has no preserveRemoteFolder recreation guard; spec#50."
+        "android": "The executor has no preserveRemoteFolder recreation guard; spec#50."
       }
     },
     {

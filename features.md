@@ -178,8 +178,12 @@ acknowledged notices are not issued again. Unchanged retained folders do not rea
 Changed or new descendants, local recreation and replacement identities still reconcile normally; genuine runtime
 and persistence failures remain errors, and recursive best-effort deletion is never allowed.
 See [deferred drive folder removal](note-format.md#deferred-drive-folder-removal) and
-[#50](https://github.com/MaxDac/marknotes-spec/issues/50). This is an intentional contract change; current-main apps
-still implement the previous repeated-error behaviour, tracked below until their coordinated updates land.
+[#50](https://github.com/MaxDac/marknotes-spec/issues/50). Desktop
+([MaxDac/marknotes-electron#56](https://github.com/MaxDac/marknotes-electron/pull/56)), Web
+([MaxDac/marknotes-web#60](https://github.com/MaxDac/marknotes-web/pull/60)) and Android Libre
+([MaxDac/marknotes-android#39](https://github.com/MaxDac/marknotes-android/pull/39)) implement it with
+marknotes-sync 0.4.0; Pro declares the capability for OneDrive and Proton Drive when it pins that Libre. Remaining
+gaps are tracked below.
 
 ## Known divergences
 
@@ -276,17 +280,13 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     [MaxDac/marknotes-android#33](https://github.com/MaxDac/marknotes-android/pull/33), with a real-store regression
     checking the error and unchanged source contents. Pro still needs a Libre pin containing the fix; its checked
     pin `a65aa93` can still move a nested `attachments` folder to the root, hiding it from the note tree.
-38. **Deferred remote folder removal** (`sync/plan`, `sync/executor-safety`): current-main Android, Desktop and Web
-    still report an unsupported-operation error on every attempt and have no durable preserved-folder marker or
-    notice lifecycle. The new `preserveRemoteFolder` action and lifecycle scenarios require coordinated shared
-    library, persistence, adapter-capability, UI and runner updates. Parent case-only rename inference must also
-    preserve a proven remote-only preserved descendant's marker and notice without restoring it locally.
-    Recording a replacement remote folder identity must atomically invalidate old descendant history, so a
-    restart or failed child download cannot restore stale deletion authority.
-    Recreation preflight retains scoped identity evidence until root adoption, so it cannot hide a simultaneous
-    remote ancestor replacement.
-    Evidence was checked at Android `d0203b9`,
-    Desktop `15f4f1d` and Web `c76ec3e`; remove each app's fixture annotations only when it implements the contract
+38. **Deferred remote folder removal on Android** (`sync/executor-safety`): Libre implements the contract with
+    marknotes-sync 0.4.0 ([MaxDac/marknotes-android#39](https://github.com/MaxDac/marknotes-android/pull/39)) and
+    passes the `sync/plan` cases, but its parity runner does not yet run the deferred-folder executor scenarios, so
+    their Android annotations stay. Pro still needs a Libre pin with the contract and must declare
+    `remoteFolderDeletion: unsupported` on its OneDrive and Proton Drive stores. Desktop
+    ([MaxDac/marknotes-electron#56](https://github.com/MaxDac/marknotes-electron/pull/56)) and Web
+    ([MaxDac/marknotes-web#60](https://github.com/MaxDac/marknotes-web/pull/60)) pass every case
     ([#50](https://github.com/MaxDac/marknotes-spec/issues/50)).
 
 Shared algorithm fixtures (`fixtures/sync/*`, `manifest/*`, `merge/*`, except `sync/executor-safety.json`) are run by
