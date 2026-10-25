@@ -2,7 +2,8 @@
 
 The shared specification of the MarkNotes apps:
 
-- [Android](https://github.com/MaxDac/marknotes-android) and its [Pro edition](https://github.com/MaxDac/MarkNotes)
+- [Android](https://github.com/MaxDac/marknotes-android) and its Pro edition,
+  [MarkNotes Plus](https://github.com/MaxDac/MarkNotes)
 - [Desktop (Electron)](https://github.com/MaxDac/marknotes-electron)
 - [Web](https://github.com/MaxDac/marknotes-web)
 

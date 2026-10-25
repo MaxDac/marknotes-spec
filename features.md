@@ -4,8 +4,9 @@ What each MarkNotes app supports today, and where their implementations of the s
 in the same pull request that changes behaviour in an app (open the spec PR first, then bump the pin in the app).
 
 Apps: **Libre** ([MaxDac/marknotes-android](https://github.com/MaxDac/marknotes-android)), **Pro**
-([MaxDac/MarkNotes](https://github.com/MaxDac/MarkNotes), which pins Libre at `libre/` and adds OneDrive and Proton
-Drive), **Desktop** ([MaxDac/marknotes-electron](https://github.com/MaxDac/marknotes-electron)) and **Web**
+([MaxDac/MarkNotes](https://github.com/MaxDac/MarkNotes), shipped to users as MarkNotes Plus, which pins Libre at
+`libre/` and adds OneDrive and Proton Drive), **Desktop**
+([MaxDac/marknotes-electron](https://github.com/MaxDac/marknotes-electron)) and **Web**
 ([MaxDac/marknotes-web](https://github.com/MaxDac/marknotes-web), TypeScript + Vite, served by Caddy). Libre and Pro
 share their editor, settings and sync executor, so they share the `android` fixture key; the other keys are `desktop`
 and `web`.
@@ -97,6 +98,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | About | Licence notices, Ko-fi link | Same as Libre, plus the Proton Drive notice | Short text | No About view; `/security` page and `licenses.txt` | No app shows its version |
 | First-access guide with replay | No ([MaxDac/marknotes-android#44](https://github.com/MaxDac/marknotes-android/pull/44)) | No (after the `libre/` pin includes Libre's guide) | Yes ([MaxDac/marknotes-electron#57](https://github.com/MaxDac/marknotes-electron/pull/57)) | Yes ([MaxDac/marknotes-web#61](https://github.com/MaxDac/marknotes-web/pull/61)) | [Shared content and acceptance criteria](docs/help.md). Web memory-only mode remembers the guide only for the session. Rollout is tracked separately from existing Markdown rendering support |
 | Offline Markdown help page | No ([MaxDac/marknotes-android#44](https://github.com/MaxDac/marknotes-android/pull/44)) | No (after the `libre/` pin includes Libre's guide) | Yes ([MaxDac/marknotes-electron#57](https://github.com/MaxDac/marknotes-electron/pull/57)) | Yes ([MaxDac/marknotes-web#61](https://github.com/MaxDac/marknotes-web/pull/61)) | [Current coverage and examples](docs/help.md#what-is-markdown). Documentation only: no renderer or format change |
+| App name and launcher icon | MarkNotes | MarkNotes Plus, indigo icon with a plus badge | MarkNotes | MarkNotes | Distinguishes the GitHub-distributed Pro edition from the F-Droid Libre app; Libre keeps its name and icon. Internal identifiers (package names, edition key `Pro`) are unchanged. App-only, no format change |
 | Links to the other apps (Settings and README) | Yes | Yes | Yes | Yes | See [Links between apps](#links-between-apps). App-only, no format change |
 | Updates | F-Droid or GitHub releases | GitHub releases | In-app updater | Service worker update | |
 
@@ -111,7 +113,7 @@ links to itself. Android Libre and Pro share the list; each host app tells the s
 | App | Link | Label |
 | --- | --- | --- |
 | Android (Libre) | <https://f-droid.org/packages/io.github.maxdac.marknotes.libre/> | MarkNotes for Android (F-Droid) |
-| Android Pro | <https://github.com/MaxDac/MarkNotes/releases> | MarkNotes Pro for Android (GitHub Releases) |
+| Android Pro | <https://github.com/MaxDac/MarkNotes/releases> | MarkNotes Plus for Android (GitHub Releases) |
 | Desktop | <https://github.com/MaxDac/marknotes-electron/releases> | MarkNotes Desktop (GitHub Releases) |
 | Web | <https://marknotes.fly.dev> | MarkNotes Web |
 
