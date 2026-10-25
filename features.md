@@ -37,7 +37,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | `attachments` reserved as a root name | Yes | Partial: awaiting the Libre move-guard pin | Yes | Yes | On create, rename and move. See known divergence 37 |
 | Folder tree with current location | Drawer, folder name | Drawer, folder name | Sidebar, folder name | Sidebar, breadcrumb | |
 | Editor views | Edit or Preview | Edit or Preview | Edit, Split or Preview | Edit, Split or Preview ([MaxDac/marknotes-web#57](https://github.com/MaxDac/marknotes-web/pull/57)) | Desktop and Web open each note in Split |
-| Formatting toolbar | Yes | Yes | Yes | Partial: no strikethrough or numbered list; Heading always inserts `##` [MaxDac/marknotes-web#48](https://github.com/MaxDac/marknotes-web/issues/48) | Android and Desktop cycle the heading through none, H1, H2 and H3. Note links are inserted with `@` in every app |
+| Formatting toolbar | Yes | Yes | Yes | Yes ([MaxDac/marknotes-web#59](https://github.com/MaxDac/marknotes-web/pull/59)) | Every app cycles the heading through none, H1, H2 and H3 and has strikethrough (`~~`) and a numbered-list toggle. Note links are inserted with `@` in every app |
 | Undo and redo | Buttons and keyboard ([MaxDac/marknotes-android#35](https://github.com/MaxDac/marknotes-android/pull/35)) | Partial: awaiting a Libre pin with undo and redo | Keyboard | Keyboard | Android: top-bar buttons, Ctrl+Z, Ctrl+Y and Ctrl+Shift+Z; session-local history of 200 steps, cleared when sync changes the open note |
 | Autosave | Yes (800 ms) | Yes (800 ms) | Yes (500 ms) | Yes (400 ms) | Debounce after the last edit |
 | Stable note ids in front-matter | Yes | Yes | Yes | Yes | |
@@ -75,7 +75,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | When sync runs | Launch, Sync now, drive added, after a merge | Same as Libre | Launch or unlock, Sync now, drive added, after a merge | Page load and Sync now | No app polls in the background |
 | Sync when the network comes back (opt-in, app open) | Yes ([MaxDac/marknotes-android#38](https://github.com/MaxDac/marknotes-android/pull/38)) | Partial: awaiting a Libre pin with the setting | No [MaxDac/marknotes-electron#48](https://github.com/MaxDac/marknotes-electron/issues/48) | Yes | "Sync when reconnected", off by default. Web: only while the tab is visible and unlocked. Android: only in the foreground and unlocked, after a 2 s settle, with retries after 5, 15 and 30 s on temporary failures |
 | Sync status | Progress, last sync per drive | Same as Libre | Last sync per drive, "Syncing…" | Last sync per drive ([MaxDac/marknotes-web#53](https://github.com/MaxDac/marknotes-web/pull/53)) | Web records the time only after an error-free pass; Desktop updates it after every attempt |
-| Expired sign-in | Partial: remove and re-add the drive [MaxDac/marknotes-android#27](https://github.com/MaxDac/marknotes-android/issues/27) | Partial (inherits Libre) | Partial: remove and re-add the drive [MaxDac/marknotes-electron#46](https://github.com/MaxDac/marknotes-electron/issues/46) | Reconnect action | |
+| Expired sign-in | Partial: remove and re-add the drive [MaxDac/marknotes-android#27](https://github.com/MaxDac/marknotes-android/issues/27) | Partial (inherits Libre) | Reconnect action ([MaxDac/marknotes-electron#50](https://github.com/MaxDac/marknotes-electron/pull/50)) | Reconnect action | Reconnect replaces credentials in place, keeping the drive, folder and sync records, and refuses a different account. Desktop matches the provider's immutable account id |
 | Disconnect signs out of the provider | Yes | Yes (OneDrive: local sign-out) | Yes (OneDrive: local sign-out) | Yes (OneDrive: local sign-out) ([MaxDac/marknotes-web#56](https://github.com/MaxDac/marknotes-web/pull/56)) | Microsoft offers public clients no single-session revoke |
 | Case-only renames on the drive | Explicit error | OneDrive only ([MaxDac/MarkNotes#44](https://github.com/MaxDac/MarkNotes/pull/44)) | OneDrive only | OneDrive only | Dropbox and Proton Drive have no safe case-only move |
 | Attachment hash check on download | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#attachment-sync) |
@@ -87,7 +87,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | App lock with idle timeout | Yes | Yes | Yes | Yes (passphrase mode) | See [Local data and privacy](#local-data-and-privacy) |
 | Local encryption at rest | Device encryption | Device encryption | Yes | Passphrase mode only | |
 | Delete local data | Yes | Yes | Yes | Yes ("Forget this device") | |
-| Block screenshots and hide in recent apps | Yes | Yes | No [MaxDac/marknotes-electron#45](https://github.com/MaxDac/marknotes-electron/issues/45) | N/A | Browsers offer no such API |
+| Block screenshots and hide in recent apps | Yes | Yes | Partial: Windows and macOS, best-effort ([MaxDac/marknotes-electron#53](https://github.com/MaxDac/marknotes-electron/pull/53)) | N/A | Browsers offer no such API. Desktop: Settings → Privacy → "Protect notes from screen capture", forced on with the app lock; macOS ScreenCaptureKit can bypass it and Linux has no support |
 | Memory-only notes | Not offered | Not offered | Not offered (credentials only, without a keyring) | Yes | Web: notes, images, sync state and credentials stay in memory, single tab. Meant for shared browsers; installed apps keep notes on the device |
 | Only the permissions the app needs | Yes (checked on release) | Partial: the `libre/` pin builds marknotes-sync without the AAR permission fix [MaxDac/MarkNotes#38](https://github.com/MaxDac/MarkNotes/issues/38) | N/A | N/A | |
 | Local error diagnostics and user-initiated GitHub reporting | Yes | Yes | Yes ([MaxDac/marknotes-electron#54](https://github.com/MaxDac/marknotes-electron/pull/54)) | Yes ([MaxDac/marknotes-web#54](https://github.com/MaxDac/marknotes-web/pull/54)) | See [Android diagnostics](#android-diagnostics). Desktop and Web: Settings › Local diagnostics with "Report a problem", export and Clear logs. Desktop also records renderer process exits; its log holds only times and codes and is not covered by the app lock. Web logs follow the storage mode and start only once storage is unlocked. App-only, no format change |
@@ -137,7 +137,8 @@ App behaviour only; none of it changes the note format, the manifest or the fixt
   - Android: biometric or device credential (requires a screen lock). Locks after Immediately, 1, 5 (default) or 15
     minutes, when the screen turns off and with "Lock now". Turning it on also blocks screenshots.
   - Desktop: passphrase of at least 8 characters (scrypt). Locks after Off, 5, 15 (default) or 60 minutes, on system
-    suspend or screen lock and with "Lock now".
+    suspend or screen lock and with "Lock now". Turning it on also enables screen-capture protection on Windows and
+    macOS.
   - Web: passphrase of at least 10 characters, in passphrase storage mode only. Locks after Off, 5, 15 (default) or
     60 minutes and with "Lock now"; browsers do not report suspend or screen lock.
 - **Encryption at rest**: Desktop always encrypts the local note database with a data key protected by the OS keychain,
