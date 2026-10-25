@@ -11,7 +11,8 @@ and WebAssembly bindings), which runs the sync fixtures here.
 The Android editions share their executor in marknotes-android; the Pro repository pins it at `libre/` and adds
 OneDrive and Proton Drive adapters. Both use the `android` fixture key.
 
-All three read and write the same notes folder and sync it through the same drives, so they must agree on the format.
+All editions read and write the same notes-folder format and interoperate through their supported drives,
+so they must agree on the shared behavior. Provider availability differs by edition; see [features.md](features.md).
 
 All MarkNotes repositories carry the `marknotes` topic (list them with `gh repo list MaxDac --topic marknotes`),
 and their issues and pull requests are tracked together on the
@@ -24,6 +25,13 @@ and their issues and pull requests are tracked together on the
 | [docs/help.md](docs/help.md) | Shared first-access guide content, current Markdown coverage and onboarding acceptance criteria |
 | [fixtures/](fixtures) | Golden test cases every app runs against its own implementation |
 | [schemas/](schemas) | JSON Schema the fixture files are validated against |
+| [docs/architecture.md](docs/architecture.md) | Repository/module graph, runtime boundaries and change ownership |
+| [docs/dependencies.md](docs/dependencies.md) | Package channels, source/binary pins, build tools and verification boundaries |
+| [docs/releasing.md](docs/releasing.md) | Release ordering, consumer acceptance and manual downstream handoffs |
+| [docs/agents.md](docs/agents.md) | Shared Copilot/Claude skills, local entrypoints and discovery/authorization rules |
+
+These operational guides complement the format specification; they do not redefine fixture behavior.
+Start with the architecture map when deciding which repository owns a change.
 
 ## Fixtures
 
@@ -58,10 +66,14 @@ Each file under `fixtures/<area>/<function>.json` has this shape:
 
 ## How apps consume this repository
 
-1. Add it as a git submodule at `spec/`, pinned to a commit on `main`:
+1. Direct consumers add it as a git submodule at `spec/`, pinned to a commit on `main`:
    `git submodule add https://github.com/MaxDac/marknotes-spec spec`.
+   Pro instead consumes the pin already owned by Libre at `libre/spec/`; change it upstream in Libre,
+   then adopt the reviewed Libre commit. Do not create an independent Pro spec pin.
 2. Run every fixture file with the app's own test runner, in a CI job named `Parity (marknotes-spec fixtures)`.
-   Checkout must use `submodules: true`.
+   Checkout must initialize the fixture pin: `submodules: true` for direct `spec/` consumers and
+   `submodules: recursive` for Pro's nested `libre/spec/`. Ordinary Android unit tests can skip absent fixtures;
+   use the required parity tasks documented in the consumer, not unit-test success as parity evidence.
 3. For each case, compare the app's output with `expected`. When `knownDivergence` has the app's key (`android`,
    `desktop` or `web`), the runner must assert that the output is **different** from `expected` and report it as a
    known divergence, so that a fix is noticed and the entry removed.
@@ -72,8 +84,9 @@ The apps' `docs/note-format.md` should link here instead of keeping a copy.
 
 `sync/executor-safety` runs against marknotes-sync's reference executor, because planner inputs cannot express a
 provider race or a process restart. App runners must map it, not silently ignore it. Desktop and Web run its cases
-against their own executors; the Android runner does not run them yet and relies on the reference suite and its own
-executor tests. Apps also keep their own adapter and durable-store tests for the same guarantees.
+against their own executors, as does the current Android runner. Pro gets that runner through its pinned Libre
+source, so check the consumed pin rather than assuming it matches Libre main. Apps also keep their own adapter
+and durable-store tests for the same guarantees.
 
 The deferred-folder cases for [#50](https://github.com/MaxDac/marknotes-spec/issues/50) intentionally change the
 unsupported-capability result and add executor scenarios to this existing file. The marknotes-sync Rust reference
@@ -86,5 +99,7 @@ the corresponding implementation is verified; the reference executor must satisf
 ## Changing the spec
 
 1. Open a pull request here that updates `note-format.md`, the fixtures and `features.md` together.
-2. After it merges, bump the submodule in each app and fix or mark the cases that now fail.
+2. After it merges, bump direct consumers' spec pins and fix or mark the cases that now fail.
+   Coordinate shared sync changes in marknotes-sync, and have Pro adopt the reviewed Libre pin rather than
+   editing its nested spec independently. See [release ordering](docs/releasing.md).
 3. Never loosen an `expected` value to match one app; add `knownDivergence` instead and agree on the fix.
