@@ -222,7 +222,10 @@ generation, so deleting the same folder identity again after recreation is a new
 - Local recreation ends the deletion lifecycle. Before planning any linked drive, atomically retire the active
   notice and remove only the affected preserved **folder records** for **every** linked drive whose folder now
   exists locally. Do not remove descendant file records or base copies, ordinary folder history or acknowledged
-  generation history. This prevents another drive's stale history from deleting the restored local folder:
+  generation history. Capture durable evidence of the retired folder's remote identity in that same transaction,
+  scoped to this drive, path and recreation, so simultaneous remote replacement cannot be mistaken for unchanged
+  recreation after the old folder record is removed. This prevents another drive's stale history from deleting
+  the restored local folder:
   if remote is absent it gets `createRemoteFolder`, and if both sides exist it gets `recordFolder`.
   Interrupted preflight resumes before planning. If the planner receives a preserved record with both folders
   present and the same identity, it still emits `recordFolder` to clear that marker rather than doing nothing.
@@ -230,6 +233,19 @@ generation, so deleting the same folder identity again after recreation is a new
 - A complete successful remote listing proving that the folder disappeared retires its record and deferred state.
   A different remote identity at the same path retires the old state and is handled as a new entry, not suppressed
   by the old identity's notice; descendants must not inherit deletion authority from a replaced ancestor's history.
+  Before recording the replacement folder identity, atomically retire that drive's old descendant records and
+  active preservation notices together with the old folder lifecycle, and save the new folder record in the same
+  transaction. Retire old descendant base copies before that commit; when bases live outside the metadata store,
+  use failure-checked ordering or a recoverable intent completed before planning to provide the same boundary.
+  Do not delete local note/attachment bytes, remote bytes or another drive's history. This prevents
+  a failed descendant download or restart after `createLocalFolder` or `recordFolder` from reusing an old child
+  record to authorize deletion, even if the child retained its own identity and revision. If the transaction fails,
+  report the error and retain the previous records and notice state; do not save the replacement identity separately.
+  Unlike local recreation preflight, remote identity replacement invalidates descendant history.
+  After a complete remote listing and before planning, compare any recreation identity evidence with the listed
+  folder identity. A mismatch requires the same descendant-history retirement before planning child actions.
+  Keep that evidence through failed folder adoption and restart; clear it only with successful root adoption.
+  A matching identity alone authorizes no descendant retirement, and remote absence is not identity replacement.
   A failed or incomplete listing never proves absence.
 - State and notice issuance are independent for different drives, accounts, folder paths and identities.
   Disconnecting one drive must not reset another drive's notices. This metadata is device-local sync history;
@@ -275,12 +291,17 @@ one consistent recorded spelling for a case-folded path, and both entries have t
   still matches. The drive revision may have changed; preserve its recorded revision for the next plan. This
   occurs when another drive's convergence has already renamed the shared local entry.
 - For a folder, all descendants must map one-to-one by the same prefix change, with records proving that every
-  stale-side file is unchanged. Missing, ignored, duplicate, differently typed or ambiguously cased descendants
-  prevent automatic inference. Genuine same-side collisions, absent or inconsistent records, and an edited stale
-  side keep the collision errors.
+  stale-side file is unchanged. A remote-only descendant folder is the sole missing-local exception: its record
+  must have `remoteFolderPreserved: true`, its remote identity must still match, and its path must have the exact
+  suffix under the proven parent prefix change. The local absence is the recorded deferred deletion, not evidence
+  of an inconsistent rename. Every other descendant must satisfy the ordinary mapping checks; the exception does
+  not authorize a missing file, an unmarked or replaced folder, or ignored, duplicate, differently typed or
+  ambiguously cased entries. Other missing descendants prevent automatic inference. Genuine same-side collisions,
+  absent or inconsistent records, and an edited stale side keep the collision errors.
 
   For the record-only stale case, folder inference requires the same complete descendant mapping, with every local
-  file hash and every drive identity matching its record. The executor rechecks the exact listed spelling and target
+  file hash and every drive identity matching its record, including the preserved-folder exception above.
+  The executor rechecks the exact listed spelling and target
   identity/content. If the old spelling is absent and the intended destination is already verified, it skips the
   physical move and completes only the current drive's record/base migration. A case-insensitive filesystem lookup
   of the old alias is not evidence that the old spelling still exists. An unverified occupied target remains an error.
@@ -297,6 +318,8 @@ other drives' records and bases at their previous paths until those drives perfo
 saved identity and version remain evidence of the unchanged stale drive spelling. A `localDeleted` flag is not
 permission to delete a case alias. Do not apply additional actions inside a renamed subtree from the old listing:
 take a fresh listing to plan its contents. A local rename counts as a local change for the other drives' queue.
+Preserved remote-only descendants stay absent locally; migrate their markers and active notice paths with the
+current drive's history without allocating a new deletion generation or issuing a new notice.
 When the rename and history migration cannot commit atomically, persist a per-drive rename intent before the
 mutation and replay it before flagging local deletions or planning. A restart after the move but before metadata
 migration must finish migrating the records and bases, not leave an old recorded spelling as a permanent collision.
