@@ -38,7 +38,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Folder tree with current location | Drawer, folder name | Drawer, folder name | Sidebar, folder name | Sidebar, breadcrumb | |
 | Editor views | Edit or Preview | Edit or Preview | Edit, Split or Preview | Partial: always side by side [MaxDac/marknotes-web#49](https://github.com/MaxDac/marknotes-web/issues/49) | |
 | Formatting toolbar | Yes | Yes | Yes | Partial: no strikethrough or numbered list; Heading always inserts `##` [MaxDac/marknotes-web#48](https://github.com/MaxDac/marknotes-web/issues/48) | Android and Desktop cycle the heading through none, H1, H2 and H3. Note links are inserted with `@` in every app |
-| Undo and redo | No [MaxDac/marknotes-android#24](https://github.com/MaxDac/marknotes-android/issues/24) | No (inherits Libre) | Keyboard | Keyboard | |
+| Undo and redo | Buttons and keyboard ([MaxDac/marknotes-android#35](https://github.com/MaxDac/marknotes-android/pull/35)) | Partial: awaiting a Libre pin with undo and redo | Keyboard | Keyboard | Android: top-bar buttons, Ctrl+Z, Ctrl+Y and Ctrl+Shift+Z; session-local history of 200 steps, cleared when sync changes the open note |
 | Autosave | Yes (800 ms) | Yes (800 ms) | Yes (500 ms) | Yes (400 ms) | Debounce after the last edit |
 | Stable note ids in front-matter | Yes | Yes | Yes | Yes | |
 | Note links and `@` picker | Yes | Yes | Yes | Yes | Picker ordering differs, see below |
@@ -66,7 +66,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Dropbox sync | Yes | Yes | Yes | Yes | |
 | OneDrive sync | No (Pro only) | Yes | Yes | Yes | Every app links several drives, each mirroring the same notes |
 | Proton Drive sync | No (Pro only) | Yes | Yes | No | Web: deferred to [MaxDac/marknotes-web#1](https://github.com/MaxDac/marknotes-web/issues/1). Pro and Desktop: folder typed by name; no CAPTCHA, two-password or FIDO2-only accounts. Pro: 64-bit devices only |
-| Several Proton Drive accounts | No (Pro only) | No: one account [MaxDac/MarkNotes#40](https://github.com/MaxDac/MarkNotes/issues/40) | Yes | No | |
+| Several Proton Drive accounts | No (Pro only) | Yes ([MaxDac/MarkNotes#41](https://github.com/MaxDac/MarkNotes/pull/41)) | Yes | No | Pro gives every sign-in a new drive id, so the same Proton user can be added as two drives; Desktop keys Proton drives by user id |
 | Shared sync algorithm ([marknotes-sync](https://github.com/MaxDac/marknotes-sync)) | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#sync); `fixtures/sync/*` |
 | Sync manifest (`.marknotes/manifest.json`) | Yes | Yes | Yes | Yes | |
 | Three-way merge, newest wins on conflict | Yes | Yes | Yes | Yes | The other version is saved as a conflicted copy |
@@ -74,7 +74,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Merge a conflicted copy back, with conflict choices | Yes | Yes | Yes | Yes | |
 | When sync runs | Launch, Sync now, drive added, after a merge | Same as Libre | Launch or unlock, Sync now, drive added, after a merge | Page load and Sync now | No app polls in the background |
 | Sync when the network comes back (opt-in, app open) | No [MaxDac/marknotes-android#30](https://github.com/MaxDac/marknotes-android/issues/30) | No (inherits Libre) | No [MaxDac/marknotes-electron#48](https://github.com/MaxDac/marknotes-electron/issues/48) | Yes | Web: "Sync when reconnected", off by default, only while the tab is visible and unlocked |
-| Sync status | Progress, last sync per drive | Same as Libre | Last sync per drive, "Syncing…" | Partial: per-drive state, no last sync time [MaxDac/marknotes-web#51](https://github.com/MaxDac/marknotes-web/issues/51) | |
+| Sync status | Progress, last sync per drive | Same as Libre | Last sync per drive, "Syncing…" | Last sync per drive ([MaxDac/marknotes-web#53](https://github.com/MaxDac/marknotes-web/pull/53)) | Web records the time only after an error-free pass; Desktop updates it after every attempt |
 | Expired sign-in | Partial: remove and re-add the drive [MaxDac/marknotes-android#27](https://github.com/MaxDac/marknotes-android/issues/27) | Partial (inherits Libre) | Partial: remove and re-add the drive [MaxDac/marknotes-electron#46](https://github.com/MaxDac/marknotes-electron/issues/46) | Reconnect action | |
 | Disconnect signs out of the provider | Yes | Yes (OneDrive: local sign-out) | Yes (OneDrive: local sign-out) | Partial: forgets credentials, revokes nothing [MaxDac/marknotes-web#52](https://github.com/MaxDac/marknotes-web/issues/52) | Microsoft offers public clients no single-session revoke |
 | Case-only renames on the drive | Explicit error | OneDrive only ([MaxDac/MarkNotes#44](https://github.com/MaxDac/MarkNotes/pull/44)) | OneDrive only | OneDrive only | Dropbox and Proton Drive have no safe case-only move |
