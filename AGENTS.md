@@ -14,7 +14,7 @@ are automatically discovered.
 | App | Repository | Fixture key | Language |
 | --- | --- | --- | --- |
 | Android Libre | MaxDac/marknotes-android | `android` | Kotlin |
-| Android Pro (pins Libre at `libre/`) | MaxDac/MarkNotes | `android` | Kotlin |
+| Android Pro, shipped as MarkNotes Plus (pins Libre at `libre/`) | MaxDac/MarkNotes | `android` | Kotlin |
 | Desktop (Electron) | MaxDac/marknotes-electron | `desktop` | TypeScript |
 | Web | MaxDac/marknotes-web | `web` | TypeScript + Vite (static PWA served by Caddy) |
 | Shared sync library | MaxDac/marknotes-sync | (none: implements every case) | Rust, Kotlin and WASM bindings |

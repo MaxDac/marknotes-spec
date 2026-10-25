@@ -18,6 +18,9 @@ Read [dependency consumption](dependencies.md), [release coordination](releasing
 | [marknotes-electron](https://github.com/MaxDac/marknotes-electron) | Desktop executor, local store, Electron processes, providers, installers/updater | Spec; sync Git source package | Verify real process, persistence and packaged-app integration |
 | [marknotes-web](https://github.com/MaxDac/marknotes-web) | Browser executor, storage/security, browser providers, PWA, static hosting | Spec; sync Git source package | Verify browser/CSP/offline behavior and deployment separately |
 
+Pro is the edition shipped to users as MarkNotes Plus; `Pro` remains its short edition key in
+this documentation and in code identifiers such as `MarkNotesEdition.Pro`.
+
 There are four app editions but three fixture keys: Libre and Pro use `android`,
 Desktop uses `desktop`, Web uses `web`. Provider availability is not identical between
 editions. Consult the feature matrix, not a repository's name, for support.
@@ -29,7 +32,7 @@ not a downloaded runtime library.
 
 ```mermaid
 flowchart TD
-    Pro["MarkNotes Pro"] -->|libre gitlink; source modules and catalog| Libre["Android Libre"]
+    Pro["MarkNotes Plus (Pro)"] -->|libre gitlink; source modules and catalog| Libre["Android Libre"]
     Libre -.->|spec gitlink| Spec["marknotes-spec"]
     Pro -.->|through libre/spec| Spec
     Sync["marknotes-sync"] -.->|spec gitlink and fixtures| Spec
