@@ -196,10 +196,10 @@ Libre and Pro use the same Android renderer through the shared Libre module.
 | Heading toolbar | H1-H3; type H4-H6 manually | H1-H3; type H4-H6 manually | H1-H3; type H4-H6 manually |
 | Syntax-highlighted fenced code | Bundled Prism grammars | Bundled Highlight.js grammars | Bundled Highlight.js grammars |
 | Edit and Preview | Yes | Yes, also Split | Yes, also Split |
-| Bare-URL linkification | Not promised; use explicit Markdown links | Yes | No |
+| Bare-URL linkification | No (no linkify plugin); use explicit Markdown links | Yes | No |
 | Canonical local attachments | Yes | Yes | Yes |
 | Remote images | Never loaded | HTTPS only after per-note session consent | Never loaded |
-| Embedded raw HTML | Not a supported help capability | Disabled; source is escaped | Disabled; source is escaped |
+| Embedded raw HTML | Not rendered (no HTML plugin) | Disabled; source is escaped | Disabled; source is escaped |
 | Math, Mermaid, footnotes and emoji-shortcode extensions | Not configured | Not configured | Not configured |
 
 Do not mistake a code block labelled `latex` or `mermaid` for equation or diagram rendering. The guide must not add

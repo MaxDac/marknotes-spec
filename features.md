@@ -94,8 +94,8 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Only the permissions the app needs | Yes (checked on release) | Partial: the `libre/` pin builds marknotes-sync without the AAR permission fix [MaxDac/MarkNotes#38](https://github.com/MaxDac/MarkNotes/issues/38) | N/A | N/A | |
 | Local error diagnostics and user-initiated GitHub reporting | Yes | Yes | Yes ([MaxDac/marknotes-electron#54](https://github.com/MaxDac/marknotes-electron/pull/54)) | Yes ([MaxDac/marknotes-web#54](https://github.com/MaxDac/marknotes-web/pull/54)) | See [Android diagnostics](#android-diagnostics). Desktop and Web: Settings › Local diagnostics with "Report a problem", export and Clear logs. Desktop also records renderer process exits; its log holds only times and codes and is not covered by the app lock. Web logs follow the storage mode and start only once storage is unlocked. App-only, no format change |
 | About | Licence notices, Ko-fi link | Same as Libre, plus the Proton Drive notice | Short text | No About view; `/security` page and `licenses.txt` | No app shows its version |
-| First-access guide with replay | Not shipped | Not shipped | Not shipped | Not shipped | [Shared content and acceptance criteria](docs/help.md). Rollout is tracked separately from existing Markdown rendering support |
-| Offline Markdown help page | Not shipped | Not shipped | Not shipped | Not shipped | [Current coverage and examples](docs/help.md#what-is-markdown). Documentation only: no renderer or format change |
+| First-access guide with replay | No | No | No | No | [Shared content and acceptance criteria](docs/help.md). Rollout is tracked separately from existing Markdown rendering support |
+| Offline Markdown help page | No | No | No | No | [Current coverage and examples](docs/help.md#what-is-markdown). Documentation only: no renderer or format change |
 | Links to the other apps (Settings and README) | Yes | Yes | Yes | Yes | See [Links between apps](#links-between-apps). App-only, no format change |
 | Updates | F-Droid or GitHub releases | GitHub releases | In-app updater | Service worker update | |
 
