@@ -46,7 +46,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Chord sequence editor | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#chord-sequences); `fixtures/chords/*` |
 | Chord sequences opt-in setting (off by default) | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#chord-sequences-setting). App-only, no format change |
 | Bass fret 12 marker after the fret | Yes | Yes | Yes | Yes | App-only, no format change |
-| Import shared text and documents as Markdown | Yes | Yes | No [MaxDac/marknotes-electron#43](https://github.com/MaxDac/marknotes-electron/issues/43) | No [MaxDac/marknotes-web#46](https://github.com/MaxDac/marknotes-web/issues/46) | Android share sheet: text, HTML, `.txt`/`.md`/`.html`, `.docx`, PDF text, images. App-only, no format change |
+| Import shared text and documents as Markdown | Yes | Yes | Yes | No [MaxDac/marknotes-web#46](https://github.com/MaxDac/marknotes-web/issues/46) | Android share sheet: text, HTML, `.txt`/`.md`/`.html`, `.docx`, PDF text, images. Desktop: Import… button, drop or paste ([MaxDac/marknotes-electron#55](https://github.com/MaxDac/marknotes-electron/pull/55)); relative links in pasted HTML are dropped. Imported front matter is kept under a new block on both. App-only, no format change |
 | Themes and accent colours | 8 + Dynamic | 8 + Dynamic | 8 | 9 | Light, dark or system everywhere. Dynamic (Material You) needs Android 12. Web adds Pink and defaults to Violet |
 
 ### Images
@@ -76,7 +76,7 @@ Search, tags, home-screen widgets and background sync while the app is closed ar
 | Sync when the network comes back (opt-in, app open) | Yes ([MaxDac/marknotes-android#38](https://github.com/MaxDac/marknotes-android/pull/38)) | Partial: awaiting a Libre pin with the setting | No [MaxDac/marknotes-electron#48](https://github.com/MaxDac/marknotes-electron/issues/48) | Yes | "Sync when reconnected", off by default. Web: only while the tab is visible and unlocked. Android: only in the foreground and unlocked, after a 2 s settle, with retries after 5, 15 and 30 s on temporary failures |
 | Sync status | Progress, last sync per drive | Same as Libre | Last sync per drive, "Syncing…" | Last sync per drive ([MaxDac/marknotes-web#53](https://github.com/MaxDac/marknotes-web/pull/53)) | Web records the time only after an error-free pass; Desktop updates it after every attempt |
 | Expired sign-in | Partial: remove and re-add the drive [MaxDac/marknotes-android#27](https://github.com/MaxDac/marknotes-android/issues/27) | Partial (inherits Libre) | Partial: remove and re-add the drive [MaxDac/marknotes-electron#46](https://github.com/MaxDac/marknotes-electron/issues/46) | Reconnect action | |
-| Disconnect signs out of the provider | Yes | Yes (OneDrive: local sign-out) | Yes (OneDrive: local sign-out) | Partial: forgets credentials, revokes nothing [MaxDac/marknotes-web#52](https://github.com/MaxDac/marknotes-web/issues/52) | Microsoft offers public clients no single-session revoke |
+| Disconnect signs out of the provider | Yes | Yes (OneDrive: local sign-out) | Yes (OneDrive: local sign-out) | Yes (OneDrive: local sign-out) ([MaxDac/marknotes-web#56](https://github.com/MaxDac/marknotes-web/pull/56)) | Microsoft offers public clients no single-session revoke |
 | Case-only renames on the drive | Explicit error | OneDrive only ([MaxDac/MarkNotes#44](https://github.com/MaxDac/MarkNotes/pull/44)) | OneDrive only | OneDrive only | Dropbox and Proton Drive have no safe case-only move |
 | Attachment hash check on download | Yes | Yes | Yes | Yes | [note-format.md](note-format.md#attachment-sync) |
 
@@ -297,7 +297,7 @@ Shared algorithm fixtures (`fixtures/sync/*`, `manifest/*`, `merge/*`, except `s
 marknotes-sync for every app. App runners may map those algorithms to the library, but must still map every file.
 `sync/executor-safety.json` describes executor races and durable restart boundaries that planner inputs cannot
 express. marknotes-sync runs it against its reference executor, and Desktop and Web run it against their own
-executors, reporting observed store state rather than returning the expected object. The Android runner maps the file
-but does not run its cases; it relies on the reference suite and `SyncEngineTest`
-([MaxDac/marknotes-android#28](https://github.com/MaxDac/marknotes-android/issues/28)).
+executors, reporting observed store state rather than returning the expected object. Android runs it against its own
+executor too ([MaxDac/marknotes-android#37](https://github.com/MaxDac/marknotes-android/pull/37)), skipping only the
+deferred-folder scenarios annotated under divergence 38.
 Apps also keep their own SDK-facing contract tests for the [drive adapters](note-format.md#drive-adapter-contract).
