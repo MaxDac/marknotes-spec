@@ -1,7 +1,13 @@
 # Agent instructions
 
-This repository is the single source of truth for behaviour shared by the three MarkNotes apps. It contains no app
+This repository is the single source of truth for behaviour shared by the MarkNotes apps. It contains no app
 code; read [README.md](README.md) first.
+
+For ecosystem work, read [architecture](docs/architecture.md), [dependency consumption](docs/dependencies.md),
+[release coordination](docs/releasing.md) and [agent workflows](docs/agents.md). Common procedures live in
+`.claude/skills/marknotes-dependencies/SKILL.md` and `.claude/skills/marknotes-release/SKILL.md`; local app
+entrypoints provide path/command maps rather than copied procedures. Do not assume nested submodule skills
+are automatically discovered.
 
 ## Sibling repositories
 
@@ -29,8 +35,16 @@ All of them carry the `marknotes` topic (`gh repo list MaxDac --topic marknotes`
 - Keep case names unique within a file; runners report failures by file and case name.
 - New fixture files must follow `schemas/fixture-file.schema.json` and be listed in the README table. Tell the app
   maintainers, because runners fail on unmapped files.
-- Before changing an expected value, check the current implementation in all three apps (for example with the
-  GitHub CLI: `gh api repos/MaxDac/<repo>/contents/<path> -H "Accept: application/vnd.github.raw"`).
+- Before changing an expected value, check the shared sync implementation and all affected app editions, including
+  Pro's actual pinned Libre tree rather than assuming it matches Libre main (for example with the GitHub CLI:
+  `gh api repos/MaxDac/<repo>/contents/<path> -H "Accept: application/vnd.github.raw"`).
+- Operational documentation and validation changes do not require unrelated fixture/format edits. If a shared
+  behavior changes, update the format, matching fixtures and feature matrix together as above.
+- Distinguish published packages, consumed source/binary pins and deployed app revisions. Pro consumes shared
+  Libre source/catalog but owns its Gradle root; Web/Desktop consume sync Git source, Android uses release assets
+  or an explicit source build. Record the actual pinned trees, not only upstream main.
+- No skill or documentation plan implicitly authorizes dependency upgrades, PR creation, merges, tags,
+  publication, deployment or destructive rollback. Web main merges can deploy production.
 
 ## Checks
 
