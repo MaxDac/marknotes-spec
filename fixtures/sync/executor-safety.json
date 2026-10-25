@@ -5,10 +5,7 @@
     {
       "name": "a failed child download after ancestor replacement cannot restore stale deletion authority on restart",
       "input": { "scenario": "folder-delete-deferred", "event": "identity-replacement-restart" },
-      "expected": { "errors": 2, "oldDescendantHistoryRetired": true, "childDownloaded": true, "remoteChildPreserved": true, "activeNotices": 0, "recursiveDeleteRequests": 0 },
-      "knownDivergence": {
-        "android": "Replacement folder records do not yet atomically retire old descendant deletion authority; spec#50."
-      }
+      "expected": { "errors": 2, "oldDescendantHistoryRetired": true, "childDownloaded": true, "remoteChildPreserved": true, "activeNotices": 0, "recursiveDeleteRequests": 0 }
     },
     {
       "name": "a concurrent child upload survives a planned folder deletion",
@@ -18,10 +15,7 @@
     {
       "name": "an explicitly unsupported removal preserves the folder with one notice and no recursive request",
       "input": { "scenario": "folder-delete-unsupported" },
-      "expected": { "errors": 0, "recursiveDeleteRequests": 0, "folderRecordRetained": true, "notices": 1 },
-      "knownDivergence": {
-        "android": "Current executor reports unsupported removal as an error and has no durable notice; spec#50."
-      }
+      "expected": { "errors": 0, "recursiveDeleteRequests": 0, "folderRecordRetained": true, "notices": 1 }
     },
     {
       "name": "an omitted capability still fails explicitly without a recursive fallback",
@@ -36,170 +30,107 @@
     {
       "name": "a pending manual-removal notice survives restart without folder resurrection or repeat actions",
       "input": { "scenario": "folder-delete-deferred", "event": "restart-pending" },
-      "expected": { "errors": 0, "notices": 1, "pendingNotices": 1, "localFolderExists": false, "remoteFolderExists": true, "folderRecordRetained": true, "repeatActions": 0 },
-      "knownDivergence": {
-        "android": "Durable deferred-folder and notice lifecycle is not implemented; spec#50."
-      }
+      "expected": { "errors": 0, "notices": 1, "pendingNotices": 1, "localFolderExists": false, "remoteFolderExists": true, "folderRecordRetained": true, "repeatActions": 0 }
     },
     {
       "name": "an acknowledged notice is not issued again after restart",
       "input": { "scenario": "folder-delete-deferred", "event": "restart-acknowledged" },
-      "expected": { "errors": 0, "notices": 1, "pendingNotices": 0, "acknowledgedNotices": 1, "localFolderExists": false, "repeatActions": 0 },
-      "knownDivergence": {
-        "android": "Durable deferred-folder and notice lifecycle is not implemented; spec#50."
-      }
+      "expected": { "errors": 0, "notices": 1, "pendingNotices": 0, "acknowledgedNotices": 1, "localFolderExists": false, "repeatActions": 0 }
     },
     {
       "name": "a new remote child revives a preserved folder and is downloaded",
       "input": { "scenario": "folder-delete-deferred", "event": "new-child" },
-      "expected": { "errors": 0, "localFolderExists": true, "newChildDownloaded": true, "preserved": false, "activeNotices": 0 },
-      "knownDivergence": {
-        "android": "No preserved-marker or notice retirement lifecycle is implemented; spec#50."
-      }
+      "expected": { "errors": 0, "localFolderExists": true, "newChildDownloaded": true, "preserved": false, "activeNotices": 0 }
     },
     {
       "name": "a changed recorded remote child wins over preserved folder deletion",
       "input": { "scenario": "folder-delete-deferred", "event": "changed-child" },
-      "expected": { "errors": 0, "localFolderExists": true, "changedChildDownloaded": true, "preserved": false, "activeNotices": 0 },
-      "knownDivergence": {
-        "android": "No preserved-marker or notice retirement lifecycle is implemented; spec#50."
-      }
+      "expected": { "errors": 0, "localFolderExists": true, "changedChildDownloaded": true, "preserved": false, "activeNotices": 0 }
     },
     {
       "name": "an ignored descendant protects a preserved folder without being downloaded",
       "input": { "scenario": "folder-delete-deferred", "event": "ignored-child" },
-      "expected": { "errors": 0, "localFolderExists": true, "ignoredChildPreserved": true, "ignoredChildDownloaded": false, "preserved": false, "activeNotices": 0 },
-      "knownDivergence": {
-        "android": "No preserved-marker or notice retirement lifecycle is implemented; spec#50."
-      }
+      "expected": { "errors": 0, "localFolderExists": true, "ignoredChildPreserved": true, "ignoredChildDownloaded": false, "preserved": false, "activeNotices": 0 }
     },
     {
       "name": "a new empty remote subfolder revives its preserved parent",
       "input": { "scenario": "folder-delete-deferred", "event": "new-empty-subfolder" },
-      "expected": { "errors": 0, "localFolderExists": true, "localSubfolderExists": true, "preserved": false, "activeNotices": 0 },
-      "knownDivergence": {
-        "android": "No preserved-marker or notice retirement lifecycle is implemented; spec#50."
-      }
+      "expected": { "errors": 0, "localFolderExists": true, "localSubfolderExists": true, "preserved": false, "activeNotices": 0 }
     },
     {
       "name": "local recreation permits a new notice for a later deletion of the same identity",
       "input": { "scenario": "folder-delete-deferred", "event": "local-recreation" },
-      "expected": { "errors": 0, "notices": 2, "pendingNotices": 1, "sameRemoteIdentity": true, "localFolderExists": false, "preserved": true },
-      "knownDivergence": {
-        "android": "Deletion-generation notice deduplication is not implemented; spec#50."
-      }
+      "expected": { "errors": 0, "notices": 2, "pendingNotices": 1, "sameRemoteIdentity": true, "localFolderExists": false, "preserved": true }
     },
     {
       "name": "local recreation with a missing remote counterpart creates remote instead of deleting local",
       "input": { "scenario": "folder-delete-deferred", "event": "local-recreation-remote-missing" },
-      "expected": { "errors": 0, "localFolderExists": true, "remoteFolderExists": true, "preserved": false, "activeNotices": 0 },
-      "knownDivergence": {
-        "android": "All-drive retirement of preserved folder history is not implemented; spec#50."
-      }
+      "expected": { "errors": 0, "localFolderExists": true, "remoteFolderExists": true, "preserved": false, "activeNotices": 0 }
     },
     {
       "name": "remote disappearance retires the retained folder record and active notice",
       "input": { "scenario": "folder-delete-deferred", "event": "remote-disappearance" },
-      "expected": { "errors": 0, "localFolderExists": false, "remoteFolderExists": false, "folderRecordRetained": false, "activeNotices": 0 },
-      "knownDivergence": {
-        "android": "Durable preserved-folder notice retirement is not implemented; spec#50."
-      }
+      "expected": { "errors": 0, "localFolderExists": false, "remoteFolderExists": false, "folderRecordRetained": false, "activeNotices": 0 }
     },
     {
       "name": "a replacement remote folder and descendant are not suppressed by an old deletion identity",
       "input": { "scenario": "folder-delete-deferred", "event": "identity-replacement" },
-      "expected": { "errors": 0, "localFolderExists": true, "replacementChildDownloaded": true, "replacementIdentityRecorded": true, "preserved": false, "activeNotices": 0 },
-      "knownDivergence": {
-        "android": "Identity-bound preserved-folder state is not implemented; spec#50."
-      }
+      "expected": { "errors": 0, "localFolderExists": true, "replacementChildDownloaded": true, "replacementIdentityRecorded": true, "preserved": false, "activeNotices": 0 }
     },
     {
       "name": "two drives deduplicate independently and local recreation retires both histories before planning",
       "input": { "scenario": "folder-delete-deferred", "event": "multi-drive" },
-      "expected": { "errors": 0, "notices": 2, "distinctNoticeDrives": 2, "localFolderExists": true, "bothRemoteFoldersExist": true, "preservedRecords": 0, "activeNotices": 0 },
-      "knownDivergence": {
-        "android": "All-drive preserved-folder recreation and notice isolation are not implemented; spec#50."
-      }
+      "expected": { "errors": 0, "notices": 2, "distinctNoticeDrives": 2, "localFolderExists": true, "bothRemoteFoldersExist": true, "preservedRecords": 0, "activeNotices": 0 }
     },
     {
       "name": "new safe deletion support removes the retained folder and retires its notice",
       "input": { "scenario": "folder-delete-deferred", "event": "supported" },
-      "expected": { "errors": 0, "remoteFolderExists": false, "folderRecordRetained": false, "activeNotices": 0, "recursiveDeleteRequests": 0 },
-      "knownDivergence": {
-        "android": "Durable preserved-folder capability transition is not implemented; spec#50."
-      }
+      "expected": { "errors": 0, "remoteFolderExists": false, "folderRecordRetained": false, "activeNotices": 0, "recursiveDeleteRequests": 0 }
     },
     {
       "name": "a failed listing cannot retire deferred state or imply remote disappearance",
       "input": { "scenario": "folder-delete-deferred", "event": "failed-listing" },
-      "expected": { "errors": 1, "folderRecordRetained": true, "pendingNotices": 1, "localFolderExists": false, "remoteFolderExists": true },
-      "knownDivergence": {
-        "android": "No durable pending folder-removal notice exists to retain; spec#50."
-      }
+      "expected": { "errors": 1, "folderRecordRetained": true, "pendingNotices": 1, "localFolderExists": false, "remoteFolderExists": true }
     },
     {
       "name": "restart before preservation commits retries without losing the deletion baseline",
       "input": { "scenario": "folder-delete-deferred", "event": "before-preserve-save" },
-      "expected": { "errors": 0, "notices": 1, "pendingNotices": 1, "folderRecordRetained": true, "localFolderExists": false, "repeatActions": 0 },
-      "knownDivergence": {
-        "android": "Atomic preserved-folder and pending-notice persistence is not implemented; spec#50."
-      }
+      "expected": { "errors": 0, "notices": 1, "pendingNotices": 1, "folderRecordRetained": true, "localFolderExists": false, "repeatActions": 0 }
     },
     {
       "name": "restart after preservation commits keeps the pending notice without a duplicate",
       "input": { "scenario": "folder-delete-deferred", "event": "after-preserve-save" },
-      "expected": { "errors": 0, "notices": 1, "pendingNotices": 1, "folderRecordRetained": true, "localFolderExists": false, "repeatActions": 0 },
-      "knownDivergence": {
-        "android": "Atomic preserved-folder and pending-notice persistence is not implemented; spec#50."
-      }
+      "expected": { "errors": 0, "notices": 1, "pendingNotices": 1, "folderRecordRetained": true, "localFolderExists": false, "repeatActions": 0 }
     },
     {
       "name": "a failed preservation save is an explicit error and the next restart safely retries",
       "input": { "scenario": "folder-delete-deferred", "event": "preserve-save-failure" },
-      "expected": { "errors": 1, "notices": 1, "pendingNotices": 1, "folderRecordRetained": true, "localFolderExists": false, "repeatActions": 0 },
-      "knownDivergence": {
-        "android": "Atomic preserved-folder and pending-notice persistence is not implemented; spec#50."
-      }
+      "expected": { "errors": 1, "notices": 1, "pendingNotices": 1, "folderRecordRetained": true, "localFolderExists": false, "repeatActions": 0 }
     },
     {
       "name": "a failed acknowledgement save leaves the same notice pending across restart",
       "input": { "scenario": "folder-delete-deferred", "event": "ack-save-failure" },
-      "expected": { "errors": 1, "notices": 1, "pendingNotices": 1, "acknowledgedNotices": 0, "repeatActions": 0 },
-      "knownDivergence": {
-        "android": "Durable manual-removal notice acknowledgement is not implemented; spec#50."
-      }
+      "expected": { "errors": 1, "notices": 1, "pendingNotices": 1, "acknowledgedNotices": 0, "repeatActions": 0 }
     },
     {
       "name": "restart after recreation preflight cannot delete the restored folder",
       "input": { "scenario": "folder-delete-deferred", "event": "local-recreation-preflight-restart" },
-      "expected": { "errors": 0, "localFolderExists": true, "remoteFolderExists": true, "preserved": false, "activeNotices": 0 },
-      "knownDivergence": {
-        "android": "Transactional preserved-folder recreation preflight is not implemented; spec#50."
-      }
+      "expected": { "errors": 0, "localFolderExists": true, "remoteFolderExists": true, "preserved": false, "activeNotices": 0 }
     },
     {
       "name": "an unsupported provider does not hide a conditional child deletion failure",
       "input": { "scenario": "folder-delete-unsupported-child-revision-race" },
-      "expected": { "errors": 1, "changedChildPreserved": true, "childRecordRetained": true, "folderRecordRetained": true, "notices": 1, "recursiveDeleteRequests": 0 },
-      "knownDivergence": {
-        "android": "Unsupported folder removal still adds a second error instead of a notice; spec#50."
-      }
+      "expected": { "errors": 1, "changedChildPreserved": true, "childRecordRetained": true, "folderRecordRetained": true, "notices": 1, "recursiveDeleteRequests": 0 }
     },
     {
       "name": "unchanged preserved subfolders do not resurrect their preserved parent",
       "input": { "scenario": "folder-delete-deferred", "event": "unchanged-subfolders" },
-      "expected": { "errors": 0, "notices": 2, "pendingNotices": 2, "localFolderExists": false, "preservedRecords": 2, "repeatActions": 0 },
-      "knownDivergence": {
-        "android": "Nested durable folder preservation is not implemented; spec#50."
-      }
+      "expected": { "errors": 0, "notices": 2, "pendingNotices": 2, "localFolderExists": false, "preservedRecords": 2, "repeatActions": 0 }
     },
     {
       "name": "local recreation after planning prevents a stale preservation action",
       "input": { "scenario": "folder-delete-local-recreation-race" },
-      "expected": { "errors": 0, "notices": 0, "localFolderExists": true, "remoteFolderExists": true, "preserved": false, "recursiveDeleteRequests": 0 },
-      "knownDivergence": {
-        "android": "The executor has no preserveRemoteFolder recreation guard; spec#50."
-      }
+      "expected": { "errors": 0, "notices": 0, "localFolderExists": true, "remoteFolderExists": true, "preserved": false, "recursiveDeleteRequests": 0 }
     },
     {
       "name": "a failed conditional child deletion prevents destructive folder removal",

@@ -287,20 +287,20 @@ Each item is either a bug to fix in the listed app or a spec change to agree on.
     [MaxDac/marknotes-android#33](https://github.com/MaxDac/marknotes-android/pull/33), with a real-store regression
     checking the error and unchanged source contents. Pro still needs a Libre pin containing the fix; its checked
     pin `d0203b9` can still move a nested `attachments` folder to the root, hiding it from the note tree.
-38. **Deferred remote folder removal on Android** (`sync/executor-safety`): Libre implements the contract with
+38. **Deferred remote folder removal on Android Pro** (not in fixtures): Libre implements the contract with
     marknotes-sync 0.4.0 ([MaxDac/marknotes-android#39](https://github.com/MaxDac/marknotes-android/pull/39)) and
-    passes the `sync/plan` cases, but its parity runner does not yet run the deferred-folder executor scenarios, so
-    their Android annotations stay. Pro still needs a Libre pin with the contract and must declare
-    `remoteFolderDeletion: unsupported` on its OneDrive and Proton Drive stores. Desktop
+    passes every `sync/plan` and `sync/executor-safety` case against its own executor
+    ([MaxDac/marknotes-android#41](https://github.com/MaxDac/marknotes-android/pull/41)), like Desktop
     ([MaxDac/marknotes-electron#56](https://github.com/MaxDac/marknotes-electron/pull/56)) and Web
-    ([MaxDac/marknotes-web#60](https://github.com/MaxDac/marknotes-web/pull/60)) pass every case
-    ([#50](https://github.com/MaxDac/marknotes-spec/issues/50)).
+    ([MaxDac/marknotes-web#60](https://github.com/MaxDac/marknotes-web/pull/60)). Pro still needs a Libre pin
+    containing the contract and must declare `remoteFolderDeletion: unsupported` on its OneDrive and Proton Drive
+    stores ([#50](https://github.com/MaxDac/marknotes-spec/issues/50)).
 
 Shared algorithm fixtures (`fixtures/sync/*`, `manifest/*`, `merge/*`, except `sync/executor-safety.json`) are run by
 marknotes-sync for every app. App runners may map those algorithms to the library, but must still map every file.
 `sync/executor-safety.json` describes executor races and durable restart boundaries that planner inputs cannot
 express. marknotes-sync runs it against its reference executor, and Desktop and Web run it against their own
 executors, reporting observed store state rather than returning the expected object. Android runs it against its own
-executor too ([MaxDac/marknotes-android#37](https://github.com/MaxDac/marknotes-android/pull/37)), skipping only the
-deferred-folder scenarios annotated under divergence 38.
+executor too ([MaxDac/marknotes-android#37](https://github.com/MaxDac/marknotes-android/pull/37),
+[MaxDac/marknotes-android#41](https://github.com/MaxDac/marknotes-android/pull/41)).
 Apps also keep their own SDK-facing contract tests for the [drive adapters](note-format.md#drive-adapter-contract).
