@@ -1,3 +1,5 @@
+<!-- marknotes-workflow: dependency-handbook-v1 -->
+
 # Dependency consumption
 
 This document explains dependency identities, build channels and verification boundaries.
